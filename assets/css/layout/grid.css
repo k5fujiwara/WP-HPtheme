@@ -1,0 +1,15 @@
+/* ===== グリッドシステム・レイアウト ===== */
+
+/* コンテナ（Block: BEM） */
+.container { 
+    margin: 0 auto;
+    width: min(1100px, 92%);
+}
+
+/* 固定ページ共通 */
+.page-content {
+    margin: 0 auto;
+    max-width: 900px;
+    padding: 0 20px;
+}
+

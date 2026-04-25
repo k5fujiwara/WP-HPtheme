@@ -1,0 +1,149 @@
+/* ===== ヘッダー ===== */
+
+.site-header { 
+    background: var(--bg-primary);
+    padding: var(--spacing-xl) 0 0 0;
+    position: static;
+    z-index: var(--z-dropdown);
+}
+
+.site-header .container {
+    padding-bottom: 0;
+    position: static;
+}
+
+.site-title,
+.site-description {
+    position: static;
+}
+
+.header-top {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+    position: static;
+}
+
+
+.site-title { 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background: var(--gradient-blue);
+    background-clip: text;
+    color: var(--primary-blue);
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: var(--line-height-tight);
+    text-decoration: none;
+    transition: transform 0.3s var(--timing-smooth);
+}
+
+.site-title:hover {
+    transform: translateY(-2px);
+}
+
+.site-description { 
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    margin: 0 0 0;
+    padding-bottom: var(--spacing-base);
+}
+
+/* ハンバーガーメニューボタン */
+.menu-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: none;
+    flex-direction: column;
+    height: 24px;
+    justify-content: space-between;
+    padding: 0;
+    transition: transform 0.3s var(--timing-smooth);
+    width: 32px;
+    z-index: 101;
+}
+
+.menu-toggle:hover {
+    transform: scale(1.1);
+}
+
+.menu-toggle:focus {
+    border-radius: var(--radius-xs);
+    outline: 2px solid var(--primary-blue);
+    outline-offset: var(--spacing-xs);
+}
+
+.menu-toggle-icon {
+    background: var(--gradient-blue);
+    border-radius: 3px;
+    display: block;
+    height: 3px;
+    transform-origin: center;
+    transition: all var(--transition-base) var(--timing-smooth);
+    width: 100%;
+}
+
+/* ハンバーガーアイコンのアニメーション */
+.menu-toggle.active .menu-toggle-icon:nth-child(1) {
+    transform: translateY(10.5px) rotate(45deg);
+}
+
+.menu-toggle.active .menu-toggle-icon:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.menu-toggle.active .menu-toggle-icon:nth-child(3) {
+    transform: translateY(-10.5px) rotate(-45deg);
+}
+
+/* ページヘッダー */
+.page-header {
+    background: var(--gradient-premium);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-3xl);
+    box-shadow: var(--shadow-xl), 0 0 60px rgba(0, 45, 156, 0.2);
+    margin-bottom: var(--spacing-4xl);
+    overflow: hidden;
+    padding: var(--spacing-2xl) var(--spacing-3xl);
+    position: relative;
+    text-align: center;
+}
+
+.page-header::before {
+    animation: float 10s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    content: '';
+    height: 400px;
+    position: absolute;
+    right: -10%;
+    top: -50%;
+    width: 400px;
+}
+
+.page-title {
+    color: white;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-black);
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: var(--line-height-snug);
+    margin: 0;
+    position: relative;
+    text-shadow: 0 3px var(--spacing-sm) rgba(0, 0, 0, 0.25);
+    z-index: var(--z-content);
+}
+
+.page-body {
+    line-height: var(--line-height-body);
+    margin-bottom: var(--spacing-3xl);
+}
+

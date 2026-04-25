@@ -1,0 +1,210 @@
+.dictionary-archive-page .page-body {
+  margin-top: 18px;
+}
+
+.dictionary-modal[hidden],
+.dictionary-detail-template[hidden] {
+  display: none !important;
+}
+
+.dictionary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.dictionary-archive-page.is-loading [data-dictionary-results] {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.dictionary-card {
+  border: 1px solid rgba(15, 98, 254, 0.2);
+  border-radius: 14px;
+  background: #fff;
+  padding: 16px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.dictionary-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(15, 98, 254, 0.45);
+  box-shadow: 0 10px 24px rgba(15, 98, 254, 0.12);
+}
+
+.dictionary-card__term {
+  display: block;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: #0f172a;
+}
+
+.dictionary-card__cats {
+  display: block;
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.dictionary-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 140ms ease, visibility 0s linear 140ms;
+}
+
+.dictionary-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 140ms ease;
+}
+
+.dictionary-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.6);
+}
+
+.dictionary-modal__dialog {
+  position: relative;
+  width: min(860px, 92vw);
+  min-height: 180px;
+  max-height: 86vh;
+  overflow: auto;
+  margin: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.3);
+  padding: 26px 20px 20px;
+  transform: translateY(8px) scale(0.985);
+  opacity: 0.98;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.dictionary-modal.is-open .dictionary-modal__dialog {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.dictionary-modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(15, 98, 254, 0.28);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #edf5ff 0%, #d0e2ff 100%);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  color: #0f62fe;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease, border-color 140ms ease;
+}
+
+.dictionary-modal__close:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 98, 254, 0.42);
+  background: linear-gradient(135deg, #d0e2ff 0%, #a6c8ff 100%);
+  box-shadow: 0 8px 18px rgba(15, 98, 254, 0.2);
+}
+
+.dictionary-modal__close:focus-visible {
+  outline: 2px solid rgba(15, 98, 254, 0.55);
+  outline-offset: 2px;
+}
+
+.dictionary-modal__term {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+}
+
+.dictionary-modal__content {
+  color: #1e293b;
+  line-height: 1.8;
+}
+
+.dictionary-modal__body {
+  color: #0f172a;
+}
+
+.dictionary-modal__related {
+  margin-top: 20px;
+  border-top: 1px solid rgba(2, 6, 23, 0.08);
+  padding-top: 16px;
+}
+
+.dictionary-modal__related-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.dictionary-modal__related-list {
+  margin: 0;
+  padding-left: 18px;
+}
+
+body.dictionary-modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 520px) {
+  .dictionary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dictionary-card {
+    padding: 14px 12px;
+  }
+
+  .dictionary-modal {
+    padding: 10px;
+  }
+
+  .dictionary-modal__dialog {
+    width: calc(100vw - 20px);
+    max-width: 100%;
+    max-height: 88vh;
+    padding: 20px 16px 16px;
+  }
+
+  .dictionary-modal__close {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .dictionary-modal__term {
+    font-size: 1.2rem;
+    padding-right: 36px;
+  }
+
+  .dictionary-modal__content {
+    line-height: 1.7;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dictionary-modal,
+  .dictionary-modal__dialog {
+    transition: none !important;
+  }
+}
+

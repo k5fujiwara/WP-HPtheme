@@ -1,0 +1,13 @@
+/* ===== グローバルリセット（最小限） ===== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ===== 画像リセット（最小限のグローバルリセット） ===== */
+.image-reset {
+    height: auto;
+    max-width: 100%;
+}
+

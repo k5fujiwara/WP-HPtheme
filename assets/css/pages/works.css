@@ -1,0 +1,112 @@
+/* ===== 開発作品ページ ===== */
+
+.works-grid {
+    display: grid;
+    gap: var(--spacing-3xl);
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: var(--spacing-4xl);
+}
+
+.work-item {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(15, 98, 254, 0.1);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: all var(--transition-slower) var(--timing-smooth);
+}
+
+.work-item:hover {
+    border-color: rgba(15, 98, 254, 0.3);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-16px) scale(1.02);
+}
+
+.work-thumbnail {
+    aspect-ratio: 16 / 9;
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--bg-secondary) 100%);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.work-thumbnail::after {
+    background: var(--gradient-blue);
+    content: '';
+    inset: 0;
+    opacity: 0;
+    position: absolute;
+    transition: opacity 0.3s ease;
+}
+
+.work-item:hover .work-thumbnail::after {
+    opacity: 0.1;
+}
+
+.work-thumbnail__link {
+    display: block;
+    height: 100%;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+}
+
+.work-thumbnail__image {
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    width: 100%;
+}
+
+.work-thumbnail__link:hover .work-thumbnail__image {
+    transform: scale(1.05);
+}
+
+.work-info {
+    padding: var(--spacing-xl);
+}
+
+.work-title {
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-base);
+}
+
+.work-description {
+    color: var(--text-secondary);
+    line-height: var(--line-height-body);
+    margin: 0 0 var(--spacing-lg);
+}
+
+.work-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.tech-tag {
+    background: var(--light-blue);
+    border: 1px solid rgba(15, 98, 254, 0.25);
+    border-radius: var(--radius-sm);
+    color: var(--primary-blue);
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wider);
+    padding: var(--spacing-sm) var(--spacing-base);
+    transition: all var(--transition-slow) var(--timing-smooth);
+}
+
+.tech-tag:hover {
+    background: var(--gradient-blue);
+    border-color: transparent;
+    box-shadow: var(--shadow-sm);
+    color: white;
+    transform: scale(1.08) translateY(-2px);
+}
+

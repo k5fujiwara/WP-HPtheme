@@ -1,0 +1,423 @@
+/* ===== レスポンシブ対応 ===== */
+
+/* SNSシェアのレスポンシブ */
+@media (max-width: 768px) {
+    .sns-share {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px 0;
+    }
+    
+    .site-nav {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    
+    .site-nav__actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        margin-left: 0;
+    }
+
+    .sns-share-menu-wrapper {
+        margin-left: 0;
+        margin-top: 12px;
+        width: 100%;
+    }
+    
+    .sns-share-menu-toggle {
+        justify-content: center;
+        padding: 12px 16px;
+        width: 100%;
+    }
+    
+    .sns-share-dropdown {
+        left: 0;
+        min-width: auto;
+        right: 0;
+    }
+    
+    /* モバイルではホバーを無効化 */
+    .sns-share-menu-wrapper:hover .sns-share-dropdown {
+        opacity: 0;
+        transform: translateY(-10px);
+        visibility: hidden;
+    }
+    
+    /* モバイルではクリックのみで開く */
+    .sns-share-menu-wrapper.active .sns-share-dropdown {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+    }
+}
+
+/* モバイル全体のレスポンシブ */
+@media (max-width: 768px) {
+    /* ハンバーガーメニュー表示 */
+    .menu-toggle {
+        display: flex;
+    }
+
+    .site-header {
+        padding: 20px 0 0 0;
+    }
+    
+    .site-header.scrolled {
+        padding-top: 0;
+    }
+
+    .header-top {
+        margin-bottom: 0;
+    }
+    
+    .site-title {
+        font-size: 1.5rem;
+    }
+
+    .site-description {
+        font-size: 0.875rem;
+        margin-bottom: 12px;
+    }
+
+    /* モバイルメニュー - アコーディオン式 */
+    .site-nav {
+        border-top: none;
+        margin-top: 0;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        padding-top: 0;
+        transition: max-height 0.5s var(--timing-smooth), 
+                    opacity 0.4s var(--timing-smooth),
+                    padding 0.4s var(--timing-smooth);
+    }
+
+    .site-nav.is-open {
+        border-top: 1px solid rgba(15, 98, 254, 0.1);
+        margin-top: 12px;
+        max-height: 500px;
+        opacity: 1;
+        padding-top: 20px;
+    }
+
+    .site-nav__menu {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .site-nav__item {
+        animation: slideIn 0.4s var(--timing-smooth) forwards;
+        border-bottom: 1px solid rgba(15, 98, 254, 0.08);
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    .site-nav.is-open .site-nav__item {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* 順番にアニメーション */
+    .site-nav.is-open .site-nav__item:nth-child(1) { animation-delay: 0.05s; }
+    .site-nav.is-open .site-nav__item:nth-child(2) { animation-delay: 0.1s; }
+    .site-nav.is-open .site-nav__item:nth-child(3) { animation-delay: 0.15s; }
+    .site-nav.is-open .site-nav__item:nth-child(4) { animation-delay: 0.2s; }
+    .site-nav.is-open .site-nav__item:nth-child(5) { animation-delay: 0.25s; }
+
+    .site-nav__item:last-child {
+        border-bottom: none;
+    }
+
+    .site-nav__link {
+        display: block;
+        font-size: 1rem;
+        padding: 16px 12px;
+    }
+
+    .site-nav__link::after {
+        display: none;
+    }
+
+    .site-nav__link:hover {
+        background: rgba(15, 98, 254, 0.05);
+        padding-left: 20px;
+    }
+
+    .site-nav__item.current-menu-item .site-nav__link,
+    .site-nav__item.current_page_item .site-nav__link,
+    .site-nav__item.current-menu-ancestor .site-nav__link {
+        background: rgba(15, 98, 254, 0.08);
+        border-left: 4px solid var(--primary-blue);
+    }
+
+    .hero-section {
+        border-radius: 24px;
+        margin: 32px 16px;
+        padding: 36px 24px;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    .intro-container {
+        border-radius: 24px;
+        padding: 44px 32px;
+    }
+
+    .intro-title {
+        font-size: 1.75rem;
+    }
+
+    .intro-lead {
+        font-size: 1.125rem;
+    }
+
+    .intro-features {
+        gap: 16px;
+        grid-template-columns: 1fr;
+    }
+
+    .feature-icon {
+        font-size: 2rem;
+    }
+
+    .feature-icon-wrapper {
+        height: 64px;
+        width: 64px;
+    }
+
+    .feature-icon-svg {
+        height: 36px;
+        margin: 14px;
+        width: 36px;
+    }
+
+    .wave-divider__svg {
+        height: 50px;
+    }
+
+    .nav-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header {
+        border-radius: 24px;
+        margin-bottom: 36px;
+        padding: 28px 24px;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .about-section {
+        border-radius: 20px;
+        padding: 36px 28px;
+    }
+
+    .about-section__title {
+        font-size: 1.5rem;
+    }
+
+    .project-section {
+        border-radius: 20px;
+        padding: 36px 28px;
+    }
+
+    .skills-list {
+        grid-template-columns: 1fr;
+    }
+
+    .work-links {
+        flex-direction: column;
+    }
+
+    .work-link {
+        text-align: center;
+    }
+
+    /* 開発作品グリッドのモバイル対応 */
+    .works-grid {
+        gap: 24px;
+        grid-template-columns: 1fr;
+    }
+
+    /* メニューバーのモバイル対応 */
+    .site-nav__menu {
+        font-size: 0.95rem;
+        gap: 20px;
+    }
+
+    /* プロジェクト詳細ページのモバイル対応 */
+    .project-gallery {
+        gap: 20px;
+        grid-template-columns: 1fr;
+        margin: 0 16px 32px;
+    }
+
+    .gallery-caption {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+    }
+
+    .project-info-grid {
+        gap: 16px;
+        grid-template-columns: 1fr;
+    }
+
+    .project-section__title {
+        font-size: 1.4rem;
+    }
+
+    .project-demo-btn {
+        font-size: 1rem;
+        padding: 14px 24px;
+    }
+
+    .model-comparison {
+        gap: 16px;
+        grid-template-columns: 1fr;
+    }
+
+    .flow-item {
+        font-size: 0.9rem;
+        min-width: 200px;
+        padding: 10px 16px;
+    }
+
+    .feature-heading {
+        font-size: 1.1rem;
+        margin: 24px 0 12px;
+    }
+
+    .tech-category {
+        font-size: 1rem;
+        margin: 20px 0 10px;
+    }
+
+    .nested-list {
+        padding-left: 20px;
+    }
+
+    .feature-table {
+        font-size: 0.85rem;
+    }
+
+    .feature-table__header-cell,
+    .feature-table__cell {
+        padding: 10px 8px;
+    }
+
+    .code-block__code {
+        font-size: 0.8rem;
+    }
+
+    .code-block__pre {
+        padding: 16px;
+    }
+    
+    /* パンくずリストのモバイル対応 */
+    .breadcrumb {
+        margin: 0;
+        padding: 10px 0;
+    }
+    
+    .breadcrumb__item {
+        font-size: 0.85rem;
+    }
+    
+    .breadcrumb__item:not(:last-child)::after {
+        margin-left: 6px;
+    }
+    
+    /* 関連ページセクションのモバイル対応 */
+    .related-pages {
+        margin: 60px 0 32px;
+        padding: 32px 0;
+    }
+    
+    .related-pages-title {
+        font-size: 1.5rem;
+        margin: 0 0 24px;
+    }
+    
+    .related-pages-grid {
+        gap: 20px;
+        grid-template-columns: 1fr;
+    }
+    
+    .related-page-card {
+        padding: 24px 20px;
+    }
+    
+    .related-page-card__title {
+        font-size: 1.15rem;
+    }
+    
+    .related-page-card__description {
+        font-size: 0.9rem;
+    }
+    
+    /* 次に読むべきページ提案のモバイル対応 */
+    .next-read-section {
+        margin: 48px 0 32px;
+        padding: 32px 24px;
+    }
+    
+    .next-read-section::before {
+        height: 200px;
+        width: 200px;
+    }
+    
+    .next-read-title {
+        font-size: 1.25rem;
+        margin: 0 0 10px;
+    }
+    
+    .next-read-description {
+        font-size: 0.95rem;
+        margin: 0 0 20px;
+    }
+    
+    .next-read-btn {
+        font-size: 0.95rem;
+        padding: 12px 28px;
+    }
+    
+    .next-read-btn__icon {
+        height: 18px;
+        width: 18px;
+    }
+    
+    /* スマホモックアップのモバイル対応 */
+    .phone-mockup {
+        width: 260px;
+    }
+    
+    .phone-gallery {
+        gap: 25px;
+        grid-template-columns: 1fr;
+        max-width: 300px;
+    }
+}
+
+/* タブレット対応 */
+@media (max-width: 1024px) {
+    .phone-mockup {
+        width: 240px;
+    }
+    
+    .phone-gallery {
+        gap: 20px;
+        max-width: 800px;
+    }
+}
+

@@ -1,0 +1,132 @@
+/* ===== 画像最適化（BEM命名規則） ===== */
+
+/* コンテンツ画像（Block） */
+.image {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+/* 遅延読み込み画像（Modifier） */
+.image--lazy {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-accent) 100%);
+    min-height: 200px;
+    opacity: 0;
+    transition: opacity 0.4s var(--timing-smooth);
+}
+
+/* 読み込み完了状態 */
+.image--lazy.is-loaded,
+.image--eager {
+    opacity: 1;
+}
+
+/* 読み込み中のスケルトン効果 */
+.image--lazy:not(.is-loaded) {
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* アスペクト比コンテナ（Block） */
+.aspect-ratio-box {
+    overflow: hidden;
+    position: relative;
+}
+
+.aspect-ratio-box::before {
+    content: '';
+    display: block;
+    padding-top: 56.25%; /* 16:9 */
+}
+
+/* アスペクト比コンテナ内の画像（Element） */
+.aspect-ratio-box__image {
+    height: 100%;
+    left: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+/* スマホモックアップ */
+.phone-mockup {
+    background: #1a1a1a;
+    border-radius: 35px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 0 6px rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    margin: 20px auto;
+    padding: 12px;
+    position: relative;
+    width: 260px;
+}
+
+/* ノッチ（切り欠き） */
+.phone-mockup::before {
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
+    content: '';
+    height: 22px;
+    left: 50%;
+    position: absolute;
+    top: 12px;
+    transform: translateX(-50%);
+    width: 100px;
+    z-index: 2;
+}
+
+/* スピーカー */
+.phone-mockup::after {
+    background: #0a0a0a;
+    border-radius: 8px;
+    content: '';
+    height: 4px;
+    left: 50%;
+    position: absolute;
+    top: 18px;
+    transform: translateX(-50%);
+    width: 45px;
+    z-index: 3;
+}
+
+/* スクリーン */
+.phone-screen {
+    aspect-ratio: 9 / 19.5;
+    background: #ffffff;
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.phone-screen__image {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* ホームインジケーター */
+.phone-screen::after {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    bottom: 6px;
+    content: '';
+    height: 3px;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 80px;
+}
+
+/* ギャラリー用のグリッドレイアウト - 3枚横並び */
+.phone-gallery {
+    display: grid;
+    gap: 25px;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    margin: 40px auto;
+    max-width: 900px;
+}
+

@@ -1,0 +1,159 @@
+/* ===== ボタン ===== */
+
+.pagination { 
+    margin-top: 28px;
+}
+
+.read-more { 
+    color: var(--primary-blue);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.read-more:hover { 
+    text-decoration: underline;
+}
+
+/* バックリンク */
+.back-link {
+    border-top: 1px solid #eee;
+    margin-top: var(--spacing-6xl);
+    padding-top: var(--spacing-2xl);
+    text-align: center;
+}
+
+.back-link__anchor {
+    border: 2px solid var(--primary-blue);
+    border-radius: var(--radius-sm);
+    color: var(--primary-blue);
+    display: inline-block;
+    font-weight: var(--font-weight-semibold);
+    padding: 10px var(--spacing-xl);
+    text-decoration: none;
+    transition: all var(--transition-base) ease;
+}
+
+.back-link__anchor:hover {
+    background: var(--primary-blue);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* プロジェクトデモボタン */
+.project-actions {
+    padding: var(--spacing-2xl) 0;
+    text-align: center;
+}
+
+.project-demo-btn {
+    align-items: center;
+    background: var(--gradient-blue);
+    border-radius: 14px;
+    box-shadow: 0 6px var(--spacing-lg) rgba(15, 98, 254, 0.35);
+    color: white;
+    display: inline-flex;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    gap: 14px;
+    letter-spacing: var(--letter-spacing-wider);
+    overflow: hidden;
+    padding: 18px var(--spacing-3xl);
+    position: relative;
+    text-decoration: none;
+    transition: all var(--transition-slow) var(--timing-smooth);
+}
+
+.project-demo-btn:hover {
+    background: var(--dark-blue);
+    box-shadow: 0 10px 30px rgba(15, 98, 254, 0.5);
+    transform: translateY(-4px) scale(1.05);
+}
+
+.project-demo-btn__icon {
+    height: 24px;
+    transition: transform 0.4s var(--timing-smooth);
+    width: 24px;
+}
+
+.project-demo-btn:hover .project-demo-btn__icon {
+    transform: translateX(4px);
+}
+
+/* 次に読むボタン */
+.next-read-btn {
+    align-items: center;
+    background: white;
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--spacing-xs) var(--spacing-md) rgba(0, 0, 0, 0.15);
+    color: var(--primary-blue);
+    display: inline-flex;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    gap: 10px;
+    padding: 14px var(--spacing-2xl);
+    position: relative;
+    text-decoration: none;
+    transition: all var(--transition-base) var(--timing-smooth);
+    z-index: var(--z-content);
+}
+
+.next-read-btn:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.next-read-btn__icon {
+    height: 20px;
+    transition: transform 0.3s var(--timing-smooth);
+    width: 20px;
+}
+
+.next-read-btn:hover .next-read-btn__icon {
+    transform: translateX(4px);
+}
+
+/* ワークリンク */
+.work-links {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.work-link {
+    align-items: center;
+    background: var(--gradient-blue);
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--spacing-xs) var(--spacing-md) rgba(15, 98, 254, 0.3);
+    color: white;
+    display: inline-flex;
+    font-weight: var(--font-weight-bold);
+    gap: var(--spacing-sm);
+    letter-spacing: var(--letter-spacing-wider);
+    padding: 14px 28px;
+    text-decoration: none;
+    transition: all var(--transition-slow) var(--timing-smooth);
+}
+
+.work-link:hover {
+    background: var(--dark-blue);
+    box-shadow: 0 8px 20px rgba(15, 98, 254, 0.45);
+    transform: translateY(-3px);
+}
+
+.work-link-demo {
+    background: var(--bg-primary);
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.work-link-demo:hover {
+    background: var(--gradient-blue);
+    border-color: var(--primary-blue);
+    color: white;
+}
+
+.work-link-demo__icon {
+    height: 16px;
+    width: 16px;
+}
+

@@ -1,0 +1,132 @@
+/* ===== フッター ===== */
+
+.site-footer { 
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    background: linear-gradient(180deg, rgba(237, 245, 255, 0.6) 0%, rgba(208, 226, 255, 0.4) 100%);
+    border-top: 1px solid rgba(15, 98, 254, 0.12);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-top: 0;
+    padding: var(--spacing-5xl) 0;
+    position: relative;
+    text-align: left;
+}
+
+.site-footer::before {
+    background: var(--gradient-accent);
+    content: '';
+    height: 4px;
+    left: 0;
+    opacity: 0.6;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.site-footer__text {
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+}
+
+.footer-tagline {
+    color: var(--primary-blue);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wide);
+    margin: 6px 0 0;
+}
+
+/* フッター：レイアウト（ブランド / 必須リンク / シェア） */
+.site-footer__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-3xl);
+    flex-wrap: wrap;
+}
+
+.site-footer__brand {
+    min-width: min(360px, 100%);
+}
+
+.site-footer__links {
+    min-width: min(420px, 100%);
+}
+
+.site-footer__links-title {
+    margin: 0 0 10px;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    letter-spacing: var(--letter-spacing-wide);
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+}
+
+.site-footer__links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px 12px;
+}
+
+.site-footer__links-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(15, 98, 254, 0.12);
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: transform var(--transition-fast) ease, box-shadow var(--transition-fast) ease, background var(--transition-fast) ease, color var(--transition-fast) ease;
+}
+
+.site-footer__links-link:hover {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: var(--shadow-sm);
+    color: var(--primary-blue);
+    transform: translateY(-1px);
+}
+
+.site-footer__bottom {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid rgba(15, 98, 254, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-base);
+}
+
+.site-footer__bottom .global-share {
+    margin-top: 0;
+}
+
+@media (max-width: 768px) {
+    .site-footer {
+        text-align: center;
+    }
+
+    .site-footer__top {
+        justify-content: center;
+    }
+
+    .site-footer__links-list {
+        justify-content: center;
+    }
+
+    .site-footer__bottom {
+        justify-content: center;
+    }
+
+    .site-footer__links-title {
+        text-align: center;
+    }
+}
+

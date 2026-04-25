@@ -1,0 +1,122 @@
+/* ===== 自己紹介ページ ===== */
+
+.about-sections {
+    margin-top: var(--spacing-3xl);
+}
+
+.about-section {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(15, 98, 254, 0.12);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-6xl);
+    padding: var(--spacing-4xl);
+    transition: all var(--transition-slow) var(--timing-smooth);
+}
+
+.about-section:hover {
+    border-color: rgba(15, 98, 254, 0.2);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.about-section__title {
+    border-bottom: 3px solid var(--light-blue);
+    color: var(--primary-blue);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-tight);
+    margin: 0 0 var(--spacing-2xl);
+    padding-bottom: var(--spacing-lg);
+    position: relative;
+}
+
+.about-section__title::after {
+    background: var(--gradient-accent);
+    border-radius: 2px;
+    bottom: -3px;
+    content: '';
+    height: 4px;
+    left: 0;
+    position: absolute;
+    width: 100px;
+}
+
+.profile-content,
+.skills-content,
+.history-content {
+    background: var(--bg-primary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 var(--spacing-xs) var(--spacing-sm) rgba(37, 99, 235, 0.05);
+    padding: 28px;
+}
+
+/* ネストされたリスト（BEM） */
+.history-content__list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.history-content__list-item {
+    line-height: var(--line-height-body);
+    margin-bottom: 12px;
+}
+
+.history-content .nested-list {
+    list-style-type: circle;
+    margin-top: 12px;
+    padding-left: 24px;
+}
+
+.nested-list__item {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: 8px;
+}
+
+.history-content__nested-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.history-content__nested-link:hover {
+    color: var(--secondary-blue);
+    text-decoration: underline;
+}
+
+.skills-list {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.skills-list__item {
+    align-items: center;
+    background: var(--light-blue);
+    border-left: 5px solid var(--primary-blue);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    display: flex;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    min-height: 60px;
+    padding: 18px var(--spacing-xl);
+    transition: all var(--transition-slow) var(--timing-smooth);
+}
+
+.skills-list__item:hover {
+    background: var(--gradient-blue);
+    border-left-color: var(--accent-cyan);
+    box-shadow: var(--shadow-md);
+    color: white;
+    transform: translateX(12px) scale(1.02);
+}
+

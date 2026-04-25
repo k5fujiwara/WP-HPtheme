@@ -1,0 +1,16 @@
+{
+  "name": "mytheme-theme-assets",
+  "private": true,
+  "description": "Asset build (CSS minify) for WordPress theme mytheme",
+  "scripts": {
+    "build:css:main": "cleancss -o \"assets/css/main.min.css\" \"assets/css/main.css\"",
+    "build:css:learning-column": "cleancss -o \"assets/css/pages/learning-column.min.css\" \"assets/css/pages/learning-column.css\"",
+    "build:css": "npm run build:css:main && npm run build:css:learning-column",
+    "watch:css": "chokidar \"assets/css/**/*.css\" \"!assets/css/**/*.min.css\" -c \"npm run build:css\""
+  },
+  "devDependencies": {
+    "chokidar-cli": "^3.0.0",
+    "clean-css-cli": "^5.6.3"
+  }
+}
+

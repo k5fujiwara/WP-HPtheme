@@ -1,0 +1,99 @@
+/* ===== ナビゲーション ===== */
+
+.site-nav {
+    background: var(--bg-primary);
+    border-top: 1px solid rgba(15, 98, 254, 0.1);
+    margin: 0;
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+}
+
+.site-nav .container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: var(--spacing-md);
+    padding-top: var(--spacing-md);
+}
+
+/* ナビ右側アクション（シェア→SNSの順で固定） */
+.site-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.site-main { 
+    padding: 0;
+}
+
+/* ナビゲーションメニュー（Element） */
+.site-nav__menu {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-3xl);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* ナビゲーションメニューアイテム（Element） */
+.site-nav__item {
+    /* スタイルなし - 必要に応じて追加 */
+}
+
+/* ナビゲーションリンク（Element） */
+.site-nav__link {
+    color: var(--text-primary);
+    display: inline-block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-wide);
+    padding: 10px 6px;
+    position: relative;
+    text-decoration: none;
+    transition: color var(--transition-base) var(--timing-smooth);
+}
+
+/* アンダーラインアニメーション - より洗練された */
+.site-nav__link::after {
+    background: var(--gradient-accent);
+    border-radius: 2px;
+    bottom: var(--spacing-xs);
+    content: '';
+    height: 2.5px;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+    transition: all var(--transition-base) var(--timing-smooth);
+    width: 0;
+}
+
+.site-nav__link:hover {
+    color: var(--primary-blue);
+}
+
+.site-nav__link:hover::after {
+    width: 100%;
+}
+
+/* 現在のページのスタイル（Modifier） */
+.site-nav__item--current .site-nav__link,
+.site-nav__item.current-menu-item .site-nav__link,
+.site-nav__item.current_page_item .site-nav__link,
+.site-nav__item.current-menu-ancestor .site-nav__link {
+    color: var(--primary-blue);
+    font-weight: var(--font-weight-bold);
+}
+
+.site-nav__item--current .site-nav__link::after,
+.site-nav__item.current-menu-item .site-nav__link::after,
+.site-nav__item.current_page_item .site-nav__link::after,
+.site-nav__item.current-menu-ancestor .site-nav__link::after {
+    width: 100%;
+}
+
