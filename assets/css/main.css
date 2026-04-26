@@ -4210,6 +4210,13 @@ html {
     padding: 0;
 }
 
+.project-gallery--single {
+    grid-template-columns: minmax(0, 1fr);
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 720px;
+}
+
 .gallery-item {
     background: var(--bg-primary);
     border-radius: 12px;
