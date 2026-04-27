@@ -1593,6 +1593,7 @@ html {
 .back-link {
     border-top: 1px solid #eee;
     margin-top: var(--spacing-6xl);
+    padding-bottom: var(--spacing-2xl);
     padding-top: var(--spacing-2xl);
     text-align: center;
 }
@@ -1616,12 +1617,6 @@ html {
     box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
     color: white;
     transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-    .back-link {
-        padding-bottom: var(--spacing-2xl);
-    }
 }
 
 /* プロジェクトデモボタン */
@@ -4247,7 +4242,8 @@ html {
     flex-wrap: wrap;
     gap: 5px;
     margin: 0;
-    padding: 6px 8px;
+    padding: 6px 8px 6px 24px;
+    position: relative;
 }
 
 .work-tech::before {
@@ -4257,7 +4253,11 @@ html {
     content: '';
     flex: 0 0 auto;
     height: 6px;
-    margin: 0 3px 0 2px;
+    left: 10px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     width: 6px;
 }
 
@@ -4350,18 +4350,6 @@ html {
         padding: 14px 18px 18px;
     }
 
-    .work-tech {
-        padding-left: 24px;
-        position: relative;
-    }
-
-    .work-tech::before {
-        left: 10px;
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-    }
 }
 
 
@@ -4415,9 +4403,12 @@ html {
 }
 
 .gallery-item__image {
+    aspect-ratio: 16 / 9;
     border-bottom: 2px solid var(--border-color);
     display: block;
     height: auto;
+    object-fit: cover;
+    object-position: center;
     width: 100%;
 }
 

@@ -168,7 +168,8 @@
     flex-wrap: wrap;
     gap: 5px;
     margin: 0;
-    padding: 6px 8px;
+    padding: 6px 8px 6px 24px;
+    position: relative;
 }
 
 .work-tech::before {
@@ -178,7 +179,11 @@
     content: '';
     flex: 0 0 auto;
     height: 6px;
-    margin: 0 3px 0 2px;
+    left: 10px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
     width: 6px;
 }
 
@@ -271,17 +276,5 @@
         padding: 14px 18px 18px;
     }
 
-    .work-tech {
-        padding-left: 24px;
-        position: relative;
-    }
-
-    .work-tech::before {
-        left: 10px;
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-    }
 }
 

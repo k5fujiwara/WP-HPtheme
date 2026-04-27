@@ -18,6 +18,7 @@
 .back-link {
     border-top: 1px solid #eee;
     margin-top: var(--spacing-6xl);
+    padding-bottom: var(--spacing-2xl);
     padding-top: var(--spacing-2xl);
     text-align: center;
 }
@@ -41,12 +42,6 @@
     box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
     color: white;
     transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-    .back-link {
-        padding-bottom: var(--spacing-2xl);
-    }
 }
 
 /* プロジェクトデモボタン */
