@@ -352,10 +352,13 @@ function mytheme_work_has_structured_detail($post_id) {
         'efforts',
         'highlights',
         'highlight_1_title',
+        'highlight_1_description',
         'highlight_1_code',
         'highlight_2_title',
+        'highlight_2_description',
         'highlight_2_code',
         'highlight_3_title',
+        'highlight_3_description',
         'highlight_3_code',
         'dev_type',
         'dev_role',
@@ -415,15 +418,17 @@ function mytheme_work_get_code_highlights($post_id) {
 
     for ( $i = 1; $i <= 3; $i++ ) {
         $title = mytheme_work_get_detail_field($post_id, 'highlight_' . $i . '_title');
+        $description = mytheme_work_get_detail_field($post_id, 'highlight_' . $i . '_description');
         $code = mytheme_work_get_detail_field($post_id, 'highlight_' . $i . '_code');
 
-        if ( trim($title) === '' && trim($code) === '' ) {
+        if ( trim($title) === '' && trim($description) === '' && trim($code) === '' ) {
             continue;
         }
 
         $items[] = [
-            'title' => trim($title) !== '' ? trim($title) : '技術的ハイライト ' . $i,
-            'code'  => (string) $code,
+            'title'       => trim($title) !== '' ? trim($title) : '技術的ハイライト ' . $i,
+            'description' => (string) $description,
+            'code'        => (string) $code,
         ];
     }
 
@@ -433,11 +438,15 @@ function mytheme_work_get_code_highlights($post_id) {
 function mytheme_work_render_code_highlights($items) {
     foreach ( (array) $items as $item ) :
         $title = isset($item['title']) ? (string) $item['title'] : '';
+        $description = isset($item['description']) ? (string) $item['description'] : '';
         $code = isset($item['code']) ? (string) $item['code'] : '';
-        if ( trim($title) === '' && trim($code) === '' ) continue;
+        if ( trim($title) === '' && trim($description) === '' && trim($code) === '' ) continue;
         ?>
         <?php if ( trim($title) !== '' ) : ?>
             <h3 class="feature-heading"><?php echo esc_html($title); ?></h3>
+        <?php endif; ?>
+        <?php if ( trim($description) !== '' ) : ?>
+            <p class="project-section__text"><?php echo wp_kses_post($description); ?></p>
         <?php endif; ?>
         <?php if ( trim($code) !== '' ) : ?>
             <div class="code-block">
@@ -961,6 +970,7 @@ function mytheme_work_render_input_field($post_id, $key, $label, $description = 
 function mytheme_work_render_detail_meta_box($post) {
     $post_id = (int) $post->ID;
     ?>
+    <?php wp_nonce_field('mytheme_work_meta_action', 'mytheme_work_detail_meta_nonce'); ?>
     <p class="description">既存の開発詳細ページと同じデザインになるよう、入力内容をテーマ側で固定レイアウトに変換します。リスト系は1行1項目で入力してください。</p>
     <?php
     mytheme_work_render_textarea_field($post_id, 'overview', 'プロジェクト概要', '本文として表示します。太字など簡単なHTMLは使用できます。', 5);
@@ -975,11 +985,16 @@ function mytheme_work_render_detail_meta_box($post) {
     ?>
     <hr>
     <h3>技術的ハイライト</h3>
-    <p class="description">見出しとコードを入力すると、既存ページと同じコードブロック表示になります。不要な行は空のままで問題ありません。</p>
+    <p class="description">見出し・説明・コードを入力すると、既存ページと同じ技術解説セクションとして表示します。不要な行は空のままで問題ありません。</p>
     <?php for ( $i = 1; $i <= 3; $i++ ) : ?>
         <p>
             <label for="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_title"><strong>技術的ハイライト <?php echo esc_html((string) $i); ?>: 見出し</strong></label><br>
             <input type="text" id="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_title" name="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_title" value="<?php echo esc_attr(mytheme_work_get_detail_field($post_id, 'highlight_' . $i . '_title')); ?>" class="widefat" placeholder="<?php echo esc_attr($i . '. 複数モデルの並列実行'); ?>">
+        </p>
+        <p>
+            <label for="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_description"><strong>技術的ハイライト <?php echo esc_html((string) $i); ?>: 説明</strong></label><br>
+            <textarea id="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_description" name="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_description" rows="3" class="widefat"><?php echo esc_textarea(mytheme_work_get_detail_field($post_id, 'highlight_' . $i . '_description')); ?></textarea>
+            <span class="description">コードの前に通常の説明文として表示します。簡単なHTMLも使用できます。</span>
         </p>
         <p>
             <label for="mytheme_work_detail_highlight_<?php echo esc_attr((string) $i); ?>_code"><strong>技術的ハイライト <?php echo esc_html((string) $i); ?>: コード</strong></label><br>
@@ -1012,7 +1027,12 @@ function mytheme_work_save_meta($post_id, $post, $update) {
     if ( ! current_user_can('edit_post', $post_id) ) return;
 
     $nonce = isset($_POST['mytheme_work_meta_nonce']) ? (string) $_POST['mytheme_work_meta_nonce'] : '';
-    if ( $nonce === '' || ! wp_verify_nonce($nonce, 'mytheme_work_meta_action') ) {
+    $detail_nonce = isset($_POST['mytheme_work_detail_meta_nonce']) ? (string) $_POST['mytheme_work_detail_meta_nonce'] : '';
+    $has_valid_nonce = (
+        ( $nonce !== '' && wp_verify_nonce($nonce, 'mytheme_work_meta_action') )
+        || ( $detail_nonce !== '' && wp_verify_nonce($detail_nonce, 'mytheme_work_meta_action') )
+    );
+    if ( ! $has_valid_nonce ) {
         return;
     }
 
@@ -1047,8 +1067,11 @@ function mytheme_work_save_meta($post_id, $post, $update) {
         'system_flow',
         'efforts',
         'highlights',
+        'highlight_1_description',
         'highlight_1_code',
+        'highlight_2_description',
         'highlight_2_code',
+        'highlight_3_description',
         'highlight_3_code',
         'cautions',
         'caution_intro',
