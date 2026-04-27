@@ -18,16 +18,20 @@
 .back-link {
     border-top: 1px solid #eee;
     margin-top: var(--spacing-6xl);
+    padding-bottom: var(--spacing-2xl);
     padding-top: var(--spacing-2xl);
     text-align: center;
 }
 
 .back-link__anchor {
+    align-items: center;
     border: 2px solid var(--primary-blue);
     border-radius: var(--radius-sm);
     color: var(--primary-blue);
-    display: inline-block;
+    display: inline-flex;
     font-weight: var(--font-weight-semibold);
+    justify-content: center;
+    line-height: 1;
     padding: 10px var(--spacing-xl);
     text-decoration: none;
     transition: all var(--transition-base) ease;

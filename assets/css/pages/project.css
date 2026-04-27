@@ -48,9 +48,12 @@
 }
 
 .gallery-item__image {
+    aspect-ratio: 16 / 9;
     border-bottom: 2px solid var(--border-color);
     display: block;
     height: auto;
+    object-fit: cover;
+    object-position: center;
     width: 100%;
 }
 

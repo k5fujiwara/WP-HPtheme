@@ -1380,16 +1380,26 @@ function mytheme_render_work_card($post_id) {
     }
     ?>
     <div class="work-item">
-        <div class="work-thumbnail">
-            <a class="work-thumbnail__link" href="<?php echo esc_url($url); ?>">
-                <?php if ( $image_id > 0 ) : ?>
-                    <?php echo mytheme_work_get_attachment_image_html($image_id, 'work-thumbnail__image', $image_alt); ?>
-                <?php elseif ( $image_path !== '' && function_exists('mytheme_picture_tag') ) : ?>
-                    <?php echo mytheme_picture_tag($image_path, $image_alt, 'work-thumbnail__image', 'lazy'); ?>
-                <?php elseif ( has_post_thumbnail($post_id) ) : ?>
-                    <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'work-thumbnail__image', 'alt' => $image_alt]); ?>
+        <div class="work-visual">
+            <div class="work-thumbnail">
+                <a class="work-thumbnail__link" href="<?php echo esc_url($url); ?>">
+                    <?php if ( $image_id > 0 ) : ?>
+                        <?php echo mytheme_work_get_attachment_image_html($image_id, 'work-thumbnail__image', $image_alt); ?>
+                    <?php elseif ( $image_path !== '' && function_exists('mytheme_picture_tag') ) : ?>
+                        <?php echo mytheme_picture_tag($image_path, $image_alt, 'work-thumbnail__image', 'lazy'); ?>
+                    <?php elseif ( has_post_thumbnail($post_id) ) : ?>
+                        <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'work-thumbnail__image', 'alt' => $image_alt]); ?>
+                    <?php endif; ?>
+                </a>
+            </div>
+            <div class="work-links">
+                <a href="<?php echo esc_url($url); ?>" class="work-link">詳細を見る</a>
+                <?php if ( $demo_url !== '' ) : ?>
+                    <a href="<?php echo esc_url($demo_url); ?>" class="work-link work-link-demo">
+                        デモを見る
+                    </a>
                 <?php endif; ?>
-            </a>
+            </div>
         </div>
         <div class="work-info">
             <h2 class="work-title"><?php echo esc_html($title); ?></h2>
@@ -1403,17 +1413,6 @@ function mytheme_render_work_card($post_id) {
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-            <div class="work-links">
-                <a href="<?php echo esc_url($url); ?>" class="work-link">詳細を見る</a>
-                <?php if ( $demo_url !== '' ) : ?>
-                    <a href="<?php echo esc_url($demo_url); ?>" class="work-link work-link-demo">
-                        <svg class="work-link-demo__icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                        デモを見る
-                    </a>
-                <?php endif; ?>
-            </div>
         </div>
     </div>
     <?php
