@@ -1,6 +1,11 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+$mytheme_work_seed_content_path = get_template_directory() . '/inc/work-seed-content.php';
+if ( file_exists($mytheme_work_seed_content_path) ) {
+    require_once $mytheme_work_seed_content_path;
+}
+
 /**
  * 開発作品（work）投稿タイプ
  */
@@ -1151,6 +1156,14 @@ function mytheme_work_build_seed_content($item) {
         $content .= (string) $item['intro_media'] . "\n\n";
     }
 
+    if ( function_exists('mytheme_get_legacy_work_seed_contents') && ! empty($item['seed_key']) ) {
+        $legacy_contents = mytheme_get_legacy_work_seed_contents();
+        $seed_key = (string) $item['seed_key'];
+        if ( is_array($legacy_contents) && ! empty($legacy_contents[$seed_key]) ) {
+            return $content . (string) $legacy_contents[$seed_key];
+        }
+    }
+
     return $content . '<section class="project-section"><h2 class="project-section__title">プロジェクト概要</h2><p class="project-section__text">' . esc_html((string) $item['content']) . '</p></section>';
 }
 
@@ -1207,6 +1220,64 @@ function mytheme_seed_work_entries_once() {
     update_option('mytheme_work_seeded_v2', 1, false);
 }
 add_action('init', 'mytheme_seed_work_entries_once', 30);
+
+function mytheme_work_should_update_seeded_detail_content($post_id) {
+    $post_id = (int) $post_id;
+    if ( $post_id <= 0 ) return false;
+
+    if ( function_exists('mytheme_work_has_structured_detail') && mytheme_work_has_structured_detail($post_id) ) {
+        return false;
+    }
+
+    $content = (string) get_post_field('post_content', $post_id);
+    if ( trim($content) === '' ) return true;
+
+    // Production may have seeded after the template files were deleted, leaving only a minimal overview.
+    return substr_count($content, 'project-section__title') <= 1;
+}
+
+function mytheme_seed_work_detail_content_once() {
+    $version = 'work-detail-content-v1';
+    if ( get_option('mytheme_work_detail_content_seeded_version') === $version ) return;
+    if ( ! function_exists('mytheme_get_legacy_work_seed_contents') ) return;
+
+    foreach ( mytheme_get_seed_work_items() as $item ) {
+        if ( empty($item['seed_key']) ) {
+            continue;
+        }
+
+        $existing = get_posts([
+            'post_type'              => 'work',
+            'post_status'            => ['publish', 'draft', 'pending', 'private'],
+            'posts_per_page'         => 1,
+            'fields'                 => 'ids',
+            'meta_key'               => '_mytheme_work_seed_key',
+            'meta_value'             => (string) $item['seed_key'],
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+            'update_post_term_cache' => false,
+        ]);
+
+        if ( empty($existing) && ! empty($item['slug']) ) {
+            $fallback = get_page_by_path((string) $item['slug'], OBJECT, 'work');
+            if ( $fallback && ! is_wp_error($fallback) ) {
+                $existing = [(int) $fallback->ID];
+            }
+        }
+
+        if ( empty($existing) || ! mytheme_work_should_update_seeded_detail_content((int) $existing[0]) ) {
+            continue;
+        }
+
+        wp_update_post([
+            'ID'           => (int) $existing[0],
+            'post_content' => mytheme_work_build_seed_content($item),
+        ]);
+    }
+
+    update_option('mytheme_work_detail_content_seeded_version', $version, false);
+}
+add_action('init', 'mytheme_seed_work_detail_content_once', 35);
 
 function mytheme_deactivate_legacy_work_child_pages_once() {
     if ( function_exists('wp_doing_ajax') && wp_doing_ajax() ) return;
