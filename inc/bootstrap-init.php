@@ -122,8 +122,7 @@ function mytheme_ensure_site_legal_pages_once() {
 }
 
 /**
- * プロジェクト詳細ページの作成（階層構造）
- * 注：移行処理を削除し、新規作成・更新のみに簡素化
+ * 開発作品一覧ページの作成
  */
 function mytheme_get_or_create_works_page_id() {
     $works_page = mytheme_get_page_by_path_cached('works');
@@ -147,56 +146,13 @@ function mytheme_get_or_create_works_page_id() {
     return (int) $works_id;
 }
 
+/**
+ * 旧プロジェクト詳細ページは work 投稿へ移行済み。
+ *
+ * 互換のため関数は残すが、新規の子ページや削除済みテンプレート割り当ては行わない。
+ */
 function mytheme_create_project_pages($works_id = 0) {
-    $works_id = (int) $works_id;
-    if ( $works_id <= 0 ) {
-        $works_id = mytheme_get_or_create_works_page_id();
-    }
-    if ( $works_id <= 0 ) return;
-    
-    // プロジェクト情報を配列で管理
-    $projects = [
-        'loto6' => [
-            'title' => 'ロト６予測ツール',
-            'template' => 'templates/projects/project-1.php'
-        ],
-        'auto-typing' => [
-            'title' => 'e-typing自動タイピング',
-            'template' => 'templates/projects/project-2.php'
-        ],
-        'quest4' => [
-            'title' => 'Quest4 - LINE学習クイズBot',
-            'template' => 'templates/projects/project-3.php'
-        ],
-        'beengineer-camp' => [
-            'title' => 'BeEngineer合宿案内サイト',
-            'template' => 'templates/projects/project-4.php'
-        ]
-    ];
-    
-    // 各プロジェクトページを作成または更新
-    foreach ( $projects as $slug => $project ) {
-        $page = mytheme_get_page_by_path_cached('works/' . $slug);
-        
-        if ( ! $page ) {
-            // ページが存在しない場合は新規作成
-            $page_id = wp_insert_post([
-                'post_title'   => $project['title'],
-                'post_name'    => $slug,
-                'post_type'    => 'page',
-                'post_status'  => 'publish',
-                'post_content' => '',
-                'post_parent'  => $works_id,
-            ]);
-            
-            if ( ! is_wp_error($page_id) ) {
-                update_post_meta($page_id, '_wp_page_template', $project['template']);
-            }
-        } else {
-            // ページが存在する場合はテンプレートのみ更新
-            update_post_meta($page->ID, '_wp_page_template', $project['template']);
-        }
-    }
+    return;
 }
 
 /**
