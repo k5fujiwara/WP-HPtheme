@@ -13,6 +13,7 @@ $works_url = $works_page ? get_permalink($works_page->ID) : home_url('/works/');
     $image_alt = function_exists('mytheme_get_work_meta') ? mytheme_get_work_meta($post_id, '_mytheme_work_card_image_alt', $title) : $title;
     $image_id = function_exists('mytheme_get_work_meta') ? (int) mytheme_get_work_meta($post_id, '_mytheme_work_card_image_id', 0) : 0;
     $image_path = function_exists('mytheme_get_work_meta') ? mytheme_get_work_meta($post_id, '_mytheme_work_card_image_path') : '';
+    $show_hero_image = ! function_exists('mytheme_get_work_meta') || mytheme_get_work_meta($post_id, '_mytheme_work_show_hero_image', '1') !== '0';
     ?>
     <article class="page-content project-detail">
         <?php if ( function_exists('mytheme_breadcrumb') ) : ?>
@@ -23,7 +24,7 @@ $works_url = $works_page ? get_permalink($works_page->ID) : home_url('/works/');
             <h1 class="page-title"><?php the_title(); ?></h1>
         </header>
 
-        <?php if ( $image_id > 0 || has_post_thumbnail($post_id) || $image_path !== '' ) : ?>
+        <?php if ( $show_hero_image && ( $image_id > 0 || has_post_thumbnail($post_id) || $image_path !== '' ) ) : ?>
             <div class="project-hero">
                 <?php if ( $image_id > 0 && function_exists('mytheme_work_get_attachment_image_html') ) : ?>
                     <?php echo mytheme_work_get_attachment_image_html($image_id, 'project-hero__image', $image_alt); ?>
@@ -41,6 +42,9 @@ $works_url = $works_page ? get_permalink($works_page->ID) : home_url('/works/');
 
         <?php if ( function_exists('mytheme_work_has_structured_detail') && mytheme_work_has_structured_detail($post_id) && function_exists('mytheme_render_work_structured_detail') ) : ?>
             <?php mytheme_render_work_structured_detail($post_id); ?>
+            <?php if ( trim((string) get_the_content()) !== '' ) : ?>
+                <?php the_content(); ?>
+            <?php endif; ?>
         <?php else : ?>
             <?php the_content(); ?>
         <?php endif; ?>

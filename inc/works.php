@@ -134,7 +134,7 @@ HTML;
         ],
         'public'              => true,
         'has_archive'         => false,
-        'rewrite'             => ['slug' => 'work', 'with_front' => false],
+        'rewrite'             => ['slug' => 'works', 'with_front' => false],
         'show_in_rest'        => true,
         'menu_position'       => 24,
         'menu_icon'           => 'dashicons-portfolio',
@@ -147,11 +147,27 @@ HTML;
 }
 add_action('init', 'mytheme_register_work_cpt', 9);
 
+function mytheme_work_add_rewrite_rules() {
+    add_rewrite_rule('^works/([^/]+)/?$', 'index.php?post_type=work&name=$matches[1]', 'top');
+}
+add_action('init', 'mytheme_work_add_rewrite_rules', 10);
+
+function mytheme_get_legacy_work_child_page_paths() {
+    return [
+        'works/loto6',
+        'works/auto-typing',
+        'works/quest4',
+        'works/beengineer-camp',
+    ];
+}
+
 function mytheme_work_meta_fields() {
     $fields = [
         '_mytheme_work_card_image_id',
         '_mytheme_work_card_image_path',
         '_mytheme_work_card_image_alt',
+        '_mytheme_work_card_description',
+        '_mytheme_work_show_hero_image',
         '_mytheme_work_tech_tags',
         '_mytheme_work_demo_url',
         '_mytheme_work_external_url',
@@ -849,6 +865,19 @@ function mytheme_work_render_meta_box($post) {
     wp_nonce_field('mytheme_work_meta_action', 'mytheme_work_meta_nonce');
     ?>
     <?php mytheme_work_render_media_picker_field('mytheme_work_card_image_id', (int) mytheme_get_work_meta($post_id, '_mytheme_work_card_image_id', 0), 'カード / メイン画像', '一覧カードと詳細ページ上部に使用します。'); ?>
+    <?php $show_hero_image = mytheme_get_work_meta($post_id, '_mytheme_work_show_hero_image', '1') !== '0'; ?>
+    <p>
+        <label>
+            <input type="checkbox" name="mytheme_work_show_hero_image" value="1" <?php checked($show_hero_image); ?>>
+            詳細ページ上部にもこの画像を表示する
+        </label><br>
+        <span class="description">一覧カードには常に使用します。画像が大きすぎる・詳細本文内で別途見せたい場合は外してください。</span>
+    </p>
+    <p>
+        <label for="mytheme_work_card_description"><strong>一覧カード説明</strong></label><br>
+        <textarea id="mytheme_work_card_description" name="mytheme_work_card_description" rows="3" class="widefat" placeholder="一覧カードに表示する短い説明文を入力します。"><?php echo esc_textarea(mytheme_get_work_meta($post_id, '_mytheme_work_card_description')); ?></textarea>
+        <span class="description">未入力の場合は、プロジェクト概要から自動で短く表示します。</span>
+    </p>
     <p>
         <label for="mytheme_work_card_image_alt"><strong>画像alt</strong></label><br>
         <input type="text" id="mytheme_work_card_image_alt" name="mytheme_work_card_image_alt" value="<?php echo esc_attr(mytheme_get_work_meta($post_id, '_mytheme_work_card_image_alt')); ?>" class="widefat">
@@ -984,6 +1013,8 @@ function mytheme_work_save_meta($post_id, $post, $update) {
 
     $values = [
         '_mytheme_work_card_image_id'   => isset($_POST['mytheme_work_card_image_id']) ? (string) absint($_POST['mytheme_work_card_image_id']) : '',
+        '_mytheme_work_card_description'=> isset($_POST['mytheme_work_card_description']) ? sanitize_textarea_field(wp_unslash((string) $_POST['mytheme_work_card_description'])) : '',
+        '_mytheme_work_show_hero_image' => ! empty($_POST['mytheme_work_show_hero_image']) ? '1' : '0',
         '_mytheme_work_card_image_alt'  => isset($_POST['mytheme_work_card_image_alt']) ? sanitize_text_field(wp_unslash((string) $_POST['mytheme_work_card_image_alt'])) : '',
         '_mytheme_work_tech_tags'       => isset($_POST['mytheme_work_tech_tags']) ? sanitize_textarea_field(wp_unslash((string) $_POST['mytheme_work_tech_tags'])) : '',
         '_mytheme_work_demo_url'        => isset($_POST['mytheme_work_demo_url']) ? mytheme_work_sanitize_url_or_anchor(wp_unslash((string) $_POST['mytheme_work_demo_url'])) : '',
@@ -1068,7 +1099,6 @@ function mytheme_get_seed_work_items() {
             'image_alt'   => 'ロト６予測ツール - 機械学習を活用した数字予測システム',
             'demo_url'    => '#demo-video',
             'tech_tags'   => "Python\nFlask\nscikit-learn\nSelenium",
-            'template'    => 'project-1.php',
             'intro_media' => '<div class="project-gallery"><div class="gallery-item">[theme_image path="assets/images/loto6_1.png" alt="ロト６予測ツール - 予測開始画面" class="gallery-item__image" loading="lazy"]<p class="gallery-caption">予測開始画面</p></div><div class="gallery-item">[theme_image path="assets/images/loto6_2.png" alt="ロト６予測ツール - データ分析中" class="gallery-item__image" loading="lazy"]<p class="gallery-caption">データ分析中</p></div></div>',
             'menu_order'  => 10,
         ],
@@ -1082,7 +1112,6 @@ function mytheme_get_seed_work_items() {
             'image_alt'   => 'e-typing自動タイピング - Selenium WebDriverによるブラウザ自動化',
             'demo_url'    => '#demo-video',
             'tech_tags'   => "Python\nSelenium\nwebdriver-manager\nXPath",
-            'template'    => 'project-2.php',
             'menu_order'  => 20,
         ],
         [
@@ -1096,7 +1125,6 @@ function mytheme_get_seed_work_items() {
             'demo_url'    => '#demo-video',
             'external_url'=> 'https://lin.ee/cyB8XEGb',
             'tech_tags'   => "JavaScript\nGoogle Apps Script\nLINE Messaging API",
-            'template'    => 'project-3.php',
             'intro_media' => '<div class="phone-gallery"><div class="phone-mockup"><div class="phone-screen">[theme_image path="assets/images/quest4_1.png" alt="Quest4 - 科目選択画面" class="phone-screen__image" loading="lazy"]</div></div><div class="phone-mockup"><div class="phone-screen">[theme_image path="assets/images/quest4_2.png" alt="Quest4 - クイズ画面" class="phone-screen__image" loading="lazy"]</div></div><div class="phone-mockup"><div class="phone-screen">[theme_image path="assets/images/quest4_3.png" alt="Quest4 - 結果画面" class="phone-screen__image" loading="lazy"]</div></div></div>',
             'menu_order'  => 30,
         ],
@@ -1111,59 +1139,16 @@ function mytheme_get_seed_work_items() {
             'demo_url'    => '#demo-video',
             'external_url'=> 'https://keigo-fujiwara.github.io/public_beengineer_camp25/',
             'tech_tags'   => "HTML5\nCSS3\nJavaScript\nlocalStorage",
-            'template'    => 'project-4.php',
             'intro_media' => '<div class="project-gallery"><div class="gallery-item">[theme_image path="assets/images/beengineer_camp_2.png" alt="BeEngineer合宿案内サイト - 持ち物リスト" class="gallery-item__image gallery-item__image--16x9" loading="lazy"]<p class="gallery-caption" style="min-height: 2.4em;">持ち物リスト</p></div><div class="gallery-item">[theme_image path="assets/images/beengineer_camp_3.png" alt="BeEngineer合宿案内サイト - お問い合わせ" class="gallery-item__image gallery-item__image--16x9" loading="lazy"]<p class="gallery-caption" style="min-height: 2.4em;">お問い合わせ</p></div></div>',
             'menu_order'  => 40,
         ],
     ];
 }
 
-function mytheme_work_convert_template_php_to_shortcodes($content) {
-    $content = (string) $content;
-    $content = preg_replace_callback(
-        "/<\\?php\\s+echo\\s+mytheme_picture_tag\\(\\s*'([^']*)'\\s*,\\s*'([^']*)'\\s*,\\s*'([^']*)'\\s*,\\s*'([^']*)'\\s*\\);\\s*\\?>/u",
-        function($matches) {
-            return sprintf(
-                '[theme_image path="%s" alt="%s" class="%s" loading="%s"]',
-                esc_attr($matches[1]),
-                esc_attr($matches[2]),
-                esc_attr($matches[3]),
-                esc_attr($matches[4])
-            );
-        },
-        $content
-    );
-
-    return preg_replace('/<\?php.*?\?>/s', '', $content);
-}
-
-function mytheme_work_extract_template_content($template_name) {
-    $path = get_template_directory() . '/templates/projects/' . basename((string) $template_name);
-    if ( ! file_exists($path) ) return '';
-
-    $source = (string) file_get_contents($path);
-    $parts = preg_split('/<div class="project-content">/u', $source, 2);
-    if ( ! is_array($parts) || count($parts) < 2 ) return '';
-
-    $tail = (string) $parts[1];
-    $content_parts = preg_split('/\R\s*<\/div>\s*\R\s*<div class="back-link"/u', $tail, 2);
-    $content = is_array($content_parts) ? (string) $content_parts[0] : $tail;
-    $content = mytheme_work_convert_template_php_to_shortcodes($content);
-
-    return trim($content);
-}
-
 function mytheme_work_build_seed_content($item) {
     $content = '';
     if ( ! empty($item['intro_media']) ) {
         $content .= (string) $item['intro_media'] . "\n\n";
-    }
-
-    if ( ! empty($item['template']) ) {
-        $template_content = mytheme_work_extract_template_content((string) $item['template']);
-        if ( $template_content !== '' ) {
-            return $content . $template_content;
-        }
     }
 
     return $content . '<section class="project-section"><h2 class="project-section__title">プロジェクト概要</h2><p class="project-section__text">' . esc_html((string) $item['content']) . '</p></section>';
@@ -1223,29 +1208,36 @@ function mytheme_seed_work_entries_once() {
 }
 add_action('init', 'mytheme_seed_work_entries_once', 30);
 
-function mytheme_redirect_legacy_work_pages() {
-    if ( is_admin() || ! is_page() ) return;
+function mytheme_deactivate_legacy_work_child_pages_once() {
+    if ( function_exists('wp_doing_ajax') && wp_doing_ajax() ) return;
+    if ( defined('REST_REQUEST') && REST_REQUEST ) return;
+    if ( ! is_admin() ) return;
+    if ( ! current_user_can('edit_pages') ) return;
 
-    $post_id = (int) get_queried_object_id();
-    if ( $post_id <= 0 ) return;
+    $version = 'legacy-work-pages-disabled-v1';
+    if ( get_option('mytheme_legacy_work_pages_disabled_version') === $version ) return;
 
-    $uri = trim((string) get_page_uri($post_id), '/');
-    $legacy_map = [
-        'works/loto6'           => 'loto6',
-        'works/auto-typing'     => 'auto-typing',
-        'works/quest4'          => 'quest4',
-        'works/beengineer-camp' => 'beengineer-camp',
-    ];
+    foreach ( mytheme_get_legacy_work_child_page_paths() as $path ) {
+        $page = get_page_by_path($path, OBJECT, 'page');
+        if ( ! $page || is_wp_error($page) ) {
+            continue;
+        }
 
-    if ( ! isset($legacy_map[$uri]) ) return;
+        if ( get_post_status($page->ID) !== 'publish' ) {
+            continue;
+        }
 
-    $work = get_page_by_path($legacy_map[$uri], OBJECT, 'work');
-    if ( ! $work || get_post_status($work->ID) !== 'publish' ) return;
+        wp_update_post([
+            'ID'          => (int) $page->ID,
+            'post_status' => 'draft',
+            'post_name'   => 'legacy-' . sanitize_title((string) $page->post_name),
+        ]);
+        update_post_meta((int) $page->ID, '_wp_page_template', 'default');
+    }
 
-    wp_safe_redirect(get_permalink($work->ID), 301);
-    exit;
+    update_option('mytheme_legacy_work_pages_disabled_version', $version, false);
 }
-add_action('template_redirect', 'mytheme_redirect_legacy_work_pages');
+add_action('admin_init', 'mytheme_deactivate_legacy_work_child_pages_once', 20);
 
 function mytheme_get_work_archive_query($args = []) {
     $defaults = [
@@ -1268,7 +1260,18 @@ function mytheme_render_work_card($post_id) {
     $image_path = mytheme_get_work_meta($post_id, '_mytheme_work_card_image_path');
     $tech_tags = mytheme_get_work_tech_tags($post_id);
     $demo_url = mytheme_get_work_meta($post_id, '_mytheme_work_demo_url');
-    $description = has_excerpt($post_id) ? trim((string) get_the_excerpt($post_id)) : '';
+    $description = trim((string) mytheme_get_work_meta($post_id, '_mytheme_work_card_description'));
+    if ( $description === '' ) {
+        $description = has_excerpt($post_id) ? trim((string) get_the_excerpt($post_id)) : '';
+    }
+    if ( $description === '' && function_exists('mytheme_work_get_detail_field') ) {
+        $overview = wp_strip_all_tags(mytheme_work_get_detail_field($post_id, 'overview'));
+        $description = wp_trim_words($overview, 80, '...');
+    }
+
+    if ( $demo_url === '' && function_exists('mytheme_work_get_detail_field') && trim(mytheme_work_get_detail_field($post_id, 'demo_embed_url')) !== '' ) {
+        $demo_url = '#demo-video';
+    }
 
     if ( strpos($demo_url, '#') === 0 ) {
         $demo_url = $url . $demo_url;
@@ -1316,12 +1319,13 @@ function mytheme_render_work_card($post_id) {
 
 function mytheme_work_flush_rewrite_on_switch() {
     mytheme_register_work_cpt();
+    mytheme_work_add_rewrite_rules();
     flush_rewrite_rules(false);
 }
 add_action('after_switch_theme', 'mytheme_work_flush_rewrite_on_switch');
 
 function mytheme_work_flush_rewrite_once_after_register() {
-    $version = 'work-rewrite-v2';
+    $version = 'work-rewrite-v4';
     if ( get_option('mytheme_work_rewrite_version') === $version ) return;
 
     flush_rewrite_rules(false);
