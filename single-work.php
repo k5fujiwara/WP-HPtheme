@@ -49,9 +49,9 @@ $works_url = $works_page ? get_permalink($works_page->ID) : home_url('/works/');
             <?php the_content(); ?>
         <?php endif; ?>
 
-        <div class="back-link">
-            <a class="back-link__anchor" href="<?php echo esc_url($works_url); ?>">← 開発作品一覧に戻る</a>
-        </div>
+        <nav class="project-detail__back-link" aria-label="開発作品ナビゲーション" style="border:0;box-sizing:border-box;margin:0;padding:64px 0 96px;text-align:center;width:100%;">
+            <a class="back-link__anchor" href="<?php echo esc_url($works_url); ?>" style="display:inline-block;margin:0 auto;">← 開発作品一覧に戻る</a>
+        </nav>
     </article>
 <?php endwhile; ?>
 

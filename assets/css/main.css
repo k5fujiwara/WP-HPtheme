@@ -4385,13 +4385,24 @@ html {
     transform: translateY(-2px);
 }
 
-.project-detail > .back-link {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-top: var(--spacing-3xl);
-    min-height: 112px;
-    padding: var(--spacing-2xl) 0;
+.project-detail .project-content .project-section:last-of-type,
+.project-detail .project-content .project-section.is-visible:last-of-type {
+    margin-bottom: 0;
+}
+
+.project-detail__back-link {
+    border: 0;
+    box-sizing: border-box;
+    display: block;
+    margin: 0;
+    padding: 64px 0 96px;
+    text-align: center;
+    width: 100%;
+}
+
+.project-detail__back-link .back-link__anchor {
+    display: inline-block;
+    margin: 0 auto;
 }
 
 .feature-list {
