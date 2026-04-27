@@ -948,10 +948,10 @@ sendReply(replyToken, messages);</code></pre>
             </section>',
   'beengineer-camp' => '<!-- プロジェクト概要 -->
             <section class="project-section">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 0 16px;">
-                    <h2 class="project-section__title" style="margin: 0;">プロジェクト概要</h2>
-                    <a class="back-link__anchor" href="https://keigo-fujiwara.github.io/public_beengineer_camp25/" target="_blank" rel="noopener noreferrer" style="text-wrap: nowrap; margin-bottom: 16px;">
-                        合宿案内サイトはこちら
+                <div class="project-section__heading-row">
+                    <h2 class="project-section__title">プロジェクト概要</h2>
+                    <a class="work-link work-link--compact" href="https://keigo-fujiwara.github.io/public_beengineer_camp25/" target="_blank" rel="noopener noreferrer">
+                        <span class="work-link__label">合宿案内サイトはこちら</span>
                     </a>
                 </div>
                 <p class="project-section__text">BeEngineerプログラミング合宿（2025年11月22日〜24日）向けの情報提供サイト。ロゴスランド京都での2泊3日に必要な情報をまとめ、<strong>HTML5/CSS3/Vanilla JavaScriptのみで構成した軽量・静的サイト</strong>です。レスポンシブデザインでPC/タブレット/スマホに対応し、合宿中のスケジュール・持ち物・アクセス・フロア案内を一元化します。</p>
@@ -1225,10 +1225,10 @@ sections.forEach(section => observer.observe(section));</code></pre>
 
             <!-- デモ動画 -->
             <section class="project-section" id="demo-video">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 0 0 12px;">
-                    <h2 class="project-section__title" style="margin: 0;">デモ動画</h2>
-                    <a class="back-link__anchor" href="https://keigo-fujiwara.github.io/public_beengineer_camp25/" target="_blank" rel="noopener noreferrer" style="text-wrap: nowrap;">
-                        合宿案内サイトはこちら
+                <div class="project-section__heading-row">
+                    <h2 class="project-section__title">デモ動画</h2>
+                    <a class="work-link work-link--compact" href="https://keigo-fujiwara.github.io/public_beengineer_camp25/" target="_blank" rel="noopener noreferrer">
+                        <span class="work-link__label">合宿案内サイトはこちら</span>
                     </a>
                 </div>
                 <p class="project-section__text" style="margin-top: 0;">実際の合宿案内サイトの動作を動画でご覧いただけます。</p>

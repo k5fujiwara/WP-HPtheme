@@ -1232,12 +1232,20 @@ function mytheme_work_should_update_seeded_detail_content($post_id) {
     $content = (string) get_post_field('post_content', $post_id);
     if ( trim($content) === '' ) return true;
 
+    if ( strpos($content, '合宿案内サイトはこちら') !== false && (
+        strpos($content, 'project-section__title" style="margin: 0;">') !== false
+        || strpos($content, 'project-section__actions') !== false
+        || ( strpos($content, 'work-link--compact') !== false && strpos($content, 'work-link__label') === false )
+    ) ) {
+        return true;
+    }
+
     // Production may have seeded after the template files were deleted, leaving only a minimal overview.
     return substr_count($content, 'project-section__title') <= 1;
 }
 
 function mytheme_seed_work_detail_content_once() {
-    $version = 'work-detail-content-v1';
+    $version = 'work-detail-content-v4';
     if ( get_option('mytheme_work_detail_content_seeded_version') === $version ) return;
     if ( ! function_exists('mytheme_get_legacy_work_seed_contents') ) return;
 

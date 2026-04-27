@@ -13,3 +13,6 @@ Thumbs.db
 # Editor settings
 .idea/
 .vscode/
+
+# 開発作品詳細ページ 入力テンプレート
+dev_intro.md
