@@ -98,7 +98,7 @@
             .hero-lead{margin-top:14px;font-size:.92rem;line-height:1.7}
         }
         @media(max-width:782px){
-            body.admin-bar .site-header-shell{top:46px}
+            body.admin-bar .site-header-shell{top:0}
         }
 
         @media(min-width:1024px){

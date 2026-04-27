@@ -23,11 +23,14 @@
 }
 
 .back-link__anchor {
+    align-items: center;
     border: 2px solid var(--primary-blue);
     border-radius: var(--radius-sm);
     color: var(--primary-blue);
-    display: inline-block;
+    display: inline-flex;
     font-weight: var(--font-weight-semibold);
+    justify-content: center;
+    line-height: 1;
     padding: 10px var(--spacing-xl);
     text-decoration: none;
     transition: all var(--transition-base) ease;
@@ -38,6 +41,12 @@
     box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
     color: white;
     transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .back-link {
+        padding-bottom: var(--spacing-2xl);
+    }
 }
 
 /* プロジェクトデモボタン */
