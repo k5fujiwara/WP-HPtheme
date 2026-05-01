@@ -248,9 +248,49 @@
 }
 
 .tech-stack {
+    align-items: center;
+    background:
+        linear-gradient(135deg, rgba(2, 12, 27, 0.9), rgba(0, 29, 108, 0.74));
+    border: 1px solid rgba(0, 212, 255, 0.18);
+    border-radius: 18px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 10px 24px rgba(0, 29, 108, 0.08);
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
+    margin: 0 0 20px;
+    max-width: 100%;
+    padding: 8px 12px 8px 28px;
+    position: relative;
+    width: fit-content;
+}
+
+.tech-stack::before {
+    background: #00d4ff;
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+    content: '';
+    height: 7px;
+    left: 12px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+}
+
+.project-detail .tech-stack .tech-tag {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.24);
+    color: rgba(226, 246, 255, 0.95);
+    text-shadow: none;
+}
+
+.project-detail .tech-stack .tech-tag:hover {
+    background: rgba(0, 212, 255, 0.14);
+    border-color: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 14px rgba(0, 212, 255, 0.18);
+    color: #fff;
 }
 
 .project-info-grid {
