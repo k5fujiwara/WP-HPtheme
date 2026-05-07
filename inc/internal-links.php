@@ -112,6 +112,17 @@ function mytheme_breadcrumb() {
                 $position++;
             }
         }
+
+        if ( is_singular('youtube_learning') ) {
+            $youtube_learning_archive_url = get_post_type_archive_link('youtube_learning');
+            if ( $youtube_learning_archive_url ) {
+                echo '<li class="breadcrumb__item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">' .
+                     '<a class="breadcrumb__link" href="' . esc_url($youtube_learning_archive_url) . '" itemprop="item"><span itemprop="name">学習おすすめ動画</span></a>' .
+                     '<meta itemprop="position" content="' . $position . '" />' .
+                     '</li>';
+                $position++;
+            }
+        }
         
         // 固定ページで親ページが設定されている場合（階層構造対応）
         if ($post->post_parent) {

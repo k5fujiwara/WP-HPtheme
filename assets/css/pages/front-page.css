@@ -9,16 +9,19 @@
 /* ヒーローセクション */
 .hero-section {
     align-items: center; /* 垂直方向の中央揃え */
-    background: var(--gradient-premium);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-4xl);
-    box-shadow: var(--shadow-xl), 0 0 var(--spacing-7xl) rgba(0, 45, 156, 0.2);
+    background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0)),
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.18), transparent 22%),
+        linear-gradient(135deg, #001d6c 0%, #0f62fe 56%, #4589ff 100%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 30px;
+    box-shadow: 0 18px 42px rgba(0, 45, 156, 0.2);
     display: flex; /* flexboxで中央揃え */
     justify-content: center; /* 水平方向の中央揃え */
-    margin: var(--spacing-3xl) var(--spacing-lg);
-    min-height: 180px; /* CLS防止のため最小高さを指定 */
+    margin: 30px var(--spacing-lg) 28px;
+    min-height: 112px; /* CLS防止のため最小高さを指定 */
     overflow: hidden;
-    padding: var(--spacing-3xl) var(--spacing-3xl);
+    padding: 22px var(--spacing-3xl);
     position: relative;
     text-align: center;
 }
@@ -58,14 +61,40 @@
 .hero-title {
     color: white;
     font-family: var(--font-heading);
-    font-size: var(--font-size-h1);
+    font-size: 2.5rem;
     font-weight: var(--font-weight-black);
     letter-spacing: var(--letter-spacing-tight);
-    line-height: var(--line-height-tight);
+    line-height: 1.12;
     margin: 0;
     position: relative;
     text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
     z-index: 1;
+}
+
+.hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 9px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    padding: 6px 13px;
+    text-transform: uppercase;
+}
+
+.hero-lead {
+    max-width: 46rem;
+    margin: 10px auto 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
 }
 
 /* サイト紹介セクション */
@@ -275,7 +304,7 @@
     animation: wave-animation 25s ease-in-out infinite;
     display: block;
     /* 高さを小さく、より洗練された印象に */
-    height: clamp(40px, 5vw, 70px);
+    height: 56px;
     position: relative;
     width: 100%;
     /* より鮮やかなグラデーションカラー */
@@ -297,8 +326,32 @@
 
 /* モバイル向け最適化 */
 @media (max-width: 768px) {
+    .hero-section {
+        border-radius: 22px;
+        margin: 24px 12px 22px;
+        min-height: 0;
+        padding: 18px 14px;
+    }
+
+    .hero-title {
+        font-size: 1.38rem;
+        line-height: 1.18;
+    }
+
+    .hero-eyebrow {
+        margin-bottom: 7px;
+        font-size: 0.58rem;
+        padding: 5px 9px;
+    }
+
+    .hero-lead {
+        margin-top: 7px;
+        font-size: 0.78rem;
+        line-height: 1.45;
+    }
+
     .wave-divider__svg {
-        height: clamp(30px, 4vw, 50px);
+        height: 40px;
         filter: drop-shadow(0 1px 4px rgba(15, 98, 254, 0.12));
     }
 }
