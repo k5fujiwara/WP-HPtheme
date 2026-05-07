@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 get_header();
 
 $archive_url = get_post_type_archive_link('youtube_learning');
-$keyword = isset($_GET['yt_q']) ? sanitize_text_field(wp_unslash((string) $_GET['yt_q'])) : '';
 $selected = [
     'yt_topic'   => isset($_GET['yt_topic']) ? sanitize_text_field(wp_unslash((string) $_GET['yt_topic'])) : '',
     'yt_channel' => isset($_GET['yt_channel']) ? sanitize_text_field(wp_unslash((string) $_GET['yt_channel'])) : '',
@@ -27,18 +26,9 @@ $selected = [
             <p>各動画はYouTube公式の埋め込み機能を利用しています。動画の権利は各投稿者・チャンネルに帰属します。</p>
         </section>
 
-        <details class="youtube-learning-search-panel" <?php echo ( $keyword !== '' || ! empty(array_filter($selected)) ) ? 'open' : ''; ?>>
-            <summary class="youtube-learning-search-panel__summary">学びたいこと・悩みから探す</summary>
+        <details class="youtube-learning-search-panel" <?php echo ! empty(array_filter($selected)) ? 'open' : ''; ?>>
+            <summary class="youtube-learning-search-panel__summary">ジャンル・YouTuberで絞り込む</summary>
             <form class="youtube-learning-search" action="<?php echo esc_url($archive_url); ?>" method="get" role="search">
-                <div class="youtube-learning-search__main">
-                    <label for="yt_q">学びたいこと・悩みを入力</label>
-                <div class="youtube-learning-search__row">
-                    <input type="search" id="yt_q" name="yt_q" value="<?php echo esc_attr($keyword); ?>" placeholder="例: 数学が苦手、プログラミング初心者、公式を理解したい">
-                    <button type="submit"><span>動画を探す</span></button>
-                </div>
-                <p class="youtube-learning-search__hint">気になる学び・悩み・YouTuber名から、関連する動画を探せます。</p>
-                </div>
-
                 <div class="youtube-learning-search__filters">
                 <?php
                 $filter_taxonomies = [
@@ -71,6 +61,9 @@ $selected = [
                     </label>
                 <?php endforeach; ?>
                 </div>
+                <div class="youtube-learning-search__actions">
+                    <button type="submit"><span>絞り込む</span></button>
+                </div>
             </form>
         </details>
 
@@ -87,7 +80,6 @@ $selected = [
                 <?php
                 the_posts_pagination([
                     'add_args' => array_filter([
-                        'yt_q'       => $keyword,
                         'yt_topic'   => $selected['yt_topic'],
                         'yt_channel' => $selected['yt_channel'],
                     ]),
@@ -96,7 +88,7 @@ $selected = [
             </div>
         <?php else : ?>
             <div class="youtube-learning-empty">
-                <p>条件に合う学習動画はまだありません。キーワードや絞り込みを変えて探してみてください。</p>
+                <p>条件に合う学習動画はまだありません。ジャンルやYouTuberを変えて探してみてください。</p>
             </div>
         <?php endif; ?>
     </div>

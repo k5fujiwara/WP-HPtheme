@@ -544,23 +544,6 @@ function mytheme_youtube_learning_archive_order($query) {
     $query->set('orderby', 'date');
     $query->set('order', 'DESC');
 
-    $keyword = isset($_GET['yt_q']) ? sanitize_text_field(wp_unslash((string) $_GET['yt_q'])) : '';
-    if ( $keyword !== '' ) {
-        $words = preg_split('/[\s　]+/u', $keyword);
-        $words = is_array($words) ? array_values(array_filter(array_map('trim', $words))) : [];
-        $meta_query = ['relation' => 'OR'];
-        foreach ( $words as $word ) {
-            $meta_query[] = [
-                'key'     => '_mytheme_yt_title',
-                'value'   => $word,
-                'compare' => 'LIKE',
-            ];
-        }
-        if ( count($meta_query) > 1 ) {
-            $query->set('meta_query', $meta_query);
-        }
-    }
-
     $tax_query = [];
     $filters = [
         'yt_topic'   => 'yt_topic',

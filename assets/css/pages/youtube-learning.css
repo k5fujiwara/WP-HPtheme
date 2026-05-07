@@ -129,17 +129,6 @@
   font-weight: 700;
 }
 
-.youtube-learning-search__main {
-  display: grid;
-  gap: 8px;
-}
-
-.youtube-learning-search__row {
-  display: flex;
-  gap: 10px;
-}
-
-.youtube-learning-search input,
 .youtube-learning-search select {
   width: 100%;
   border: 1px solid rgba(15, 23, 42, 0.16);
@@ -204,13 +193,6 @@
   transform: translateY(-1px);
 }
 
-.youtube-learning-search__hint {
-  margin: 8px 0 0;
-  color: #64748b;
-  font-size: 0.86rem;
-  line-height: 1.6;
-}
-
 .youtube-learning-button--secondary {
   background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
 }
@@ -221,13 +203,19 @@
 
 .youtube-learning-search__filters {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 16px;
+  margin: 0;
 }
 
 .youtube-learning-search__filters span {
   font-size: 0.86rem;
+}
+
+.youtube-learning-search__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
 }
 
 .youtube-learning-grid {
@@ -530,7 +518,6 @@
     line-height: 1.5;
   }
 
-  .youtube-learning-search__row,
   .youtube-learning-actions {
     flex-direction: column;
   }
