@@ -87,6 +87,22 @@ function mytheme_assets() {
         }
     }
 
+    if ( is_post_type_archive('youtube_learning') || is_singular('youtube_learning') ) {
+        $yt_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/pages/youtube-learning', '.css');
+        $yt_css_path = $theme_dir . $yt_css_rel;
+        if ( file_exists($yt_css_path) ) {
+            $yt_css_ver = (string) filemtime($yt_css_path);
+            wp_enqueue_style('mytheme-youtube-learning', get_template_directory_uri() . $yt_css_rel, ['mytheme-main'], $yt_css_ver);
+        }
+
+        $yt_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/youtube-learning', '.js');
+        $yt_js_path = $theme_dir . $yt_js_rel;
+        if ( file_exists($yt_js_path) ) {
+            $yt_js_ver = (string) filemtime($yt_js_path);
+            wp_enqueue_script('mytheme-youtube-learning', get_template_directory_uri() . $yt_js_rel, [], $yt_js_ver, true);
+        }
+    }
+
     // NOTE: footer.css は main.css に統合済みのため、追加読み込みしない（重複CSS削減）
     
     $main_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/main', '.js');
@@ -127,7 +143,7 @@ function mytheme_async_page_styles($html, $handle, $href, $media) {
         return $html;
     }
 
-    if ( ! in_array($handle, ['mytheme-learning-column', 'mytheme-dictionary', 'mytheme-beengineer-news'], true) ) {
+    if ( ! in_array($handle, ['mytheme-learning-column', 'mytheme-dictionary', 'mytheme-beengineer-news', 'mytheme-youtube-learning'], true) ) {
         return $html;
     }
 

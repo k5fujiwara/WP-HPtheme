@@ -426,6 +426,25 @@ function mytheme_breadcrumb_schema() {
             'name'     => get_the_title($post_id),
             'item'     => get_permalink($post_id),
         ];
+    } elseif ( is_singular('youtube_learning') ) {
+        $youtube_learning_archive_url = get_post_type_archive_link('youtube_learning');
+        if ( $youtube_learning_archive_url ) {
+            $breadcrumbs['itemListElement'][] = [
+                '@type'    => 'ListItem',
+                'position' => $position,
+                'name'     => '学習おすすめ動画',
+                'item'     => $youtube_learning_archive_url,
+            ];
+            $position++;
+        }
+
+        $post_id = get_queried_object_id();
+        $breadcrumbs['itemListElement'][] = [
+            '@type'    => 'ListItem',
+            'position' => $position,
+            'name'     => get_the_title($post_id),
+            'item'     => get_permalink($post_id),
+        ];
     } elseif ( is_singular() ) {
         $post_id = get_queried_object_id();
         $breadcrumbs['itemListElement'][] = [
