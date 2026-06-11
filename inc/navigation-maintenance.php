@@ -524,6 +524,14 @@ function mytheme_get_ebooks() {
                     'cover'       => 'assets/images/ebook-5.jpg',
                     'url'         => 'https://amzn.to/4bYSQr8',
                 ],
+                'en' => [
+                    'label'       => 'English',
+                    'title'       => 'Why Your Words Fall Flat',
+                    'subtitle'    => 'The Art of High-Resolution Observation for Leaders and Educators',
+                    'description' => 'Before you improve how you speak, you need to observe the person in front of you. Drawing on experience as both an educator and a corporate leader, this book explains how high-resolution observation builds intellectual listening, trust, and stronger communication in the AI era.',
+                    'cover'       => 'assets/images/ebook-5-en.jpg',
+                    'url'         => 'https://amzn.to/4o4IsCE',
+                ],
             ],
         ],
         [

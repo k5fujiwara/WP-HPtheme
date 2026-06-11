@@ -335,8 +335,10 @@
     background: rgba(29, 122, 75, 0.72);
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"],
-.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"] {
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"],
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"] {
     display: inline-flex;
     position: relative;
     align-items: center;
@@ -360,8 +362,10 @@
     transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta::before,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]::before,
-.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]::before {
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]::before,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]::before {
     content: "";
     position: absolute;
     top: -20%;
@@ -374,8 +378,10 @@
     pointer-events: none;
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta::after,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]::after,
-.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]::after {
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]::after,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]::after {
     content: " >";
     display: inline-block;
     margin-left: 8px;
@@ -383,10 +389,14 @@
     line-height: 1;
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta:hover,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta:focus-visible,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]:hover,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]:focus-visible,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:hover,
-.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:focus-visible {
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:focus-visible,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]:hover,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]:focus-visible {
     background: var(--be-green-dark);
     border-color: var(--be-green-dark);
     color: #ffffff !important;
@@ -397,8 +407,10 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta:active,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]:active,
-.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:active {
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:active,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]:active {
     transform: translateY(1px) scale(0.99);
     box-shadow:
         0 6px 12px rgba(18, 22, 20, 0.14),
@@ -406,10 +418,14 @@
         inset 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta:hover::before,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a.beengineer-news-cta:focus-visible::before,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]:hover::before,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech/"]:focus-visible::before,
 .single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:hover::before,
-.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:focus-visible::before {
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href="https://be-engineer.tech"]:focus-visible::before,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]:hover::before,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://lp.be-engineer.tech/pages/summer_2026.html"]:focus-visible::before {
     opacity: 1;
     animation: beengineerButtonShine 780ms ease forwards;
 }
