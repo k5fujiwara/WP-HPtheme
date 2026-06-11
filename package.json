@@ -5,7 +5,8 @@
   "scripts": {
     "build:css:main": "cleancss -o \"assets/css/main.min.css\" \"assets/css/main.css\"",
     "build:css:learning-column": "cleancss -o \"assets/css/pages/learning-column.min.css\" \"assets/css/pages/learning-column.css\"",
-    "build:css": "npm run build:css:main && npm run build:css:learning-column",
+    "build:css:beengineer-news": "cleancss -o \"assets/css/pages/beengineer-news.min.css\" \"assets/css/pages/beengineer-news.css\"",
+    "build:css": "npm run build:css:main && npm run build:css:learning-column && npm run build:css:beengineer-news",
     "watch:css": "chokidar \"assets/css/**/*.css\" \"!assets/css/**/*.min.css\" -c \"npm run build:css\""
   },
   "devDependencies": {
