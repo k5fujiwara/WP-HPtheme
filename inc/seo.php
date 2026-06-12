@@ -79,7 +79,7 @@ function mytheme_seo_meta_tags() {
     
     // アイキャッチ画像がない場合はデフォルトOGP画像を使用
     if ( ! $image ) {
-        $image = 'https://info-study.com/wp-content/uploads/2025/10/og-default.png';
+        $image = 'https://info-study.com/wp-content/uploads/2026/06/og-default.png';
     }
     
     // キーワードの設定
