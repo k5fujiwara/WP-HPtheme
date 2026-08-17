@@ -24,6 +24,12 @@ $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_co
             $article_classes = ['page-content'];
             if ( $is_legal_page ) $article_classes[] = 'legal-page';
             if ( is_singular('post') ) $article_classes[] = 'single-post-content';
+            $single_theme = is_singular('post') && function_exists('mytheme_get_learning_column_theme_meta')
+                ? mytheme_get_learning_column_theme_meta(get_the_ID())
+                : null;
+            $single_updated_ts = is_singular('post') && function_exists('mytheme_learning_column_modified_timestamp')
+                ? mytheme_learning_column_modified_timestamp(get_the_ID())
+                : 0;
             ?>
             <article <?php post_class($article_classes); ?>>
                 <?php if ( function_exists('mytheme_breadcrumb') ) : ?>
@@ -32,12 +38,36 @@ $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_co
 
                 <header class="page-header">
                     <h1 class="page-title"><?php the_title(); ?></h1>
+                    <?php if ( is_singular('post') ) : ?>
+                        <div class="single-post-meta" aria-label="記事情報">
+                            <?php if ( $single_theme ) : ?>
+                                <span class="single-post-meta__theme <?php echo esc_attr((string) $single_theme['class']); ?>"><?php echo esc_html((string) $single_theme['label']); ?></span>
+                            <?php endif; ?>
+                            <time class="single-post-meta__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>">公開：<?php echo esc_html(get_the_date()); ?></time>
+                            <?php if ( $single_updated_ts > 0 ) : ?>
+                                <time class="single-post-meta__date" datetime="<?php echo esc_attr(mytheme_learning_column_modified_datetime(get_the_ID())); ?>">更新：<?php echo esc_html(mytheme_learning_column_modified_date(get_the_ID())); ?></time>
+                            <?php endif; ?>
+                            <span class="single-post-meta__author"><?php echo esc_html(get_the_author()); ?></span>
+                        </div>
+                    <?php endif; ?>
                 </header>
 
                 <div class="page-body">
                     <?php the_content(); ?>
 
                     <?php if ( is_singular('post') ) : ?>
+                        <?php if ( function_exists('mytheme_render_post_references') ) : ?>
+                            <?php mytheme_render_post_references((int) get_the_ID()); ?>
+                        <?php endif; ?>
+
+                        <?php if ( function_exists('mytheme_render_related_posts') ) : ?>
+                            <?php mytheme_render_related_posts((int) get_the_ID(), 3); ?>
+                        <?php endif; ?>
+
+                        <?php if ( function_exists('mytheme_render_learning_column_author_box') ) : ?>
+                            <?php mytheme_render_learning_column_author_box(); ?>
+                        <?php endif; ?>
+
                         <?php if ( function_exists('mytheme_render_learning_column_toolbox') ) : ?>
                             <?php mytheme_render_learning_column_toolbox('single'); ?>
                         <?php endif; ?>
@@ -86,10 +116,6 @@ $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_co
                                     <span class="post-nav__item post-nav__item--next is-empty" aria-hidden="true"></span>
                                 <?php endif; ?>
                             </nav>
-                        <?php endif; ?>
-
-                        <?php if ( function_exists('mytheme_render_related_posts') ) : ?>
-                            <?php mytheme_render_related_posts((int) get_the_ID(), 3); ?>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>

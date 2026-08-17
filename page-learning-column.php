@@ -11,7 +11,15 @@ $allowed_cats = [
 ];
 
 $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_column_category_meta() : [];
+$theme_meta = function_exists('mytheme_get_learning_column_themes') ? mytheme_get_learning_column_themes() : [];
 $selected_cat = '';
+$selected_theme = '';
+if ( isset($_GET['theme']) && function_exists('mytheme_normalize_learning_column_theme') ) {
+    $selected_theme = mytheme_normalize_learning_column_theme((string) $_GET['theme']);
+    if ( $selected_theme === 'review-required' ) {
+        $selected_theme = '';
+    }
+}
 if ( isset($_GET['cats']) ) {
     // 互換: cats=education,programming のような複数指定が来ても「先頭1つだけ」採用
     $raw = (string) $_GET['cats'];
@@ -39,11 +47,24 @@ $query_args = [
 ];
 if ( $selected_cat !== '' ) {
     $query_args['category_name'] = $selected_cat;
+} elseif ( $selected_theme !== '' && function_exists('mytheme_get_learning_column_theme_tax_query') ) {
+    $theme_tax_query = mytheme_get_learning_column_theme_tax_query($selected_theme);
+    if ( ! empty($theme_tax_query) ) {
+        $query_args['tax_query'] = isset($theme_tax_query['relation']) ? $theme_tax_query : [$theme_tax_query];
+    }
 }
 
 $q = new WP_Query([
     ...$query_args,
 ]);
+$legacy_cat_theme_map = [
+    'education'        => 'education-learning',
+    'programming'      => 'ai-programming',
+    'self-development' => 'learning-work',
+];
+$active_theme = $selected_theme !== ''
+    ? $selected_theme
+    : (isset($legacy_cat_theme_map[$selected_cat]) ? $legacy_cat_theme_map[$selected_cat] : '');
 ?>
 
 <article <?php post_class(['page-content', 'learning-column-page']); ?>>
@@ -53,7 +74,7 @@ $q = new WP_Query([
 
     <header class="page-header">
         <h1 class="page-title">学習コラム</h1>
-        <p class="post-subtitle">教育・プログラミング・自己啓発の学びを、サイト内に蓄積していきます。</p>
+        <p class="post-subtitle">教育、AI・プログラミング、情報Ⅰ・データ分析、資格、学習法など、学びを実践につなげるための情報を整理しています。</p>
     </header>
 
     <div class="page-body">
@@ -61,31 +82,32 @@ $q = new WP_Query([
             <?php mytheme_render_learning_column_toolbox('archive'); ?>
         <?php endif; ?>
 
-        <nav class="learning-column-filters" aria-label="カテゴリで絞り込み">
+        <nav class="learning-column-filters" aria-label="テーマで絞り込み">
             <?php
             $base_url = get_permalink();
-            $all_url  = remove_query_arg(['cat', 'cats', 'paged'], $base_url);
+            $all_url  = remove_query_arg(['cat', 'cats', 'theme', 'paged'], $base_url);
             ?>
-            <a class="learning-column-filters__item is-all <?php echo $selected_cat === '' ? 'is-active' : ''; ?>" href="<?php echo esc_url($all_url); ?>">
+            <a class="learning-column-filters__item is-all <?php echo ($selected_cat === '' && $selected_theme === '') ? 'is-active' : ''; ?>" href="<?php echo esc_url($all_url); ?>">
                 <span class="lc-filter-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16"></path><path d="M6 12h12"></path><path d="M8 18h8"></path></svg>
                 </span>
                 <span class="lc-filter-text">すべて</span>
             </a>
-            <?php foreach ( $allowed_cats as $slug => $label ) : ?>
+            <?php foreach ( $theme_meta as $slug => $m ) : ?>
                 <?php
-                // 存在するカテゴリだけ出す（もし消されていた場合の保険）
-                $term = get_term_by('slug', $slug, 'category');
-                if ( ! $term || is_wp_error($term) ) continue;
-                $is_active = $selected_cat === $slug;
-                $url = add_query_arg('cat', $slug, remove_query_arg(['cats', 'paged'], $base_url));
-                $m = isset($cat_meta[$slug]) ? $cat_meta[$slug] : null;
+                if ( $slug === 'review-required' ) continue;
+                $is_active = $active_theme === $slug;
+                $url = add_query_arg('theme', $slug, remove_query_arg(['cat', 'cats', 'paged'], $base_url));
                 ?>
-                <a class="learning-column-filters__item <?php echo $m ? esc_attr($m['class']) : ''; ?> <?php echo $is_active ? 'is-active' : ''; ?>" href="<?php echo esc_url($url); ?>" data-cat="<?php echo esc_attr($slug); ?>">
-                    <?php if ( $m && ! empty($m['icon']) ) : ?>
+                <a class="learning-column-filters__item <?php echo ! empty($m['class']) ? esc_attr($m['class']) : ''; ?> <?php echo $is_active ? 'is-active' : ''; ?>" href="<?php echo esc_url($url); ?>" data-cat="<?php echo esc_attr($slug); ?>">
+                    <?php if ( ! empty($m['icon']) ) : ?>
                         <span class="lc-filter-icon" aria-hidden="true"><?php echo $m['icon']; ?></span>
+                    <?php else : ?>
+                        <span class="lc-filter-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"></path><path d="M5 8h14"></path><path d="M5 16h14"></path></svg>
+                        </span>
                     <?php endif; ?>
-                    <span class="lc-filter-text"><?php echo esc_html($label); ?></span>
+                    <span class="lc-filter-text"><?php echo esc_html((string) $m['label']); ?></span>
                 </a>
             <?php endforeach; ?>
         </nav>
@@ -103,7 +125,7 @@ $q = new WP_Query([
                         'current' => $paged,
                         'base'    => trailingslashit($base_url) . '%_%',
                         'format'  => user_trailingslashit('page/%#%/'),
-                        'add_args'=> $selected_cat !== '' ? ['cat' => $selected_cat] : [],
+                        'add_args'=> $selected_cat !== '' ? ['cat' => $selected_cat] : ($selected_theme !== '' ? ['theme' => $selected_theme] : []),
                     ]);
                     ?>
                 </div>

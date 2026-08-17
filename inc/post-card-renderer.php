@@ -17,7 +17,7 @@ function mytheme_get_column_category_meta(): array {
             'icon'  => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>',
         ],
         'self-development' => [
-            'label' => '自己啓発',
+            'label' => '学習法・仕事術',
             'class' => 'is-self-development',
             'icon'  => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M2 12h4"></path><path d="M18 12h4"></path></svg>',
         ],
@@ -31,18 +31,13 @@ function mytheme_render_learning_column_card(array $cat_meta = [], bool $show_de
     $post_id = (int) get_the_ID();
     if ( $post_id <= 0 ) return;
 
-    $primary = null;
     $post_url = get_permalink($post_id);
-    $cats = get_the_category($post_id);
-    if ( is_array($cats) ) {
-        foreach ( $cats as $cat ) {
-            $slug = isset($cat->slug) ? (string) $cat->slug : '';
-            if ( $slug !== '' && isset($cat_meta[$slug]) ) {
-                $primary = $cat_meta[$slug];
-                break;
-            }
-        }
-    }
+    $primary = function_exists('mytheme_get_learning_column_theme_meta')
+        ? mytheme_get_learning_column_theme_meta($post_id)
+        : null;
+    $updated_ts = function_exists('mytheme_learning_column_modified_timestamp')
+        ? mytheme_learning_column_modified_timestamp($post_id)
+        : 0;
 
     echo '<article ';
     post_class(array_filter(['post-card', 'lc-card', $primary ? $primary['class'] : '']));
@@ -60,7 +55,14 @@ function mytheme_render_learning_column_card(array $cat_meta = [], bool $show_de
         echo '<span class="lc-badge"><span class="lc-badge__text">学習コラム</span></span>';
     }
 
-    echo '<time class="lc-date" datetime="' . esc_attr(get_the_date('c', $post_id)) . '">' . esc_html(get_the_date('', $post_id)) . '</time>';
+    echo '<span class="lc-dates">';
+    echo '<time class="lc-date" datetime="' . esc_attr(get_the_date('c', $post_id)) . '">公開: ' . esc_html(get_the_date('', $post_id)) . '</time>';
+    if ( $updated_ts > 0 ) {
+        $updated_datetime = function_exists('mytheme_learning_column_modified_datetime') ? mytheme_learning_column_modified_datetime($post_id) : '';
+        $updated_date = function_exists('mytheme_learning_column_modified_date') ? mytheme_learning_column_modified_date($post_id) : '';
+        echo '<time class="lc-date lc-date--updated" datetime="' . esc_attr($updated_datetime) . '">更新: ' . esc_html($updated_date) . '</time>';
+    }
+    echo '</span>';
     echo '</div>';
 
     echo '<h2 class="post-title"><a href="' . esc_url($post_url) . '">';

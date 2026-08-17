@@ -386,6 +386,21 @@
 .learning-column-page .lc-card.is-self-development::before {
   background: rgba(36, 161, 72, 0.55);
 }
+.learning-column-page .lc-card.is-theme-education-learning::before {
+  background: rgba(15, 98, 254, 0.65);
+}
+.learning-column-page .lc-card.is-theme-ai-programming::before {
+  background: rgba(0, 212, 255, 0.72);
+}
+.learning-column-page .lc-card.is-theme-info-data::before {
+  background: rgba(124, 58, 237, 0.62);
+}
+.learning-column-page .lc-card.is-theme-qualification-career::before {
+  background: rgba(245, 158, 11, 0.7);
+}
+.learning-column-page .lc-card.is-theme-learning-work::before {
+  background: rgba(36, 161, 72, 0.62);
+}
 
 /* 以前の「内側に余白を足す」指定をカード内では無効化 */
 .learning-column-page .lc-card .post-excerpt,
@@ -467,6 +482,25 @@
   border-color: rgba(36, 161, 72, 0.40);
   color: rgba(18, 83, 40, 0.95);
 }
+.learning-column-filters__item.is-theme-ai-programming.is-active {
+  background: rgba(0, 212, 255, 0.10);
+  border-color: rgba(0, 212, 255, 0.40);
+}
+.learning-column-filters__item.is-theme-info-data.is-active {
+  background: rgba(124, 58, 237, 0.10);
+  border-color: rgba(124, 58, 237, 0.32);
+  color: rgba(88, 28, 135, 0.95);
+}
+.learning-column-filters__item.is-theme-qualification-career.is-active {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.36);
+  color: rgba(146, 64, 14, 0.95);
+}
+.learning-column-filters__item.is-theme-learning-work.is-active {
+  background: rgba(36, 161, 72, 0.10);
+  border-color: rgba(36, 161, 72, 0.40);
+  color: rgba(18, 83, 40, 0.95);
+}
 
 /* カード上部：カテゴリバッジ＋日付（トップと同系統） */
 .lc-card-head {
@@ -480,6 +514,16 @@
   color: var(--text-secondary);
   font-size: 0.86rem;
   white-space: nowrap;
+}
+.lc-dates {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px 10px;
+  color: var(--text-secondary);
+}
+.lc-date--updated {
+  color: rgba(15, 98, 254, 0.86);
 }
 .lc-badge {
   display: inline-flex;
@@ -515,6 +559,26 @@
   color: rgba(0, 45, 156, 0.95);
 }
 .lc-badge.is-self-development {
+  background: rgba(36, 161, 72, 0.10);
+  border-color: rgba(36, 161, 72, 0.22);
+  color: rgba(18, 83, 40, 0.95);
+}
+.lc-badge.is-theme-ai-programming {
+  background: rgba(0, 212, 255, 0.10);
+  border-color: rgba(0, 212, 255, 0.24);
+  color: rgba(0, 45, 156, 0.95);
+}
+.lc-badge.is-theme-info-data {
+  background: rgba(124, 58, 237, 0.10);
+  border-color: rgba(124, 58, 237, 0.22);
+  color: rgba(88, 28, 135, 0.95);
+}
+.lc-badge.is-theme-qualification-career {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.28);
+  color: rgba(146, 64, 14, 0.95);
+}
+.lc-badge.is-theme-learning-work {
   background: rgba(36, 161, 72, 0.10);
   border-color: rgba(36, 161, 72, 0.22);
   color: rgba(18, 83, 40, 0.95);
@@ -561,6 +625,9 @@
   -webkit-line-clamp: 2;
   overflow: hidden;
 }
+.learning-column-page .lc-card .post-excerpt {
+  min-height: 5.55em;
+}
 
 /* グローバルの本文用 h2 スタイル（大きい余白/左ボーダー）を一覧タイトルでは無効化 */
 .learning-column-page .lc-card h2.post-title {
@@ -591,6 +658,163 @@
   color: var(--primary-blue);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.single-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 18px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.92rem;
+}
+.single-post-meta__theme,
+.related-posts__theme {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  color: inherit;
+  font-weight: 800;
+  line-height: 1.3;
+}
+.single-post-meta__date,
+.single-post-meta__author {
+  font-variant-numeric: tabular-nums;
+}
+.post-references,
+.related-posts,
+.post-author-box {
+  max-width: 820px;
+  margin: 32px auto 0;
+}
+.post-references,
+.post-author-box {
+  padding: 22px;
+  border: 1px solid rgba(15, 98, 254, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 0 rgba(15, 98, 254, 0.06);
+}
+.page-content:not(.legal-page) .page-body .post-references__title,
+.page-content:not(.legal-page) .page-body .related-posts__title,
+.page-content:not(.legal-page) .page-body .post-author-box__name {
+  margin: 0 0 14px;
+  padding: 0;
+  border-left: 0;
+  color: rgba(15, 23, 42, 0.94);
+  font-size: 1.3rem;
+  line-height: 1.35;
+}
+.post-references__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 1.2em;
+}
+.post-references__org {
+  display: inline;
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+.post-references__org::after {
+  content: "：";
+}
+.related-posts__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.related-posts__card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid rgba(15, 98, 254, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1px 0 rgba(15, 98, 254, 0.06);
+}
+.related-posts__theme {
+  margin-bottom: 10px;
+  background: rgba(15, 98, 254, 0.08);
+  color: rgba(0, 45, 156, 0.92);
+  font-size: 0.78rem;
+}
+.page-content:not(.legal-page) .page-body .related-posts__card-title {
+  margin: 0 0 8px;
+  padding: 0;
+  border-left: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.related-posts__meta {
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+.related-posts__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.related-posts__tag {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(15, 98, 254, 0.06);
+  color: rgba(15, 23, 42, 0.78);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.related-posts__excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  margin: auto 0 0;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+.post-author-box__eyebrow {
+  margin: 0 0 4px;
+  color: var(--primary-blue);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.post-author-box__text {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.85;
+}
+.post-author-box__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 18px;
+}
+.page-content:not(.legal-page) .page-body .post-author-box__primary {
+  display: inline-flex;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--gradient-blue);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+}
+.page-content:not(.legal-page) .page-body .post-author-box__secondary {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 @media (max-width: 768px) {
   .learning-column-page .page-header {
@@ -707,15 +931,47 @@
   }
 
   .lc-badge,
-  .lc-date {
+  .lc-date,
+  .lc-dates {
     max-width: 100%;
     white-space: normal;
+  }
+  .lc-dates {
+    justify-content: flex-start;
   }
 
   .learning-column-page .lc-card .post-title,
   .learning-column-page .lc-card h2.post-title {
     font-size: 1rem;
     line-height: 1.4;
+  }
+  .single-post-meta {
+    justify-content: flex-start;
+    font-size: 0.86rem;
+  }
+  .post-references,
+  .related-posts,
+  .post-author-box {
+    margin-top: 24px;
+  }
+  .post-references,
+  .post-author-box {
+    padding: 18px;
+    border-radius: 16px;
+  }
+  .related-posts__grid {
+    grid-template-columns: 1fr;
+  }
+  .related-posts__card {
+    padding: 16px;
+  }
+  .post-author-box__links {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .page-content:not(.legal-page) .page-body .post-author-box__primary,
+  .page-content:not(.legal-page) .page-body .post-author-box__secondary {
+    width: 100%;
   }
 }
 @media (min-width: 1024px) {

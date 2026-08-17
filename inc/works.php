@@ -1345,44 +1345,86 @@ function mytheme_get_work_presentation_meta($post_id) {
     $post_id = (int) $post_id;
     $slug = (string) get_post_field('post_name', $post_id);
     $seed_key = (string) mytheme_get_work_meta($post_id, '_mytheme_work_seed_key');
-    $key = $seed_key !== '' ? $seed_key : $slug;
+    $title_key = strtolower((string) get_the_title($post_id));
+    $key = strtolower($seed_key !== '' ? $seed_key : $slug);
+    $lookup_text = strtolower(trim($key . ' ' . $slug . ' ' . $title_key));
 
     $defaults = [
         'category'       => 'automation',
         'category_label' => 'AI・業務自動化',
         'status'         => '公開中',
-        'target'         => '学びや業務の手間を減らすための個人開発',
+        'target'         => '手作業で行っている制作・投稿・運用フローを効率化したい方向け',
+        'sort'           => 90,
     ];
 
     $map = [
+        'it1-code-pocket' => [
+            'category'       => 'education',
+            'category_label' => '教育・学習プロダクト',
+            'status'         => '公開中',
+            'target'         => '共通テスト「情報Ⅰ」のプログラミング・アルゴリズム分野を、スマートフォンで反復学習したい高校生を支援',
+            'sort'           => 10,
+        ],
         'quest4' => [
             'category'       => 'education',
             'category_label' => '教育・学習プロダクト',
             'status'         => '公開中',
             'target'         => 'LINE上で学習クイズに取り組みたい学習者を支援',
+            'sort'           => 20,
         ],
         'beengineer-camp' => [
             'category'       => 'education',
             'category_label' => '教育・学習プロダクト',
             'status'         => '公開中',
             'target'         => '合宿参加者が必要情報を迷わず確認できるようにする',
+            'sort'           => 30,
+        ],
+        'shorts-auto-creator' => [
+            'category'       => 'automation',
+            'category_label' => 'AI・業務自動化',
+            'status'         => '公開中',
+            'target'         => '記事からYouTube Shortsを制作・投稿する一連の作業を自動化したい運用者向け',
+            'sort'           => 40,
+        ],
+        'note-auto-post' => [
+            'category'       => 'automation',
+            'category_label' => 'AI・業務自動化',
+            'status'         => '公開中',
+            'target'         => 'note記事をThreads向けに再構成し、定期投稿する作業を自動化',
+            'sort'           => 50,
         ],
         'loto6' => [
             'category'       => 'experiment',
             'category_label' => '技術検証・実験',
             'status'         => '技術検証',
             'target'         => '機械学習やデータ分析の流れを実験的に検証',
+            'sort'           => 70,
         ],
         'auto-typing' => [
             'category'       => 'experiment',
             'category_label' => '技術検証・実験',
             'status'         => '技術検証',
             'target'         => 'ブラウザ自動化とDOM操作の技術検証',
+            'sort'           => 80,
         ],
     ];
 
     if ( isset($map[$key]) ) {
         return $map[$key];
+    }
+    foreach ( $map as $map_key => $meta ) {
+        if ( strpos($lookup_text, $map_key) !== false ) {
+            return $meta;
+        }
+    }
+    if ( strpos($lookup_text, 'it1') !== false || strpos($lookup_text, '情報') !== false ) {
+        return $map['it1-code-pocket'];
+    }
+    if ( strpos($lookup_text, 'shorts') !== false ) {
+        return $map['shorts-auto-creator'];
+    }
+    if ( strpos($lookup_text, 'note') !== false ) {
+        return $map['note-auto-post'];
     }
 
     return $defaults;
@@ -1415,6 +1457,49 @@ function mytheme_get_work_archive_query($args = []) {
     ];
 
     return new WP_Query(wp_parse_args($args, $defaults));
+}
+
+function mytheme_sort_work_ids_by_presentation(array $work_ids): array {
+    usort($work_ids, function($a, $b) {
+        $a_meta = mytheme_get_work_presentation_meta((int) $a);
+        $b_meta = mytheme_get_work_presentation_meta((int) $b);
+        $a_sort = isset($a_meta['sort']) ? (int) $a_meta['sort'] : 90;
+        $b_sort = isset($b_meta['sort']) ? (int) $b_meta['sort'] : 90;
+        if ( $a_sort === $b_sort ) {
+            return strcmp((string) get_the_title((int) $a), (string) get_the_title((int) $b));
+        }
+        return $a_sort <=> $b_sort;
+    });
+
+    return $work_ids;
+}
+
+function mytheme_get_front_featured_work_ids(int $limit = 3): array {
+    $limit = max(1, min(6, $limit));
+    $q = mytheme_get_work_archive_query(['posts_per_page' => 50]);
+    $ids = [];
+    if ( $q->have_posts() ) {
+        while ( $q->have_posts() ) {
+            $q->the_post();
+            $ids[] = (int) get_the_ID();
+        }
+        wp_reset_postdata();
+    }
+    $ids = mytheme_sort_work_ids_by_presentation($ids);
+
+    $preferred = [];
+    $fallback = [];
+    foreach ( $ids as $id ) {
+        $meta = mytheme_get_work_presentation_meta($id);
+        $sort = isset($meta['sort']) ? (int) $meta['sort'] : 90;
+        if ( in_array($sort, [10, 20, 40], true) ) {
+            $preferred[] = $id;
+        } else {
+            $fallback[] = $id;
+        }
+    }
+
+    return array_slice(array_values(array_unique(array_merge($preferred, $fallback))), 0, $limit);
 }
 
 function mytheme_render_work_card($post_id) {

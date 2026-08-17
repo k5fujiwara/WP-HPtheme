@@ -56,9 +56,9 @@ $latest_beengineer_news = new WP_Query([
     'update_post_term_cache' => false,
 ]);
 
-$featured_works = function_exists('mytheme_get_work_archive_query')
-    ? mytheme_get_work_archive_query(['posts_per_page' => 3])
-    : null;
+$featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
+    ? mytheme_get_front_featured_work_ids(3)
+    : [];
 ?>
 
 <div class="front-page">
@@ -150,7 +150,7 @@ $featured_works = function_exists('mytheme_get_work_archive_query')
                         ],
                         'self-development' => [
                             'key' => 'self-development',
-                            'label' => '自己啓発',
+                            'label' => '学習法・仕事術',
                             'badge_class' => 'is-self-development',
                             'icon' => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M15 9l-3 3"></path></svg>',
                         ],
@@ -235,13 +235,12 @@ $featured_works = function_exists('mytheme_get_work_archive_query')
             <a class="work-link work-link-demo" href="<?php echo esc_url($works_url); ?>">開発作品を見る</a>
         </div>
 
-        <?php if ( $featured_works instanceof WP_Query && $featured_works->have_posts() ) : ?>
+        <?php if ( ! empty($featured_work_ids) ) : ?>
             <div class="front-tools__list">
-                <?php while ( $featured_works->have_posts() ) : $featured_works->the_post(); ?>
-                    <?php if ( function_exists('mytheme_render_work_card') ) mytheme_render_work_card(get_the_ID()); ?>
-                <?php endwhile; ?>
+                <?php foreach ( $featured_work_ids as $work_id ) : ?>
+                    <?php if ( function_exists('mytheme_render_work_card') ) mytheme_render_work_card((int) $work_id); ?>
+                <?php endforeach; ?>
             </div>
-            <?php wp_reset_postdata(); ?>
         <?php endif; ?>
     </section>
 
@@ -400,15 +399,15 @@ $featured_works = function_exists('mytheme_get_work_archive_query')
                     </div>
                     <div class="intro-feature">
                         <div class="feature-icon-wrapper">
-                            <svg class="feature-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-label="自己成長アイコン">
+                            <svg class="feature-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-label="継続学習アイコン">
                                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
                             </svg>
                             <div class="feature-icon-bg" aria-hidden="true"></div>
                         </div>
-                        <h3 class="intro-feature__title">自己成長</h3>
-                        <p class="intro-feature__description">継続的な学びと挑戦の記録を発信します</p>
+                        <h3 class="intro-feature__title">継続学習</h3>
+                        <p class="intro-feature__description">資格学習や実践の記録を、次の学びにつながる形で整理します</p>
                     </div>
                 </div>
             </div>

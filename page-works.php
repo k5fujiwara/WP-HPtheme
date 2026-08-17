@@ -38,6 +38,11 @@ get_header();
                 }
                 $grouped_work_ids[$category_key][] = get_the_ID();
             endwhile;
+            if ( function_exists('mytheme_sort_work_ids_by_presentation') ) {
+                foreach ( $grouped_work_ids as $group_key => $work_ids ) {
+                    $grouped_work_ids[$group_key] = mytheme_sort_work_ids_by_presentation($work_ids);
+                }
+            }
             ?>
 
             <div class="works-group-list">

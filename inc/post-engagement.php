@@ -41,10 +41,10 @@ add_action('template_redirect', 'mytheme_track_post_views', 1);
 /**
  * 関連記事IDを取得
  * 優先度:
- * 1. 同タグ × 人気
- * 2. 同タグ × 新着
- * 3. 同カテゴリ × 人気
- * 4. 同カテゴリ × 新着
+ * 1. 同タグ
+ * 2. 同一表示テーマ
+ * 3. 同カテゴリ
+ * 4. 公開日の近さ
  */
 function mytheme_get_related_post_ids(int $post_id, int $limit = 3): array {
     $limit = max(1, min(12, $limit));
@@ -56,15 +56,13 @@ function mytheme_get_related_post_ids(int $post_id, int $limit = 3): array {
     $tag_ids = array_values(array_filter(array_map('intval', $tag_ids)));
     $cat_ids = wp_list_pluck((array) get_the_category($post_id), 'term_id');
     $cat_ids = array_values(array_filter(array_map('intval', $cat_ids)));
-    // タグ/カテゴリがどちらも無い投稿は関連記事を出さない
-    if ( empty($tag_ids) && empty($cat_ids) ) {
-        return [];
-    }
+    $theme_slug = function_exists('mytheme_get_learning_column_theme_slug')
+        ? mytheme_get_learning_column_theme_slug($post_id)
+        : '';
 
     // 高速化：関連記事IDを投稿ごとにキャッシュ
-    // - 人気順（postmetaソート）は重くなりやすいので、結果をトランジェントに保存して再利用
-    $cache_hash = md5(implode(',', $tag_ids) . '|' . implode(',', $cat_ids));
-    $cache_key = 'mytheme_rel_v2_' . $post_id . '_' . $limit . '_' . substr($cache_hash, 0, 10);
+    $cache_hash = md5(implode(',', $tag_ids) . '|' . implode(',', $cat_ids) . '|' . $theme_slug);
+    $cache_key = 'mytheme_rel_v3_' . $post_id . '_' . $limit . '_' . substr($cache_hash, 0, 10);
     $cached = get_transient($cache_key);
     if ( is_array($cached) ) {
         // 念のため型と除外を整える
@@ -94,46 +92,76 @@ function mytheme_get_related_post_ids(int $post_id, int $limit = 3): array {
         wp_reset_postdata();
     };
 
-    // 1) 同タグ × 人気（閲覧数）優先
+    // 1) 共通タグを最優先
     if ( ! empty($tag_ids) ) {
         $run([
             'tag__in'   => $tag_ids,
-            'meta_key'  => '_mytheme_post_views',
-            'orderby'   => [
-                'meta_value_num' => 'DESC',
-                'date'           => 'DESC',
-            ],
+            'orderby'   => 'date',
+            'order'     => 'DESC',
         ]);
     }
 
-    // 2) 同タグ × 新着
-    if ( ! empty($tag_ids) ) {
-        $run([
-            'tag__in'  => $tag_ids,
-            'orderby'  => 'date',
-            'order'    => 'DESC',
+    // 2) 同一表示テーマで補完（表示用分類は投稿メタ/タグ/カテゴリから判定）
+    if ( count($found) < $limit && $theme_slug !== '' && $theme_slug !== 'review-required' ) {
+        $candidate_ids = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'fields'         => 'ids',
+            'posts_per_page' => 40,
+            'post__not_in'   => $exclude,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'no_found_rows'  => true,
         ]);
+        foreach ( (array) $candidate_ids as $candidate_id ) {
+            $candidate_id = (int) $candidate_id;
+            if ( $candidate_id <= 0 || in_array($candidate_id, $exclude, true) ) continue;
+            if ( function_exists('mytheme_get_learning_column_theme_slug') && mytheme_get_learning_column_theme_slug($candidate_id) !== $theme_slug ) continue;
+            $found[] = $candidate_id;
+            $exclude[] = $candidate_id;
+            if ( count($found) >= $limit ) break;
+        }
     }
 
-    // 3) 同カテゴリ × 人気（閲覧数）優先
-    if ( ! empty($cat_ids) ) {
-        $run([
-            'category__in' => $cat_ids,
-            'meta_key'     => '_mytheme_post_views',
-            'orderby'      => [
-                'meta_value_num' => 'DESC',
-                'date'           => 'DESC',
-            ],
-        ]);
-    }
-
-    // 4) 同カテゴリ × 新着
-    if ( ! empty($cat_ids) ) {
+    // 3) 同カテゴリで補完
+    if ( ! empty($cat_ids) && count($found) < $limit ) {
         $run([
             'category__in' => $cat_ids,
             'orderby'      => 'date',
             'order'        => 'DESC',
         ]);
+    }
+
+    // 4) 最後に公開日の近い記事で補完（完全ランダムは使わない）
+    if ( count($found) < $limit ) {
+        $published = (int) get_the_time('U', $post_id);
+        $candidate_ids = get_posts([
+            'post_type'      => 'post',
+            'post_status'    => 'publish',
+            'fields'         => 'ids',
+            'posts_per_page' => 40,
+            'post__not_in'   => $exclude,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+            'no_found_rows'  => true,
+        ]);
+        $scored = [];
+        foreach ( (array) $candidate_ids as $candidate_id ) {
+            $candidate_id = (int) $candidate_id;
+            if ( $candidate_id <= 0 || in_array($candidate_id, $exclude, true) ) continue;
+            $scored[] = [
+                'id'    => $candidate_id,
+                'score' => abs((int) get_the_time('U', $candidate_id) - $published),
+            ];
+        }
+        usort($scored, function($a, $b) {
+            return ((int) $a['score']) <=> ((int) $b['score']);
+        });
+        foreach ( $scored as $item ) {
+            $found[] = (int) $item['id'];
+            $exclude[] = (int) $item['id'];
+            if ( count($found) >= $limit ) break;
+        }
     }
 
     // 念のため、現在の記事が混ざっていないことを保証
@@ -178,13 +206,16 @@ function mytheme_render_related_posts(int $post_id, int $limit = 3): void {
         if ( (int) get_the_ID() === (int) $post_id ) {
             continue; // 念のための保険（同一記事は絶対出さない）
         }
+        $theme = function_exists('mytheme_get_learning_column_theme_meta')
+            ? mytheme_get_learning_column_theme_meta(get_the_ID())
+            : null;
         echo '<article class="related-posts__card">';
+        if ( $theme ) {
+            echo '<span class="related-posts__theme ' . esc_attr((string) $theme['class']) . '">' . esc_html((string) $theme['label']) . '</span>';
+        }
         echo '<h3 class="related-posts__card-title"><a class="related-posts__link" href="' . esc_url(get_permalink()) . '">' . esc_html(get_the_title()) . '</a></h3>';
         echo '<div class="related-posts__meta">';
         echo '<time datetime="' . esc_attr(get_the_date('c')) . '">' . esc_html(get_the_date()) . '</time>';
-        if ( has_category() ) {
-            echo ' <span class="related-posts__sep">|</span> <span class="related-posts__cats">' . wp_kses_post(get_the_category_list(', ')) . '</span>';
-        }
         echo '</div>';
         $shared_tags = [];
         if ( ! empty($current_tag_ids) ) {
@@ -249,7 +280,10 @@ function mytheme_purge_related_posts_cache_on_save($post_id, $post, $update) {
 
     $tag_ids = wp_list_pluck((array) get_the_tags($post_id), 'term_id');
     $tag_ids = array_values(array_filter(array_map('intval', $tag_ids)));
-    $key = 'mytheme_rel_v2_' . (int) $post_id . '_3_' . substr(md5(implode(',', $tag_ids) . '|' . implode(',', $cat_ids)), 0, 10);
+    $theme_slug = function_exists('mytheme_get_learning_column_theme_slug')
+        ? mytheme_get_learning_column_theme_slug($post_id)
+        : '';
+    $key = 'mytheme_rel_v3_' . (int) $post_id . '_3_' . substr(md5(implode(',', $tag_ids) . '|' . implode(',', $cat_ids) . '|' . $theme_slug), 0, 10);
     delete_transient($key);
 }
 add_action('save_post', 'mytheme_purge_related_posts_cache_on_save', 10, 3);

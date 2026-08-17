@@ -1,6 +1,262 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+function mytheme_get_learning_column_themes(): array {
+    return [
+        'education-learning' => [
+            'label'       => '教育・学習',
+            'class'       => 'is-theme-education-learning',
+            'description' => '教育現場での実践、学習支援、授業づくりに関する記事',
+        ],
+        'ai-programming' => [
+            'label'       => 'AI・プログラミング',
+            'class'       => 'is-theme-ai-programming',
+            'description' => 'AI活用、Python、プログラミング、開発に関する記事',
+        ],
+        'info-data' => [
+            'label'       => '情報Ⅰ・データ分析',
+            'class'       => 'is-theme-info-data',
+            'description' => '情報Ⅰ、統計、データ分析、アルゴリズムに関する記事',
+        ],
+        'qualification-career' => [
+            'label'       => '資格・キャリア',
+            'class'       => 'is-theme-qualification-career',
+            'description' => '資格学習、キャリア、スキルアップに関する記事',
+        ],
+        'learning-work' => [
+            'label'       => '学習法・仕事術',
+            'class'       => 'is-theme-learning-work',
+            'description' => '継続学習、仕事術、アウトプット、習慣化に関する記事',
+        ],
+        'review-required' => [
+            'label'       => '要確認',
+            'class'       => 'is-theme-review-required',
+            'description' => '表示テーマを手動確認したい記事',
+        ],
+    ];
+}
+
+function mytheme_normalize_learning_column_theme($theme): string {
+    $theme = sanitize_key((string) $theme);
+    $themes = mytheme_get_learning_column_themes();
+    return isset($themes[$theme]) ? $theme : '';
+}
+
+function mytheme_get_learning_column_theme_slug($post_id): string {
+    $post_id = (int) $post_id;
+    if ( $post_id <= 0 ) return 'review-required';
+
+    $explicit = mytheme_normalize_learning_column_theme(get_post_meta($post_id, '_mytheme_column_theme', true));
+    if ( $explicit !== '' ) {
+        return $explicit;
+    }
+
+    $tag_terms = get_the_terms($post_id, 'post_tag');
+    $tag_keys = [];
+    if ( is_array($tag_terms) ) {
+        foreach ( $tag_terms as $tag ) {
+            $tag_keys[] = strtolower((string) ($tag->slug ?? ''));
+            $tag_keys[] = strtolower((string) ($tag->name ?? ''));
+        }
+    }
+    $tag_text = implode(' ', array_filter($tag_keys));
+
+    if ( preg_match('/情報|info-?1|data|データ|統計|statistics|algorithm|アルゴリズム/u', $tag_text) ) {
+        return 'info-data';
+    }
+    if ( preg_match('/ai|chatgpt|gemini|python|programming|プログラミング|コード|開発/u', $tag_text) ) {
+        return 'ai-programming';
+    }
+    if ( preg_match('/資格|検定|キャリア|career|skill|スキル/u', $tag_text) ) {
+        return 'qualification-career';
+    }
+    if ( preg_match('/勉強法|学習法|継続|習慣|仕事術|アウトプット/u', $tag_text) ) {
+        return 'learning-work';
+    }
+
+    $cats = get_the_category($post_id);
+    if ( is_array($cats) ) {
+        foreach ( $cats as $cat ) {
+            $slug = isset($cat->slug) ? (string) $cat->slug : '';
+            if ( $slug === 'education' ) return 'education-learning';
+            if ( $slug === 'programming' ) return 'ai-programming';
+            if ( $slug === 'self-development' ) return 'learning-work';
+        }
+    }
+
+    return 'review-required';
+}
+
+function mytheme_get_learning_column_theme_meta($post_id): array {
+    $themes = mytheme_get_learning_column_themes();
+    $slug = mytheme_get_learning_column_theme_slug($post_id);
+    $meta = $themes[$slug] ?? $themes['review-required'];
+    $meta['slug'] = $slug;
+    return $meta;
+}
+
+function mytheme_learning_column_modified_timestamp($post_id): int {
+    $post_id = (int) $post_id;
+    $explicit = trim((string) get_post_meta($post_id, '_mytheme_post_updated_at', true));
+    if ( $explicit === '' ) return 0;
+
+    $timestamp = strtotime($explicit);
+    if ( ! $timestamp ) return 0;
+
+    $published = (int) get_the_time('U', $post_id);
+    if ( $published > 0 && gmdate('Y-m-d', $timestamp) === get_the_date('Y-m-d', $post_id) ) {
+        return 0;
+    }
+
+    return (int) $timestamp;
+}
+
+function mytheme_learning_column_modified_date($post_id, string $format = ''): string {
+    $timestamp = mytheme_learning_column_modified_timestamp($post_id);
+    if ( $timestamp <= 0 ) return '';
+    $format = $format !== '' ? $format : get_option('date_format');
+    return wp_date($format, $timestamp);
+}
+
+function mytheme_learning_column_modified_datetime($post_id): string {
+    $timestamp = mytheme_learning_column_modified_timestamp($post_id);
+    return $timestamp > 0 ? wp_date(DATE_W3C, $timestamp) : '';
+}
+
+function mytheme_get_learning_column_theme_tax_query(string $theme): array {
+    $theme = mytheme_normalize_learning_column_theme($theme);
+    if ( $theme === '' || $theme === 'review-required' ) return [];
+
+    $tag_map = [
+        'ai-programming' => ['ai', 'chatgpt', 'gemini', 'python', 'programming', 'programming-learning'],
+        'info-data' => ['information-1', 'info1', 'data', 'statistics', 'python'],
+        'qualification-career' => ['qualification', 'career', 'skill-up'],
+        'learning-work' => ['study-method', 'output', 'work-style'],
+    ];
+    $cat_map = [
+        'education-learning' => ['education'],
+        'ai-programming' => ['programming'],
+        'learning-work' => ['self-development'],
+    ];
+
+    $queries = [];
+    if ( ! empty($cat_map[$theme]) ) {
+        $queries[] = [
+            'taxonomy' => 'category',
+            'field'    => 'slug',
+            'terms'    => $cat_map[$theme],
+        ];
+    }
+    if ( ! empty($tag_map[$theme]) ) {
+        $queries[] = [
+            'taxonomy' => 'post_tag',
+            'field'    => 'slug',
+            'terms'    => $tag_map[$theme],
+        ];
+    }
+
+    if ( empty($queries) ) return [];
+    if ( count($queries) === 1 ) return $queries[0];
+    return array_merge(['relation' => 'OR'], $queries);
+}
+
+function mytheme_parse_post_references($post_id): array {
+    $raw = trim((string) get_post_meta((int) $post_id, '_mytheme_post_references', true));
+    if ( $raw === '' ) return [];
+
+    $items = json_decode($raw, true);
+    if ( ! is_array($items) ) {
+        $items = [];
+        foreach ( preg_split('/\r\n|\r|\n/', $raw) ?: [] as $line ) {
+            $line = trim((string) $line);
+            if ( $line === '' ) continue;
+            $parts = array_map('trim', explode('|', $line));
+            $items[] = [
+                'title'        => $parts[0] ?? '',
+                'url'          => $parts[1] ?? '',
+                'organization' => $parts[2] ?? '',
+            ];
+        }
+    }
+
+    $normalized = [];
+    foreach ( $items as $item ) {
+        if ( ! is_array($item) ) continue;
+        $title = trim((string) ($item['title'] ?? ''));
+        $url = trim((string) ($item['url'] ?? ''));
+        $organization = trim((string) ($item['organization'] ?? ''));
+        if ( $title === '' || $url === '' ) continue;
+        $normalized[] = [
+            'title'        => $title,
+            'url'          => esc_url_raw($url),
+            'organization' => $organization,
+        ];
+    }
+
+    return $normalized;
+}
+
+function mytheme_render_post_references($post_id): void {
+    $references = mytheme_parse_post_references($post_id);
+    if ( empty($references) ) return;
+    ?>
+    <section class="post-references" aria-labelledby="post-references-title">
+        <h2 id="post-references-title" class="post-references__title">参考資料</h2>
+        <ul class="post-references__list">
+            <?php foreach ( $references as $ref ) : ?>
+                <li class="post-references__item">
+                    <?php if ( $ref['organization'] !== '' ) : ?>
+                        <span class="post-references__org"><?php echo esc_html($ref['organization']); ?></span>
+                    <?php endif; ?>
+                    <a class="post-references__link" href="<?php echo esc_url($ref['url']); ?>" target="_blank" rel="noopener noreferrer external">
+                        <?php echo esc_html($ref['title']); ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+    <?php
+}
+
+function mytheme_render_learning_column_author_box(): void {
+    $about_url = function_exists('mytheme_get_page_url_by_path')
+        ? mytheme_get_page_url_by_path('about', home_url('/about/'))
+        : home_url('/about/');
+    ?>
+    <section class="post-author-box" aria-labelledby="post-author-box-title">
+        <p class="post-author-box__eyebrow">運営者</p>
+        <h2 id="post-author-box-title" class="post-author-box__name">藤原圭吾</h2>
+        <p class="post-author-box__text">教育・プログラミング・情報Ⅰ・AI活用などを中心に、実際に学び・試した内容をこのサイトに整理しています。</p>
+        <div class="post-author-box__links">
+            <a class="post-author-box__primary" href="<?php echo esc_url($about_url); ?>">詳しいプロフィール</a>
+            <a class="post-author-box__secondary" href="https://note.com/k5fujiwara" target="_blank" rel="noopener noreferrer external">日々の学びや実践記録はnoteでも発信しています。</a>
+        </div>
+    </section>
+    <?php
+}
+
+function mytheme_register_learning_column_meta_fields(): void {
+    register_post_meta('post', '_mytheme_post_updated_at', [
+        'type'              => 'string',
+        'single'            => true,
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'sanitize_text_field',
+        'auth_callback'     => function() {
+            return current_user_can('edit_posts');
+        },
+    ]);
+    register_post_meta('post', '_mytheme_post_references', [
+        'type'              => 'string',
+        'single'            => true,
+        'show_in_rest'      => true,
+        'sanitize_callback' => 'wp_kses_post',
+        'auth_callback'     => function() {
+            return current_user_can('edit_posts');
+        },
+    ]);
+}
+add_action('init', 'mytheme_register_learning_column_meta_fields');
+
 /**
  * 学習コラム用のカテゴリを用意（冪等）
  * - 教育系 / プログラミング / 自己啓発
@@ -151,7 +407,7 @@ function mytheme_render_learning_column_toolbox(string $context = 'archive'): vo
         $summary_title = '記事を検索したい方はここから！';
         $search_title = '記事をキーワードで探す';
         $search_text = '関連記事や、今の内容に近いテーマをすぐに検索できます。';
-        $search_hint = '例: AI / 勉強法 / プログラミング / 塾講師';
+        $search_hint = '例: AI / 情報Ⅰ / Python / 統計 / 資格 / 学習法';
         $dictionary_title = '辞書から理解を深める';
         $dictionary_text = '本文中で気になった概念やキーワードを、辞書ページで一覧から確認できます。';
         $dictionary_cta = '辞書を見る';
@@ -160,7 +416,7 @@ function mytheme_render_learning_column_toolbox(string $context = 'archive'): vo
         $summary_title = '記事を検索したい方はここから！';
         $search_title = '記事を検索する';
         $search_text = '読みたいテーマが決まっているときは、キーワード検索から始めるのが最短です。';
-        $search_hint = '例: 自己啓発 / Python / 教育 / 継続';
+        $search_hint = '例: AI / 情報Ⅰ / Python / 統計 / 資格 / 学習法';
         $dictionary_title = '辞書からたどる';
         $dictionary_text = '学習コラムに登場する重要語句をまとめています。基礎から整理したいときに便利です。';
         $dictionary_cta = '辞書ページへ';

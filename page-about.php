@@ -220,14 +220,14 @@ get_header();
                     <?php endif; ?>
 
                     <h3>外部発信：YouTube / note</h3>
-                    <p>サイト内では「体系化した学習コラム」を中心に、外部では用途に合わせて発信しています（動画・短文など）。必要な方が参照できるよう、ここにまとめています。</p>
+                    <p>サイト内では「体系化した学習コラム」を中心に、外部では用途に合わせて補足的に発信しています。必要な方が参照できるよう、ここにまとめています。</p>
                     <ul class="history-content__list">
                         <li class="history-content__list-item">
                             <strong>YouTube</strong>：学習のアウトプット（主に英語）や、取り組みの記録を動画で発信しています。<br>
                             <a class="history-content__nested-link" href="https://www.youtube.com/channel/UCp0Bt81y7Dd5uuXNOaErNkw" target="_blank" rel="noopener noreferrer external">YouTubeチャンネルを見る</a>
                         </li>
                         <li class="history-content__list-item">
-                            <strong>note</strong>：気づきや学びを短めにまとめたり、コラムの補足を発信しています。<br>
+                            <strong>note</strong>：日々の学びや実践記録を発信しています。<br>
                             <a class="history-content__nested-link" href="https://note.com/k5fujiwara" target="_blank" rel="noopener noreferrer external">noteを見る</a>
                         </li>
                     </ul>
@@ -246,7 +246,7 @@ get_header();
             <section class="about-section">
                 <h2 class="about-section__title">運営方針（記事作成・修正方針）</h2>
                 <div class="history-content">
-                    <p>当サイトでは、教育・自己啓発・プログラミング学習に関する情報を、実体験と一次情報を重視して作成しています。記事内容は公開後も定期的に見直し、内容の更新や改善を行います。</p>
+                    <p>当サイトでは、教育、AI・プログラミング、情報Ⅰ、資格・継続学習、個人開発などについて、実体験と一次情報を重視して整理しています。記事内容は公開後も定期的に見直し、内容の更新や改善を行います。</p>
                     <p>記載内容に誤りや不明点がある場合は、確認のうえ修正いたします。ご連絡は<a class="history-content__nested-link" href="<?php echo esc_url( function_exists('mytheme_get_page_url_by_path') ? mytheme_get_page_url_by_path('contact', home_url('/contact/')) : home_url('/contact/') ); ?>">お問い合わせページ</a>よりお願いいたします。個人情報の取り扱いは<a class="history-content__nested-link" href="<?php echo esc_url( function_exists('mytheme_get_page_url_by_path') ? mytheme_get_page_url_by_path('privacy-policy', home_url('/privacy-policy/')) : home_url('/privacy-policy/') ); ?>">プライバシーポリシー</a>をご確認ください。</p>
                 </div>
             </section>

@@ -30,10 +30,16 @@
       } catch (_) {
         return;
       }
+      const themeParam = url.searchParams.get('theme') || '';
       const catsParam = url.searchParams.get('cats') || '';
       const legacyCat = url.searchParams.get('cat') || '';
+      const legacyThemeMap = {
+        education: 'education-learning',
+        programming: 'ai-programming',
+        'self-development': 'learning-work',
+      };
       const selected =
-        (catsParam ? catsParam.split(',')[0] : legacyCat || '').trim() || '';
+        (themeParam || legacyThemeMap[(catsParam ? catsParam.split(',')[0] : legacyCat || '').trim()] || '').trim() || '';
       const items = filters.querySelectorAll('.learning-column-filters__item');
       items.forEach((a) => {
         if (a.classList.contains('is-all')) {
