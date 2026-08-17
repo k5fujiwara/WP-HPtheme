@@ -2970,7 +2970,7 @@ html {
 }
 
 .front-news__title {
-    margin: 0 0 6px;
+    margin: 0;
     font-size: 1.45rem;
     font-weight: 900;
     letter-spacing: -0.01em;
@@ -3065,7 +3065,7 @@ html {
 .front-beengineer__heading {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0;
     min-width: 0;
 }
 
@@ -6752,6 +6752,78 @@ html {
     transform: translateY(-1px);
 }
 
+.tech-tag--more {
+    background: rgba(15, 23, 42, 0.05);
+    border-color: rgba(15, 23, 42, 0.12);
+    color: rgba(23, 32, 51, 0.68);
+    font-weight: 700;
+}
+
+.tech-tag--more:hover {
+    background: rgba(15, 23, 42, 0.05);
+    border-color: rgba(15, 23, 42, 0.12);
+    color: rgba(23, 32, 51, 0.68);
+    transform: none;
+}
+
+.about-ebooks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    gap: 12px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.about-ebook-card {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.86);
+}
+
+.about-ebook-card__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 10px;
+}
+
+.about-ebook-card__image {
+    width: 88px;
+    height: auto;
+    border-radius: 6px;
+}
+
+.about-ebook-card__title {
+    margin: 0 0 6px;
+    color: var(--color-text);
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.about-ebook-card__summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.84rem;
+    line-height: 1.55;
+}
+
+.about-ebooks-cta {
+    margin: 16px 0 0;
+}
+
+.about-ebooks-cta .history-content__nested-link:focus-visible {
+    outline: 2px solid rgba(15, 98, 254, 0.55);
+    outline-offset: 3px;
+}
+
 .work-thumbnail {
     transform: none;
 }
@@ -6785,7 +6857,8 @@ html {
         transform: none;
     }
 
-    .about-overview-grid {
+    .about-overview-grid,
+    .about-ebooks-grid {
         grid-template-columns: 1fr;
     }
 

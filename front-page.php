@@ -117,7 +117,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
                 <span class="front-featured-card__link">記事を読む</span>
             </a>
             <a class="front-featured-card" href="<?php echo esc_url($beengineer_news_url); ?>">
-                <span class="front-featured-card__eyebrow">BeEngineer Journal</span>
+                <span class="front-featured-card__eyebrow">BeEngineer通信</span>
                 <h3 class="front-featured-card__title">教育現場からの一次情報</h3>
                 <p class="front-featured-card__text">教室運営、イベント、生徒の学び、指導者としての振り返りをBeEngineer通信として発信します。</p>
                 <span class="front-featured-card__link">BeEngineer通信へ</span>
@@ -128,7 +128,6 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     <!-- 最新の学習コラム -->
     <section class="front-latest-posts" aria-label="最新の学習コラム">
         <div class="front-latest-posts__inner">
-            <p class="front-section-kicker">Latest Columns</p>
             <h2 class="front-latest-posts__title">最新の学習コラム</h2>
             <p class="front-latest-posts__lead">教育・AI・プログラミング・資格学習など、学びを実践につなげるための記事を更新しています。</p>
 
@@ -190,7 +189,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
 
     <section class="front-tools" aria-labelledby="front-tools-title">
         <div class="front-section-heading">
-            <p class="front-section-kicker">Tools and Works</p>
+            <p class="front-section-kicker">Works</p>
             <h2 id="front-tools-title" class="front-section-title">開発・学習ツール</h2>
             <p class="front-section-lead">技術スタックよりも、「誰の何を解決するか」が先に伝わるように整理しています。</p>
         </div>
@@ -214,7 +213,6 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
             <div class="front-beengineer__content">
                 <div class="front-beengineer__headline">
                     <div class="front-beengineer__heading">
-                        <p class="front-beengineer__eyebrow">BeEngineer Journal</p>
                         <h2 class="front-beengineer__title">BeEngineer通信</h2>
                     </div>
                     <p class="front-beengineer__cta">
@@ -256,7 +254,6 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     <section class="front-about" aria-labelledby="front-about-title">
         <div class="front-about__inner">
             <div>
-                <p class="front-section-kicker">Profile</p>
                 <h2 id="front-about-title" class="front-section-title">教育・開発・学びをつなげる個人Web資産</h2>
                 <p class="front-about__text">教育現場での指導や教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールなどを制作しています。日々の学びを、あとから使える形に整理して蓄積します。</p>
             </div>
@@ -269,7 +266,6 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     <section class="front-ebooks" aria-labelledby="front-ebooks-title">
         <div class="front-ebooks__inner">
             <div>
-                <p class="front-section-kicker">Books</p>
                 <h2 id="front-ebooks-title" class="front-section-title">電子書籍</h2>
                 <p class="front-section-lead">学習法・仕事術・アウトプットなど、サイト内の実践知を別の形でも整理しています。</p>
             </div>
@@ -282,7 +278,6 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <div class="front-news__inner">
             <div class="front-news__header">
                 <div>
-                    <p class="front-section-kicker">News</p>
                     <h2 class="front-news__title">お知らせ</h2>
                 </div>
                 <a class="front-news__archive-link" href="<?php echo esc_url($news_url); ?>">一覧を見る</a>
@@ -313,7 +308,6 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <details class="site-intro__details" open>
             <summary class="site-intro__summary">
                 <span class="site-intro__summary-copy">
-                    <span class="site-intro__summary-label">About This Site</span>
                     <span class="site-intro__summary-title">このサイトについて</span>
                     <span class="site-intro__summary-text">運営方針や発信内容を見る</span>
                 </span>

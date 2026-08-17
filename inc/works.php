@@ -206,6 +206,24 @@ function mytheme_get_work_tech_tags($post_id) {
     return array_values(array_unique($items));
 }
 
+function mytheme_get_work_card_tech_tags($post_id, $limit = 5) {
+    $tags = mytheme_get_work_tech_tags($post_id);
+    $limit = max(1, (int) $limit);
+    $total = count($tags);
+
+    if ( $total <= $limit ) {
+        return [
+            'visible'   => $tags,
+            'remaining' => 0,
+        ];
+    }
+
+    return [
+        'visible'   => array_slice($tags, 0, $limit),
+        'remaining' => $total - $limit,
+    ];
+}
+
 function mytheme_work_sanitize_url_or_anchor($value) {
     $value = trim((string) $value);
     if ( $value === '' ) return '';
@@ -1584,7 +1602,7 @@ function mytheme_render_work_card($post_id) {
     $image_alt = mytheme_get_work_meta($post_id, '_mytheme_work_card_image_alt', $title);
     $image_id = (int) mytheme_get_work_meta($post_id, '_mytheme_work_card_image_id', 0);
     $image_path = mytheme_get_work_meta($post_id, '_mytheme_work_card_image_path');
-    $tech_tags = mytheme_get_work_tech_tags($post_id);
+    $tech_tags = mytheme_get_work_card_tech_tags($post_id, 5);
     $demo_url = mytheme_get_work_meta($post_id, '_mytheme_work_demo_url');
     $description = trim((string) mytheme_get_work_meta($post_id, '_mytheme_work_card_description'));
     if ( $description === '' ) {
@@ -1642,11 +1660,14 @@ function mytheme_render_work_card($post_id) {
                     <dd><span class="work-status"><?php echo esc_html((string) $presentation['status']); ?></span></dd>
                 </div>
             </dl>
-            <?php if ( ! empty($tech_tags) ) : ?>
+            <?php if ( ! empty($tech_tags['visible']) ) : ?>
                 <div class="work-tech">
-                    <?php foreach ( $tech_tags as $tag ) : ?>
+                    <?php foreach ( $tech_tags['visible'] as $tag ) : ?>
                         <span class="tech-tag"><?php echo esc_html($tag); ?></span>
                     <?php endforeach; ?>
+                    <?php if ( (int) $tech_tags['remaining'] > 0 ) : ?>
+                        <span class="tech-tag tech-tag--more">+<?php echo (int) $tech_tags['remaining']; ?></span>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
         </div>

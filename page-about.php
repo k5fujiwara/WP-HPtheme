@@ -195,7 +195,7 @@ get_header();
                 <h2 class="about-section__title">運営者の実績・活動（外部発信を含む）</h2>
                 <div class="history-content">
                     <h3>執筆活動：電子書籍（Kindle）</h3>
-                    <p>学習法・アウトプット・仕事術など「学び続ける人の課題解決」にフォーカスして執筆しています。内容の要点はサイト内コラムにも還元していきます。</p>
+                    <p>学習法・アウトプット・仕事術など「学び続ける人の課題解決」にフォーカスして執筆しています。</p>
 
                     <?php
                     $ebooks_url = function_exists('mytheme_get_page_url_by_path')
@@ -205,34 +205,42 @@ get_header();
                     ?>
 
                     <?php if ( ! empty($ebooks) && is_array($ebooks) ) : ?>
-                        <ul class="history-content__list">
+                        <ul class="about-ebooks-grid">
                             <?php foreach ( $ebooks as $book ) : ?>
                                 <?php
                                 $ja = function_exists('mytheme_get_ebook_edition') ? mytheme_get_ebook_edition($book, 'ja') : null;
-                                $en = function_exists('mytheme_get_ebook_edition') ? mytheme_get_ebook_edition($book, 'en') : null;
                                 $ja_title = $ja && ! empty($ja['title']) ? (string) $ja['title'] : '';
                                 $ja_desc  = $ja && ! empty($ja['description']) ? (string) $ja['description'] : '';
-                                $ja_url   = $ja && ! empty($ja['url']) ? (string) $ja['url'] : '';
-                                $en_url   = $en && ! empty($en['url']) ? (string) $en['url'] : '';
+                                $ja_cover = $ja && ! empty($ja['cover']) ? (string) $ja['cover'] : '';
+                                $ja_summary = '';
+                                if ( $ja_desc !== '' ) {
+                                    if ( preg_match('/^(.+?。)/u', wp_strip_all_tags($ja_desc), $ja_sentence) ) {
+                                        $ja_summary = (string) $ja_sentence[1];
+                                    } else {
+                                        $ja_summary = function_exists('wp_html_excerpt')
+                                            ? wp_html_excerpt(wp_strip_all_tags($ja_desc), 48, '…')
+                                            : wp_strip_all_tags($ja_desc);
+                                    }
+                                }
                                 ?>
                                 <?php if ( $ja_title ) : ?>
-                                    <li class="history-content__list-item">
-                                        <strong><?php echo esc_html($ja_title); ?></strong>
-                                        <?php if ( $ja_desc ) : ?><br><?php echo esc_html($ja_desc); ?><?php endif; ?>
-                                        <?php if ( $ja_url ) : ?>
-                                            <div>
-                                                <a class="history-content__nested-link" href="<?php echo esc_url($ja_url); ?>" target="_blank" rel="noopener noreferrer external">Amazonで見る（日本語）</a>
-                                                <?php if ( $en_url ) : ?>
-                                                    <span> / </span>
-                                                    <a class="history-content__nested-link" href="<?php echo esc_url($en_url); ?>" target="_blank" rel="noopener noreferrer external">Amazonで見る（English）</a>
-                                                <?php endif; ?>
+                                    <li class="about-ebook-card">
+                                        <?php if ( $ja_cover !== '' && function_exists('mytheme_picture_tag') ) : ?>
+                                            <div class="about-ebook-card__media">
+                                                <?php echo mytheme_picture_tag($ja_cover, $ja_title, 'about-ebook-card__image', 'lazy'); ?>
                                             </div>
+                                        <?php endif; ?>
+                                        <p class="about-ebook-card__title"><?php echo esc_html($ja_title); ?></p>
+                                        <?php if ( $ja_summary !== '' ) : ?>
+                                            <p class="about-ebook-card__summary"><?php echo esc_html($ja_summary); ?></p>
                                         <?php endif; ?>
                                     </li>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         </ul>
-                        <p><a class="history-content__nested-link" href="<?php echo esc_url($ebooks_url); ?>">電子書籍一覧（本棚）を見る</a></p>
+                        <p class="about-ebooks-cta">
+                            <a class="history-content__nested-link" href="<?php echo esc_url($ebooks_url); ?>">電子書籍一覧を見る</a>
+                        </p>
                     <?php else : ?>
                         <p>電子書籍の情報は準備中です。</p>
                     <?php endif; ?>
