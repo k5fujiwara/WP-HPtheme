@@ -1341,6 +1341,70 @@ function mytheme_deactivate_legacy_work_child_pages_once() {
 }
 add_action('admin_init', 'mytheme_deactivate_legacy_work_child_pages_once', 20);
 
+function mytheme_get_work_presentation_meta($post_id) {
+    $post_id = (int) $post_id;
+    $slug = (string) get_post_field('post_name', $post_id);
+    $seed_key = (string) mytheme_get_work_meta($post_id, '_mytheme_work_seed_key');
+    $key = $seed_key !== '' ? $seed_key : $slug;
+
+    $defaults = [
+        'category'       => 'automation',
+        'category_label' => 'AI・業務自動化',
+        'status'         => '公開中',
+        'target'         => '学びや業務の手間を減らすための個人開発',
+    ];
+
+    $map = [
+        'quest4' => [
+            'category'       => 'education',
+            'category_label' => '教育・学習プロダクト',
+            'status'         => '公開中',
+            'target'         => 'LINE上で学習クイズに取り組みたい学習者を支援',
+        ],
+        'beengineer-camp' => [
+            'category'       => 'education',
+            'category_label' => '教育・学習プロダクト',
+            'status'         => '公開中',
+            'target'         => '合宿参加者が必要情報を迷わず確認できるようにする',
+        ],
+        'loto6' => [
+            'category'       => 'experiment',
+            'category_label' => '技術検証・実験',
+            'status'         => '技術検証',
+            'target'         => '機械学習やデータ分析の流れを実験的に検証',
+        ],
+        'auto-typing' => [
+            'category'       => 'experiment',
+            'category_label' => '技術検証・実験',
+            'status'         => '技術検証',
+            'target'         => 'ブラウザ自動化とDOM操作の技術検証',
+        ],
+    ];
+
+    if ( isset($map[$key]) ) {
+        return $map[$key];
+    }
+
+    return $defaults;
+}
+
+function mytheme_get_work_category_groups() {
+    return [
+        'education' => [
+            'title'       => '教育・学習プロダクト',
+            'description' => '情報Ⅰ対策、学習支援、教室運営など、学習者や教育現場の課題解決を目的にした制作物です。',
+        ],
+        'automation' => [
+            'title'       => 'AI・業務自動化',
+            'description' => 'AI活用や自動化により、制作・運用・業務の手間を減らすための個人開発です。',
+        ],
+        'experiment' => [
+            'title'       => '技術検証・実験',
+            'description' => '学習や検証を目的に、技術的な仕組みや可能性を試したプロジェクトです。',
+        ],
+    ];
+}
+
 function mytheme_get_work_archive_query($args = []) {
     $defaults = [
         'post_type'      => 'work',
@@ -1370,6 +1434,7 @@ function mytheme_render_work_card($post_id) {
         $overview = wp_strip_all_tags(mytheme_work_get_detail_field($post_id, 'overview'));
         $description = wp_trim_words($overview, 80, '...');
     }
+    $presentation = mytheme_get_work_presentation_meta($post_id);
 
     if ( $demo_url === '' && function_exists('mytheme_work_get_detail_field') && trim(mytheme_work_get_detail_field($post_id, 'demo_embed_url')) !== '' ) {
         $demo_url = '#demo-video';
@@ -1406,6 +1471,16 @@ function mytheme_render_work_card($post_id) {
             <?php if ( $description !== '' ) : ?>
                 <p class="work-description"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
+            <dl class="work-summary">
+                <div class="work-summary__item">
+                    <dt>対象 / 解決する課題</dt>
+                    <dd><?php echo esc_html((string) $presentation['target']); ?></dd>
+                </div>
+                <div class="work-summary__item">
+                    <dt>ステータス</dt>
+                    <dd><span class="work-status"><?php echo esc_html((string) $presentation['status']); ?></span></dd>
+                </div>
+            </dl>
             <?php if ( ! empty($tech_tags) ) : ?>
                 <div class="work-tech">
                     <?php foreach ( $tech_tags as $tag ) : ?>

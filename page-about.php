@@ -32,6 +32,15 @@ get_header();
             <?php the_content(); ?>
         </div>
 
+        <section class="about-profile-summary" aria-label="プロフィール要約">
+            <p>
+                教育・プログラミングを中心に活動する藤原圭吾です。教育現場での指導・教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールなどを制作しています。
+            </p>
+            <p>
+                学び続けながら、実際に使った知識や経験をこのサイトに整理しています。
+            </p>
+        </section>
+
         <div class="about-sections">
             <section class="about-section">
                 <h2 class="about-section__title">名前</h2>
@@ -45,7 +54,7 @@ get_header();
                 <div class="history-content">
                     <ul class="history-content__list">
                         <li class="history-content__list-item">明治大学　理工学部　情報科学系　卒業</li>
-                        <li class="history-content__list-item">明治大学大学院　理工学研究科　基礎理工学専攻　情報科学系　卒業</li>
+                        <li class="history-content__list-item">明治大学大学院　理工学研究科　基礎理工学専攻　情報科学系　修了</li>
                     </ul>
                 </div>
             </section>

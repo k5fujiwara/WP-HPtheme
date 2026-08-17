@@ -12,12 +12,21 @@ $works_url = function_exists('mytheme_get_page_url_by_path')
 $learning_column_url = function_exists('mytheme_get_page_url_by_path')
     ? mytheme_get_page_url_by_path('learning-column', home_url('/learning-column/'))
     : home_url('/learning-column/');
+$learning_tools_url = function_exists('get_post_type_archive_link')
+    ? get_post_type_archive_link('youtube_learning')
+    : home_url('/youtube-learning/');
+if ( ! $learning_tools_url ) {
+    $learning_tools_url = home_url('/youtube-learning/');
+}
 $news_url = function_exists('get_post_type_archive_link')
     ? get_post_type_archive_link('news')
     : home_url('/news/');
 $beengineer_news_url = function_exists('get_post_type_archive_link')
     ? get_post_type_archive_link('beengineer-news')
     : home_url('/beengineer-news/');
+$ebooks_url = function_exists('mytheme_get_page_url_by_path')
+    ? mytheme_get_page_url_by_path('ebooks', home_url('/ebooks/'))
+    : home_url('/ebooks/');
 
 // 最新の学習コラム（トップで最優先表示）
 $latest_posts = new WP_Query([
@@ -46,6 +55,10 @@ $latest_beengineer_news = new WP_Query([
     'update_post_meta_cache' => false,
     'update_post_term_cache' => false,
 ]);
+
+$featured_works = function_exists('mytheme_get_work_archive_query')
+    ? mytheme_get_work_archive_query(['posts_per_page' => 3])
+    : null;
 ?>
 
 <div class="front-page">
@@ -53,15 +66,71 @@ $latest_beengineer_news = new WP_Query([
         <div class="hero-section__inner">
             <p class="hero-eyebrow">Learning, Growth, and Creation</p>
             <h1 class="hero-title">学び続ける、成長し続ける</h1>
-            <p class="hero-lead">教育・プログラミング・自己成長を軸に、実践から得た学びを発信しています。</p>
+            <p class="hero-lead">教育現場での実践、AI・プログラミング、資格学習、個人開発など、自分自身が学び・試したことを体系的に整理しています。</p>
         </div>
     </div>
 
-    <!-- 最新の学習コラム（最優先） -->
+    <section class="front-finder" aria-labelledby="front-finder-title">
+        <div class="front-section-heading">
+            <p class="front-section-kicker">Start Here</p>
+            <h2 id="front-finder-title" class="front-section-title">何を探していますか？</h2>
+            <p class="front-section-lead">目的に合わせて、記事・ツール・プロフィールへ進めます。</p>
+        </div>
+
+        <div class="front-choice-grid">
+            <a class="front-choice-card" href="<?php echo esc_url($learning_column_url); ?>">
+                <span class="front-choice-card__label">学びたい</span>
+                <span class="front-choice-card__title">学習コラム</span>
+                <span class="front-choice-card__text">教育・AI・プログラミング・資格・学習法などを体系的に整理。</span>
+            </a>
+            <a class="front-choice-card" href="<?php echo esc_url($works_url); ?>">
+                <span class="front-choice-card__label">使ってみたい</span>
+                <span class="front-choice-card__title">学習ツール / 開発作品</span>
+                <span class="front-choice-card__text">情報Ⅰ対策や学習支援など、実際に制作したツールやプロジェクト。</span>
+            </a>
+            <a class="front-choice-card" href="<?php echo esc_url($about_url); ?>">
+                <span class="front-choice-card__label">運営者を知りたい</span>
+                <span class="front-choice-card__title">自己紹介</span>
+                <span class="front-choice-card__text">教育・研究・開発・教室運営など、これまでの経験と活動。</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="front-featured" aria-labelledby="front-featured-title">
+        <div class="front-section-heading">
+            <p class="front-section-kicker">Featured</p>
+            <h2 id="front-featured-title" class="front-section-title">代表的なコンテンツ</h2>
+            <p class="front-section-lead">このサイトらしさが伝わる、実践・開発・教育現場の入口です。</p>
+        </div>
+
+        <div class="front-featured-grid">
+            <a class="front-featured-card front-featured-card--primary" href="<?php echo esc_url($works_url); ?>">
+                <span class="front-featured-card__eyebrow">Learning Product</span>
+                <h3 class="front-featured-card__title">教育・学習プロダクト</h3>
+                <p class="front-featured-card__text">情報Ⅰ対策アプリやLINE学習Botなど、学習者の課題解決を目的に制作したものをまとめています。</p>
+                <span class="front-featured-card__link">開発作品を見る</span>
+            </a>
+            <a class="front-featured-card" href="<?php echo esc_url($learning_column_url); ?>">
+                <span class="front-featured-card__eyebrow">Column</span>
+                <h3 class="front-featured-card__title">教育・AI・継続学習の整理</h3>
+                <p class="front-featured-card__text">一般論だけでなく、実際に学び、試し、教育現場で考えたことを記事として蓄積しています。</p>
+                <span class="front-featured-card__link">記事を読む</span>
+            </a>
+            <a class="front-featured-card" href="<?php echo esc_url($beengineer_news_url); ?>">
+                <span class="front-featured-card__eyebrow">BeEngineer Journal</span>
+                <h3 class="front-featured-card__title">教育現場からの一次情報</h3>
+                <p class="front-featured-card__text">教室運営、イベント、生徒の学び、指導者としての振り返りをBeEngineer通信として発信します。</p>
+                <span class="front-featured-card__link">BeEngineer通信へ</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- 最新の学習コラム -->
     <section class="front-latest-posts" aria-label="最新の学習コラム">
         <div class="front-latest-posts__inner">
-            <h2 class="front-latest-posts__title">効率的な学びと成長のための「学習準備室」</h2>
-            <p class="front-latest-posts__lead">「やる気に頼らない勉強法」や「AI時代のスキルアップ」など、あなたの学びを加速させるヒントを公開中。</p>
+            <p class="front-section-kicker">Latest Columns</p>
+            <h2 class="front-latest-posts__title">最新の学習コラム</h2>
+            <p class="front-latest-posts__lead">教育・AI・プログラミング・資格学習など、学びを実践につなげるための記事を更新しています。</p>
 
             <div class="front-latest-posts__list">
                 <?php if ( $latest_posts->have_posts() ) : ?>
@@ -154,112 +223,27 @@ $latest_beengineer_news = new WP_Query([
 
     <?php wp_reset_postdata(); ?>
 
-    <!-- 波型セクション区切り -->
-    <div class="wave-divider" aria-hidden="true">
-        <svg class="wave-divider__svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" role="presentation">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor"></path>
-            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor"></path>
-            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor"></path>
-        </svg>
-    </div>
-
-    <div class="nav-cards">
-        <!-- 学習コラム（サイト内記事） -->
-        <div class="nav-card">
-            <div class="nav-card-top">
-                <div class="nav-card-head">
-                    <div class="nav-card-icon" aria-hidden="true">
-                        <svg class="nav-card-icon__svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                        </svg>
-                    </div>
-                    <h2 class="nav-card-title">学習コラム</h2>
-                </div>
-                <a href="<?php echo esc_url( $learning_column_url ); ?>" class="nav-card-link" aria-label="学習コラムへ">
-                    記事一覧を見る
-                    <svg class="nav-card-link__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
-            </div>
-            <p class="nav-card-description">教育・プログラミング・自己啓発の学びを蓄積</p>
+    <section class="front-tools" aria-labelledby="front-tools-title">
+        <div class="front-section-heading">
+            <p class="front-section-kicker">Tools and Works</p>
+            <h2 id="front-tools-title" class="front-section-title">開発・学習ツール</h2>
+            <p class="front-section-lead">技術スタックよりも、「誰の何を解決するか」が先に伝わるように整理しています。</p>
         </div>
 
-        <!-- 自己紹介ページ -->
-        <div class="nav-card">
-            <div class="nav-card-top">
-                <div class="nav-card-head">
-                    <div class="nav-card-icon" aria-hidden="true">
-                        <svg class="nav-card-icon__svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </div>
-                    <h2 class="nav-card-title">自己紹介</h2>
-                </div>
-                <a href="<?php echo esc_url( $about_url ); ?>" class="nav-card-link" aria-label="自己紹介ページへ">
-                    詳しく見る
-                    <svg class="nav-card-link__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
-            </div>
-            <p class="nav-card-description">プロフィールや経歴について</p>
+        <div class="front-tools__actions">
+            <a class="work-link" href="<?php echo esc_url($learning_tools_url); ?>">学習ツールを見る</a>
+            <a class="work-link work-link-demo" href="<?php echo esc_url($works_url); ?>">開発作品を見る</a>
         </div>
 
-        <!-- 開発作品紹介ページ（任意） -->
-        <div class="nav-card">
-            <div class="nav-card-top">
-                <div class="nav-card-head">
-                    <div class="nav-card-icon" aria-hidden="true">
-                        <svg class="nav-card-icon__svg" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="16 18 22 12 16 6"></polyline>
-                            <polyline points="8 6 2 12 8 18"></polyline>
-                        </svg>
-                    </div>
-                    <h2 class="nav-card-title">開発作品</h2>
-                </div>
-                <a href="<?php echo esc_url( $works_url ); ?>" class="nav-card-link" aria-label="開発作品ページへ">
-                    作品を見る
-                    <svg class="nav-card-link__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </a>
+        <?php if ( $featured_works instanceof WP_Query && $featured_works->have_posts() ) : ?>
+            <div class="front-tools__list">
+                <?php while ( $featured_works->have_posts() ) : $featured_works->the_post(); ?>
+                    <?php if ( function_exists('mytheme_render_work_card') ) mytheme_render_work_card(get_the_ID()); ?>
+                <?php endwhile; ?>
             </div>
-            <p class="nav-card-description">学びの成果として制作したプロジェクト</p>
-        </div>
-    </div>
-
-    <?php if ( $latest_news->have_posts() ) : ?>
-    <section class="front-news" aria-label="お知らせ">
-        <div class="front-news__inner">
-            <div class="front-news__header">
-                <div>
-                    <h2 class="front-news__title">お知らせ</h2>
-                </div>
-                <a class="front-news__archive-link" href="<?php echo esc_url($news_url); ?>">一覧を見る</a>
-            </div>
-
-            <ul class="front-news__list">
-                <?php
-                if ( function_exists('mytheme_render_news_list_items') ) {
-                    mytheme_render_news_list_items($latest_news, [
-                        'item_class'    => 'front-news__item',
-                        'link_class'    => 'front-news__link',
-                        'date_class'    => 'front-news__date',
-                        'title_class'   => 'front-news__item-title',
-                        'date_format'   => 'Y.m.d',
-                        'date_position' => 'left',
-                    ]);
-                }
-                ?>
-            </ul>
-        </div>
+            <?php wp_reset_postdata(); ?>
+        <?php endif; ?>
     </section>
-    <?php endif; ?>
-
-    <?php wp_reset_postdata(); ?>
 
     <section class="front-beengineer" aria-label="BeEngineer通信">
         <div class="front-beengineer__inner">
@@ -305,6 +289,61 @@ $latest_beengineer_news = new WP_Query([
 
     <?php wp_reset_postdata(); ?>
 
+    <section class="front-about" aria-labelledby="front-about-title">
+        <div class="front-about__inner">
+            <div>
+                <p class="front-section-kicker">Profile</p>
+                <h2 id="front-about-title" class="front-section-title">教育・開発・学びをつなげる個人Web資産</h2>
+                <p class="front-about__text">教育現場での指導や教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールなどを制作しています。日々の学びを、あとから使える形に整理して蓄積します。</p>
+            </div>
+            <p class="front-about__action">
+                <a class="work-link" href="<?php echo esc_url($about_url); ?>">運営者を知る</a>
+            </p>
+        </div>
+    </section>
+
+    <section class="front-ebooks" aria-labelledby="front-ebooks-title">
+        <div class="front-ebooks__inner">
+            <div>
+                <p class="front-section-kicker">Books</p>
+                <h2 id="front-ebooks-title" class="front-section-title">電子書籍</h2>
+                <p class="front-section-lead">学習法・仕事術・アウトプットなど、サイト内の実践知を別の形でも整理しています。</p>
+            </div>
+            <a class="work-link" href="<?php echo esc_url($ebooks_url); ?>">電子書籍を見る</a>
+        </div>
+    </section>
+
+    <?php if ( $latest_news->have_posts() ) : ?>
+    <section class="front-news" aria-label="お知らせ">
+        <div class="front-news__inner">
+            <div class="front-news__header">
+                <div>
+                    <p class="front-section-kicker">News</p>
+                    <h2 class="front-news__title">お知らせ</h2>
+                </div>
+                <a class="front-news__archive-link" href="<?php echo esc_url($news_url); ?>">一覧を見る</a>
+            </div>
+
+            <ul class="front-news__list">
+                <?php
+                if ( function_exists('mytheme_render_news_list_items') ) {
+                    mytheme_render_news_list_items($latest_news, [
+                        'item_class'    => 'front-news__item',
+                        'link_class'    => 'front-news__link',
+                        'date_class'    => 'front-news__date',
+                        'title_class'   => 'front-news__item-title',
+                        'date_format'   => 'Y.m.d',
+                        'date_position' => 'left',
+                    ]);
+                }
+                ?>
+            </ul>
+        </div>
+    </section>
+    <?php endif; ?>
+
+    <?php wp_reset_postdata(); ?>
+
     <!-- サイト紹介セクション -->
     <section class="site-intro">
         <details class="site-intro__details" open>
@@ -323,12 +362,12 @@ $latest_beengineer_news = new WP_Query([
 
             <div class="intro-container site-intro__panel">
                 <p class="intro-lead">
-                    学びと成長を支援する情報発信プラットフォーム
+                    教育現場での実践、AI・プログラミング、継続学習を整理するサイト
                 </p>
                 <div class="intro-content">
                     <p class="intro-content__text">
-                        当サイトは、<strong>教育・自己啓発・プログラミング</strong>に関する情報を発信しています。
-                        学び続ける全ての方々に、実践的な知識とインスピレーションをお届けすることを目指しています。
+                        当サイトは、<strong>教育現場での実践、AI・プログラミング、情報Ⅰ、資格学習、個人開発</strong>に関する情報を整理しています。
+                        一般的な解説だけでなく、実際に学び、試し、使った経験をあとから参照できる形で蓄積します。
                     </p>
                 </div>
 

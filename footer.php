@@ -6,17 +6,49 @@
         <div class="site-footer__top">
             <div class="site-footer__brand">
                 <p class="site-footer__text">&copy; <?php echo date('Y'); ?> <span itemprop="copyrightHolder"><?php bloginfo('name'); ?></span></p>
-                <p class="footer-tagline">学びと成長を支援する教育プラットフォーム</p>
+                <p class="footer-tagline">教育現場での実践、AI・プログラミング、継続学習を整理する個人Web資産</p>
+                <p class="site-footer__note">日々の学びや実践記録は <a href="https://note.com/k5fujiwara" target="_blank" rel="noopener noreferrer external">note</a> でも軽く発信しています。</p>
             </div>
         
             <?php
             // 必須ページへの導線（AdSense審査で見られやすい）
+            $learning_column_url = function_exists('mytheme_get_page_url_by_path')
+                ? mytheme_get_page_url_by_path('learning-column', home_url('/learning-column/'))
+                : home_url('/learning-column/');
+            $works_url = function_exists('mytheme_get_page_url_by_path')
+                ? mytheme_get_page_url_by_path('works', home_url('/works/'))
+                : home_url('/works/');
+            $learning_tools_url = function_exists('get_post_type_archive_link')
+                ? get_post_type_archive_link('youtube_learning')
+                : '';
+            if ( ! $learning_tools_url ) {
+                $learning_tools_url = home_url('/youtube-learning/');
+            }
+            $ebooks_url = function_exists('mytheme_get_page_url_by_path')
+                ? mytheme_get_page_url_by_path('ebooks', home_url('/ebooks/'))
+                : home_url('/ebooks/');
             $footer_links = [
+                [
+                    'label' => '学習コラム',
+                    'url'   => $learning_column_url,
+                ],
+                [
+                    'label' => '学習ツール',
+                    'url'   => $learning_tools_url,
+                ],
+                [
+                    'label' => '開発作品',
+                    'url'   => $works_url,
+                ],
                 [
                     'label' => '運営者情報',
                     'url'   => function_exists('mytheme_get_page_url_by_path')
                         ? mytheme_get_page_url_by_path('about', home_url('/about/'))
                         : home_url('/about/'),
+                ],
+                [
+                    'label' => '電子書籍',
+                    'url'   => $ebooks_url,
                 ],
                 [
                     'label' => 'お問い合わせ',

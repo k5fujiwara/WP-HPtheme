@@ -1471,6 +1471,24 @@ html {
     margin: 6px 0 0;
 }
 
+.site-footer__note {
+    margin: 12px 0 0;
+    max-width: 34rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.site-footer__note a {
+    color: var(--primary-blue);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.site-footer__note a:hover {
+    color: var(--dark-blue);
+    text-decoration: underline;
+}
+
 .site-footer__links {
     flex: 1 1 420px;
     min-width: 0;
@@ -2564,6 +2582,164 @@ html {
     overflow-x: clip;
 }
 
+.front-section-heading {
+    margin: 0 auto 20px;
+    max-width: 760px;
+    text-align: center;
+}
+
+.front-section-kicker {
+    margin: 0 0 8px;
+    color: var(--primary-blue);
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.front-section-title {
+    margin: 0;
+    color: rgba(15, 23, 42, 0.94);
+    font-size: 1.75rem;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+}
+
+.front-section-lead {
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    line-height: 1.85;
+}
+
+.front-finder,
+.front-featured,
+.front-tools,
+.front-about,
+.front-ebooks {
+    margin: var(--spacing-3xl) auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.front-choice-grid,
+.front-featured-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.front-choice-card,
+.front-featured-card {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    gap: 10px;
+    padding: 22px;
+    border: 1px solid rgba(15, 98, 254, 0.14);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.92);
+    color: inherit;
+    text-decoration: none;
+    box-shadow: 0 12px 32px rgba(15, 98, 254, 0.07);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.front-choice-card:hover,
+.front-choice-card:focus-visible,
+.front-featured-card:hover,
+.front-featured-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(15, 98, 254, 0.3);
+    box-shadow: 0 18px 44px rgba(15, 98, 254, 0.13);
+    text-decoration: none;
+}
+
+.front-choice-card__label,
+.front-featured-card__eyebrow {
+    color: var(--primary-blue);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+}
+
+.front-choice-card__title,
+.front-featured-card__title {
+    color: rgba(15, 23, 42, 0.94);
+    font-size: 1.2rem;
+    font-weight: 900;
+    line-height: 1.45;
+}
+
+.front-choice-card__text,
+.front-featured-card__text {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
+.front-featured-card--primary {
+    background: linear-gradient(135deg, rgba(237, 245, 255, 0.96), rgba(255, 255, 255, 0.96));
+    border-color: rgba(15, 98, 254, 0.24);
+}
+
+.front-featured-card__link {
+    margin-top: auto;
+    color: var(--primary-blue);
+    font-weight: 900;
+}
+
+.front-featured-card__link::after {
+    content: " >";
+}
+
+.front-tools__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin: 0 0 22px;
+}
+
+.front-tools__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.front-tools__list .work-item {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.front-tools__list .work-visual,
+.front-tools__list .work-info {
+    width: 100%;
+}
+
+.front-about__inner,
+.front-ebooks__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    border: 1px solid rgba(15, 98, 254, 0.14);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 12px 32px rgba(15, 98, 254, 0.07);
+}
+
+.front-about__text {
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    line-height: 1.9;
+}
+
+.front-about__action {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
 /* 最新の学習コラム：ヒーロー/他セクションと左右幅を揃える */
 .front-latest-posts {
     margin: var(--spacing-3xl) auto;
@@ -3642,6 +3818,26 @@ html {
 
 /* ===== 自己紹介ページ ===== */
 
+.about-profile-summary {
+    margin: 0 0 var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    border: 1px solid rgba(15, 98, 254, 0.14);
+    border-radius: var(--radius-2xl);
+    background: linear-gradient(135deg, rgba(237, 245, 255, 0.9), rgba(255, 255, 255, 0.96));
+    box-shadow: var(--shadow-sm);
+}
+
+.about-profile-summary p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 1.02rem;
+    line-height: 1.9;
+}
+
+.about-profile-summary p + p {
+    margin-top: 8px;
+}
+
 .about-sections {
     margin-top: var(--spacing-3xl);
 }
@@ -3828,11 +4024,40 @@ html {
 
 /* ===== 開発作品ページ ===== */
 
+.works-group-list {
+    display: grid;
+    gap: var(--spacing-4xl);
+}
+
+.works-group {
+    padding: var(--spacing-xl);
+    border: 1px solid rgba(15, 98, 254, 0.12);
+    border-radius: var(--radius-2xl);
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.works-group__header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.works-group__title {
+    margin: 0 0 8px;
+    color: var(--text-primary);
+    font-size: 1.55rem;
+    line-height: 1.35;
+}
+
+.works-group__description {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.8;
+}
+
 .works-grid {
     display: grid;
     gap: 14px;
     grid-template-columns: 1fr;
-    margin-top: var(--spacing-4xl);
+    margin-top: 0;
 }
 
 /* ===== 電子書籍（本棚） ===== */
@@ -4227,6 +4452,47 @@ html {
     line-height: 1.62;
     margin: 0 0 10px;
     overflow: hidden;
+}
+
+.work-summary {
+    display: grid;
+    gap: 8px;
+    margin: 0 0 12px;
+}
+
+.work-summary__item {
+    display: grid;
+    gap: 3px;
+    padding: 8px 10px;
+    border: 1px solid rgba(15, 98, 254, 0.1);
+    border-radius: 10px;
+    background: rgba(237, 245, 255, 0.56);
+}
+
+.work-summary__item dt {
+    color: var(--text-tertiary);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+.work-summary__item dd {
+    margin: 0;
+    color: rgba(15, 23, 42, 0.88);
+    font-size: 0.84rem;
+    line-height: 1.55;
+}
+
+.work-status {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    border-radius: 999px;
+    background: rgba(15, 98, 254, 0.1);
+    color: var(--primary-blue);
+    font-size: 0.78rem;
+    font-weight: 900;
+    padding: 3px 9px;
 }
 
 .work-tech {
@@ -5778,6 +6044,54 @@ html {
         gap: 25px;
         grid-template-columns: 1fr;
         max-width: 300px;
+    }
+}
+
+@media (max-width: 900px) {
+    .front-choice-grid,
+    .front-featured-grid,
+    .front-tools__list {
+        grid-template-columns: 1fr;
+    }
+
+    .front-about__inner,
+    .front-ebooks__inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .front-about__action {
+        width: 100%;
+    }
+
+    .front-about__action .work-link,
+    .front-ebooks__inner .work-link {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .front-finder,
+    .front-featured,
+    .front-tools,
+    .front-about,
+    .front-ebooks {
+        margin: var(--spacing-2xl) auto;
+        padding: 0 var(--spacing-base);
+    }
+
+    .front-choice-card,
+    .front-featured-card,
+    .front-about__inner,
+    .front-ebooks__inner,
+    .works-group {
+        padding: var(--spacing-lg);
+        border-radius: var(--radius-xl);
+    }
+
+    .works-group-list {
+        gap: var(--spacing-2xl);
     }
 }
 
