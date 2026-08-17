@@ -1502,6 +1502,81 @@ function mytheme_get_front_featured_work_ids(int $limit = 3): array {
     return array_slice(array_values(array_unique(array_merge($preferred, $fallback))), 0, $limit);
 }
 
+function mytheme_get_work_identity_key($post_id): string {
+    $post_id = (int) $post_id;
+    $seed_key = strtolower((string) mytheme_get_work_meta($post_id, '_mytheme_work_seed_key'));
+    $slug = strtolower((string) get_post_field('post_name', $post_id));
+    $title = strtolower((string) get_the_title($post_id));
+    $lookup_text = trim($seed_key . ' ' . $slug . ' ' . $title);
+
+    $keys = [
+        'it1-code-pocket',
+        'quest4',
+        'beengineer-camp',
+        'shorts-auto-creator',
+        'note-auto-post',
+        'loto6',
+        'auto-typing',
+    ];
+    foreach ( $keys as $key ) {
+        if ( strpos($lookup_text, $key) !== false ) {
+            return $key;
+        }
+    }
+    if ( strpos($lookup_text, 'it1') !== false || strpos($lookup_text, '情報') !== false ) return 'it1-code-pocket';
+    if ( strpos($lookup_text, 'shorts') !== false ) return 'shorts-auto-creator';
+    if ( strpos($lookup_text, 'note') !== false ) return 'note-auto-post';
+    if ( strpos($lookup_text, 'e-typing') !== false || strpos($lookup_text, 'typing') !== false ) return 'auto-typing';
+
+    return $seed_key !== '' ? $seed_key : $slug;
+}
+
+function mytheme_get_work_card_secondary_cta($post_id, string $detail_url, string $demo_url): array {
+    $post_id = (int) $post_id;
+    $key = mytheme_get_work_identity_key($post_id);
+    $external_url = mytheme_get_work_meta($post_id, '_mytheme_work_external_url');
+
+    // IT1-CODE-POCKETは確認済みのため、既存CTAをそのまま維持する。
+    if ( $key === 'it1-code-pocket' ) {
+        return [
+            'label'       => 'デモを見る',
+            'url'         => $demo_url,
+            'is_external' => false,
+        ];
+    }
+
+    if ( $key === 'quest4' && $external_url !== '' ) {
+        return [
+            'label'       => 'LINEで使う',
+            'url'         => $external_url,
+            'is_external' => true,
+        ];
+    }
+
+    if ( $key === 'beengineer-camp' && $external_url !== '' ) {
+        return [
+            'label'       => '合宿サイトを見る',
+            'url'         => $external_url,
+            'is_external' => true,
+        ];
+    }
+
+    if ( in_array($key, ['shorts-auto-creator', 'note-auto-post', 'loto6', 'auto-typing'], true) ) {
+        $url = $demo_url !== '' ? $demo_url : $detail_url . '#demo-video';
+        return [
+            'label'       => 'デモ動画を見る',
+            'url'         => $url,
+            'is_external' => strpos($url, 'http') === 0 && strpos($url, home_url('/')) !== 0,
+        ];
+    }
+
+    return [
+        'label'       => 'デモ動画を見る',
+        'url'         => $demo_url,
+        'is_external' => $demo_url !== '' && strpos($demo_url, home_url('/')) !== 0 && strpos($demo_url, '#') !== 0,
+    ];
+}
+
 function mytheme_render_work_card($post_id) {
     $post_id = (int) $post_id;
     $url = mytheme_get_work_detail_url($post_id);
@@ -1528,6 +1603,7 @@ function mytheme_render_work_card($post_id) {
     if ( strpos($demo_url, '#') === 0 ) {
         $demo_url = $url . $demo_url;
     }
+    $secondary_cta = mytheme_get_work_card_secondary_cta($post_id, (string) $url, (string) $demo_url);
     ?>
     <div class="work-item">
         <div class="work-visual">
@@ -1544,9 +1620,9 @@ function mytheme_render_work_card($post_id) {
             </div>
             <div class="work-links">
                 <a href="<?php echo esc_url($url); ?>" class="work-link">詳細を見る</a>
-                <?php if ( $demo_url !== '' ) : ?>
-                    <a href="<?php echo esc_url($demo_url); ?>" class="work-link work-link-demo">
-                        デモを見る
+                <?php if ( ! empty($secondary_cta['url']) ) : ?>
+                    <a href="<?php echo esc_url((string) $secondary_cta['url']); ?>" class="work-link work-link-demo"<?php echo ! empty($secondary_cta['is_external']) ? ' target="_blank" rel="noopener noreferrer external"' : ''; ?>>
+                        <?php echo esc_html((string) $secondary_cta['label']); ?>
                     </a>
                 <?php endif; ?>
             </div>

@@ -4609,7 +4609,12 @@ html {
     }
 
     .work-visual .work-links {
-        flex-direction: row;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .work-visual .work-links .work-link {
+        width: 100%;
     }
 
     .work-info {

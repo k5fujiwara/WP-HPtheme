@@ -93,7 +93,7 @@ get_header();
                         <li class="skills-list__item">情報セキュリティマネジメント</li>
                         <li class="skills-list__item">ファイナンシャル・プランニング技能検定3級</li>
                         <li class="skills-list__item">ビジネス実務マナー検定3級</li>
-                        <li class="skills-list__item">統計検定3級</li>
+                        <li class="skills-list__item">統計検定2級</li>
                         <li class="skills-list__item">日商簿記3級</li>
                     </ul>
                 </div>
