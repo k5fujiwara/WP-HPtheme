@@ -381,28 +381,5 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
 
 </div>
 
-<!-- 構造化データ: WebSite -->
-<script type="application/ld+json">
-{
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "<?php echo esc_js( get_bloginfo('name') ); ?>",
-    "description": "<?php echo esc_js( get_bloginfo('description') ); ?>",
-    "url": "<?php echo esc_url( home_url('/') ); ?>",
-    "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "<?php echo esc_url( home_url('/') ); ?>?s={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
-    }
-}
-</script>
-
-<?php
-// EducationalOrganization構造化データはfunctions.phpで出力されます
-?>
-
 <?php get_footer(); ?>
 

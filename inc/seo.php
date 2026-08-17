@@ -1,151 +1,221 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+function mytheme_seo_default_image_url(): string {
+    return 'https://info-study.com/wp-content/uploads/2026/06/og-default.png';
+}
+
+function mytheme_seo_person_id(): string {
+    return home_url('/about/#person');
+}
+
+function mytheme_seo_clean_text($text, int $max_length = 155): string {
+    $text = strip_shortcodes((string) $text);
+    $text = wp_strip_all_tags($text, true);
+    $text = html_entity_decode($text, ENT_QUOTES, get_bloginfo('charset'));
+    $text = preg_replace('/\s+/u', ' ', $text);
+    $text = trim((string) $text);
+
+    if ( $text !== '' && mb_strlen($text) > $max_length ) {
+        $text = rtrim(mb_substr($text, 0, $max_length - 1)) . '…';
+    }
+    return $text;
+}
+
+function mytheme_seo_request_url(): string {
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '/';
+    return home_url($request_uri);
+}
+
+function mytheme_seo_is_learning_filter_url(): bool {
+    if ( ! ( is_page('learning-column') || is_home() ) ) {
+        return false;
+    }
+    return isset($_GET['theme']) || isset($_GET['cat']) || isset($_GET['cats']);
+}
+
+function mytheme_seo_get_canonical_url(): string {
+    if ( is_404() ) {
+        return '';
+    }
+
+    if ( is_search() || mytheme_seo_is_learning_filter_url() ) {
+        return mytheme_seo_request_url();
+    }
+
+    $paged_number = max((int) get_query_var('paged'), (int) get_query_var('page'));
+    if ( $paged_number > 1 ) {
+        return mytheme_seo_request_url();
+    }
+
+    if ( is_front_page() ) {
+        return home_url('/');
+    }
+
+    if ( is_singular() ) {
+        return (string) get_permalink(get_queried_object_id());
+    }
+
+    if ( is_home() ) {
+        $posts_page_id = (int) get_option('page_for_posts');
+        return $posts_page_id > 0 ? (string) get_permalink($posts_page_id) : home_url('/');
+    }
+
+    if ( is_post_type_archive() ) {
+        $post_type = get_query_var('post_type');
+        if ( is_array($post_type) ) {
+            $post_type = reset($post_type);
+        }
+        $archive_url = is_string($post_type) ? get_post_type_archive_link($post_type) : '';
+        return $archive_url ? (string) $archive_url : mytheme_seo_request_url();
+    }
+
+    if ( is_category() || is_tag() || is_tax() ) {
+        $term_link = get_term_link(get_queried_object());
+        return is_wp_error($term_link) ? mytheme_seo_request_url() : (string) $term_link;
+    }
+
+    if ( is_author() ) {
+        $author_id = (int) get_query_var('author');
+        return $author_id > 0 ? get_author_posts_url($author_id) : mytheme_seo_request_url();
+    }
+
+    return mytheme_seo_request_url();
+}
+
+function mytheme_seo_get_title(): string {
+    $site_name = get_bloginfo('name');
+    if ( is_front_page() ) {
+        return $site_name . ' | 教育・AI・情報Ⅰ・資格学習を整理する個人サイト';
+    }
+    if ( is_singular() ) {
+        return get_the_title(get_queried_object_id()) . ' | ' . $site_name;
+    }
+    if ( is_search() ) {
+        return '検索結果: ' . get_search_query(false) . ' | ' . $site_name;
+    }
+    if ( is_archive() ) {
+        return wp_strip_all_tags(get_the_archive_title()) . ' | ' . $site_name;
+    }
+    return $site_name;
+}
+
+function mytheme_seo_get_description(): string {
+    $site_desc = get_bloginfo('description');
+
+    if ( is_front_page() ) {
+        return '教育現場での実践、AI・プログラミング、情報Ⅰ、資格・継続学習、個人開発の記録を整理する藤原圭吾の個人Webサイトです。';
+    }
+
+    if ( is_singular() ) {
+        $post_id = get_queried_object_id();
+        $post_slug = get_post_field('post_name', $post_id);
+        $custom_descriptions = [
+            'about' => '藤原圭吾のプロフィール。教育、AI・プログラミング、情報Ⅰ、資格学習、個人開発などの実践と発信内容を紹介します。',
+            'works' => '藤原圭吾が制作した学習支援、情報Ⅰ、AI活用、業務効率化などの開発作品を、目的や使い方とあわせて紹介します。',
+            'ebooks' => '情報Ⅰ、プログラミング、AI活用、学習法などをテーマにした電子書籍をまとめています。',
+        ];
+        if ( isset($custom_descriptions[$post_slug]) ) {
+            return mytheme_seo_clean_text($custom_descriptions[$post_slug]);
+        }
+
+        $manual_desc = get_post_meta($post_id, '_mytheme_seo_description', true);
+        if ( is_string($manual_desc) && trim($manual_desc) !== '' ) {
+            return mytheme_seo_clean_text($manual_desc);
+        }
+
+        $excerpt = get_the_excerpt($post_id);
+        if ( is_string($excerpt) && trim($excerpt) !== '' ) {
+            return mytheme_seo_clean_text($excerpt);
+        }
+
+        $content = get_post_field('post_content', $post_id);
+        return mytheme_seo_clean_text(wp_trim_words(wp_strip_all_tags($content), 40, '…'));
+    }
+
+    if ( is_search() ) {
+        return mytheme_seo_clean_text('サイト内検索「' . get_search_query(false) . '」の結果一覧です。');
+    }
+
+    if ( is_archive() ) {
+        $archive_desc = get_the_archive_description();
+        if ( is_string($archive_desc) && trim($archive_desc) !== '' ) {
+            return mytheme_seo_clean_text($archive_desc);
+        }
+        return mytheme_seo_clean_text(wp_strip_all_tags(get_the_archive_title()) . 'の記事一覧です。');
+    }
+
+    return mytheme_seo_clean_text($site_desc);
+}
+
+function mytheme_seo_get_robots_content(): string {
+    $index = true;
+
+    if ( is_404() || is_search() || is_feed() || is_attachment() || mytheme_seo_is_learning_filter_url() || is_author() || is_date() ) {
+        $index = false;
+    }
+
+    $prefix = $index ? 'index, follow' : 'noindex, follow';
+    return $prefix . ', max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+}
+
+function mytheme_seo_get_image_url($post_id = 0): string {
+    $post_id = (int) $post_id;
+    if ( $post_id > 0 && has_post_thumbnail($post_id) ) {
+        $image = get_the_post_thumbnail_url($post_id, 'large');
+        if ( $image ) {
+            return (string) $image;
+        }
+    }
+    return mytheme_seo_default_image_url();
+}
+
 /**
  * 全ページ共通のメタディスクリプションとOGPタグ
  */
 function mytheme_seo_meta_tags() {
-    // 現在のページ情報を取得
-    $url = get_permalink();
     $site_name = get_bloginfo('name');
-    $site_desc = get_bloginfo('description');
-    
-    // ページタイプに応じてタイトルと説明文を設定
-    if ( is_front_page() ) {
-        $title = $site_name . ' - 教育・自己啓発・プログラミング学習支援プラットフォーム';
-        $desc = '教育・自己啓発・プログラミング学習を支援。Python開発、機械学習、資格取得の実践的なノウハウを共有。学び続ける人を応援する情報プラットフォームです。';
-        $type = 'website';
-    } elseif ( is_singular() ) {
-        $post_id = get_queried_object_id();
-        $post_slug = get_post_field('post_name', $post_id);
-        
-        // カスタムタイトルの設定（階層構造対応）
-        $custom_titles = array(
-            'about' => '自己紹介 - Python・機械学習エンジニア藤原圭吾',
-            'works' => '開発作品 - Python機械学習プロジェクト一覧',
-            'loto6' => 'ロト6予測ツール - Python機械学習開発事例',
-            'auto-typing' => 'e-typing自動タイピング - Python自動化ツール開発',
-            'quest4' => 'Quest4 - LINE学習クイズBot | Google Apps Script開発事例',
-            'beengineer-camp' => 'BeEngineer合宿案内サイト - レスポンシブWebサイト開発事例'
-        );
-        
-        if ( isset($custom_titles[$post_slug]) ) {
-            $title = $custom_titles[$post_slug] . ' | ' . $site_name;
-        } else {
-            $title = get_the_title($post_id) . ' | ' . $site_name;
-        }
-        
-        // ページスラッグに応じて最適化されたメタディスクリプションを設定（階層構造対応）
-        $custom_descriptions = array(
-            'about' => '藤原圭吾のプロフィール。Python・機械学習・データ分析のスキルと経歴を紹介。教育・自己啓発分野での学習経験と資格取得の軌跡をご覧ください。',
-            'works' => 'Python開発プロジェクト一覧。ロト6予測ツール、自動タイピングシステムなど、機械学習とデータ分析を活用した実践的な開発作品を紹介します。',
-            'loto6' => 'Pythonと機械学習でロト6当選番号を予測。LightGBM・XGBoost・ニューラルネットワークを使用したAI予測システムの開発事例を詳しく解説。',
-            'auto-typing' => 'Pythonで構築した自動タイピングシステム。文字認識とGUIを組み合わせた実用的なツールの開発過程と技術スタックを紹介します。',
-            'quest4' => 'Google Apps ScriptとLINE Messaging APIで開発した対話型学習支援システム。4科目24カテゴリ、Flex MessageによるモダンなUI設計で実用的な学習Botを実現。',
-            'beengineer-camp' => 'BeEngineerプログラミング合宿の案内用Webサイト。HTML5、CSS3、Vanilla JavaScriptを使用した静的サイトで、レスポンシブデザインに完全対応。フレームワーク不使用の軽量設計が特徴。'
-        );
-        
-        // カスタムディスクリプションがあれば使用、なければデフォルト処理
-        if ( isset($custom_descriptions[$post_slug]) ) {
-            $desc = $custom_descriptions[$post_slug];
-        } else {
-            $desc = wp_strip_all_tags( get_the_excerpt($post_id), true );
-            if ( ! $desc ) {
-                $content = get_post_field('post_content', $post_id);
-                $desc = wp_trim_words( wp_strip_all_tags($content), 30, '...' );
-            }
-        }
-        $type = is_page() ? 'website' : 'article';
-    } elseif ( is_archive() ) {
-        $title = get_the_archive_title() . ' | ' . $site_name;
-        $desc = get_the_archive_description() ?: $site_desc;
-        $type = 'website';
-    } else {
-        $title = $site_name;
-        $desc = $site_desc;
-        $type = 'website';
-    }
-    
-    // メタディスクリプションを155文字以内に調整
-    if ( mb_strlen($desc) > 155 ) {
-        $desc = mb_substr($desc, 0, 152) . '...';
-    }
-    
-    // アイキャッチ画像の取得（デフォルトOGP画像のフォールバック付き）
-    $image = '';
-    if ( is_singular() && has_post_thumbnail() ) {
-        $image = get_the_post_thumbnail_url(null, 'large');
-    }
-    
-    // アイキャッチ画像がない場合はデフォルトOGP画像を使用
-    if ( ! $image ) {
-        $image = 'https://info-study.com/wp-content/uploads/2026/06/og-default.png';
-    }
-    
-    // キーワードの設定
-    $keywords = '';
-    if ( is_front_page() ) {
-        $keywords = '教育,自己啓発,プログラミング学習,Python,機械学習,データ分析,資格取得,学習支援';
-    } elseif ( is_singular() && isset($post_slug) ) {
-        $custom_keywords = array(
-            'about' => 'Python,機械学習,データ分析,プログラミング,自己紹介,経歴,スキル',
-            'works' => 'Python開発,機械学習プロジェクト,ロト6予測,自動化ツール,開発事例',
-            'loto6' => 'ロト6予測,Python,機械学習,LightGBM,XGBoost,ニューラルネットワーク,AI',
-            'auto-typing' => 'Python,自動タイピング,GUI,自動化,文字認識,開発ツール',
-            'quest4' => 'LINE Bot,Google Apps Script,学習支援,Flex Message,LINE Messaging API,JavaScript,教育,クイズBot,Quest4',
-            'beengineer-camp' => 'HTML5,CSS3,JavaScript,レスポンシブデザイン,静的サイト,Vanilla JavaScript,Webサイト開発,フレームワーク不使用,合宿案内'
-        );
-        $keywords = isset($custom_keywords[$post_slug]) ? $custom_keywords[$post_slug] : '';
-    }
-    
-    // Robotsメタタグの設定（404、検索結果、フィード、添付ファイル、2ページ目以降はnoindex）
-    $robots_content = 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
-    if ( is_404() || is_search() || is_feed() || is_attachment() || (is_paged() && get_query_var('paged') > 1) ) {
-        $robots_content = 'noindex, follow';
-    }
-    
-    // タグ、日付アーカイブ、著者アーカイブはnoindex（カテゴリはindexを許可）
-    if ( is_tag() || is_date() || is_author() ) {
-        $robots_content = 'noindex, follow';
-    }
+    $post_id = is_singular() ? get_queried_object_id() : 0;
+    $url = mytheme_seo_get_canonical_url();
+    $title = mytheme_seo_get_title();
+    $desc = mytheme_seo_get_description();
+    $image = mytheme_seo_get_image_url($post_id);
+    $type = is_singular(['post', 'news', 'beengineer-news']) ? 'article' : 'website';
     ?>
     <!-- SEO基本タグ -->
     <meta name="description" content="<?php echo esc_attr($desc); ?>">
-    <?php if ($keywords): ?>
-    <meta name="keywords" content="<?php echo esc_attr($keywords); ?>">
-    <?php endif; ?>
     <meta name="author" content="藤原圭吾">
-    <meta name="robots" content="<?php echo esc_attr($robots_content); ?>">
+    <meta name="robots" content="<?php echo esc_attr(mytheme_seo_get_robots_content()); ?>">
+    <?php if ( $url !== '' ) : ?>
     <link rel="canonical" href="<?php echo esc_url($url); ?>">
-    
+    <?php endif; ?>
+
     <!-- 言語設定 -->
     <meta name="language" content="Japanese">
-    
+
     <!-- Open Graph タグ（Facebook、LinkedIn等） -->
     <meta property="og:locale" content="ja_JP">
     <meta property="og:type" content="<?php echo esc_attr($type); ?>">
     <meta property="og:title" content="<?php echo esc_attr($title); ?>">
     <meta property="og:description" content="<?php echo esc_attr($desc); ?>">
+    <?php if ( $url !== '' ) : ?>
     <meta property="og:url" content="<?php echo esc_url($url); ?>">
+    <?php endif; ?>
     <meta property="og:site_name" content="<?php echo esc_attr($site_name); ?>">
-    <?php if ($image): ?>
     <meta property="og:image" content="<?php echo esc_url($image); ?>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="<?php echo esc_attr($title); ?>">
-    <?php endif; ?>
-    
+
     <!-- Twitter Card タグ -->
-    <meta name="twitter:card" content="<?php echo $image ? 'summary_large_image' : 'summary'; ?>">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@KoshiK5">
     <meta name="twitter:creator" content="@KoshiK5">
     <meta name="twitter:title" content="<?php echo esc_attr($title); ?>">
     <meta name="twitter:description" content="<?php echo esc_attr($desc); ?>">
-    <?php if ($image): ?>
     <meta name="twitter:image" content="<?php echo esc_url($image); ?>">
     <meta name="twitter:image:alt" content="<?php echo esc_attr($title); ?>">
-    <?php endif; ?>
-    
+
     <?php
 }
 add_action('wp_head', 'mytheme_seo_meta_tags', 5);
@@ -154,6 +224,7 @@ add_action('wp_head', 'mytheme_seo_meta_tags', 5);
  * WordPressのデフォルトcanonicalタグを削除（カスタムcanonicalと重複するため）
  */
 remove_action('wp_head', 'rel_canonical');
+remove_action('wp_head', 'wp_robots', 1);
 
 /**
  * 添付ファイルページを親ページにリダイレクト（重複コンテンツ防止）
@@ -178,178 +249,133 @@ add_action('template_redirect', 'mytheme_redirect_attachment_pages');
  * 構造化データ（JSON-LD）の追加
  */
 function mytheme_structured_data() {
+    $graph = [];
     $site_name = get_bloginfo('name');
     $site_url = home_url('/');
-    $logo_url = get_site_icon_url();
-    
-    // 基本的な組織情報
-    $structured_data = [
-        '@context' => 'https://schema.org',
-        '@type' => 'EducationalOrganization',
-        'name' => $site_name,
-        'url' => $site_url,
-        'description' => get_bloginfo('description'),
+    $canonical = mytheme_seo_get_canonical_url();
+    $description = mytheme_seo_get_description();
+    $person = [
+        '@type' => 'Person',
+        '@id' => mytheme_seo_person_id(),
+        'name' => '藤原圭吾',
+        'url' => home_url('/about/'),
+        'description' => '教育、AI・プログラミング、情報Ⅰ、資格学習、個人開発などの実践を発信しています。',
         'sameAs' => [
             'https://note.com/k5fujiwara',
             'https://www.youtube.com/channel/UCp0Bt81y7Dd5uuXNOaErNkw',
             'https://x.com/K5_jukukoshi',
             'https://www.instagram.com/k5_jukukoshi/',
             'https://www.threads.com/@k5_jukukoshi',
-            'https://www.facebook.com/profile.php?id=100067108881612'
-        ]
+            'https://www.facebook.com/profile.php?id=100067108881612',
+        ],
+        'knowsAbout' => [
+            '教育',
+            'AI活用',
+            'プログラミング',
+            '情報Ⅰ',
+            'データ分析',
+            '資格学習',
+        ],
     ];
-    
-    if ($logo_url) {
-        $structured_data['logo'] = [
-            '@type' => 'ImageObject',
-            'url' => $logo_url
+
+    if ( is_front_page() ) {
+        $graph[] = [
+            '@type' => 'WebSite',
+            '@id' => home_url('/#website'),
+            'name' => $site_name,
+            'url' => $site_url,
+            'description' => $description,
+            'publisher' => [
+                '@id' => mytheme_seo_person_id(),
+            ],
+            'potentialAction' => [
+                '@type' => 'SearchAction',
+                'target' => [
+                    '@type' => 'EntryPoint',
+                    'urlTemplate' => home_url('/?s={search_term_string}'),
+                ],
+                'query-input' => 'required name=search_term_string',
+            ],
         ];
+        $graph[] = $person;
     }
-    
-    // 記事ページの場合は Article を追加
-    if ( is_singular('post') ) {
+
+    if ( is_page('about') ) {
+        $graph[] = [
+            '@type' => 'ProfilePage',
+            '@id' => get_permalink(get_queried_object_id()) . '#profile',
+            'url' => get_permalink(get_queried_object_id()),
+            'name' => get_the_title(get_queried_object_id()),
+            'description' => $description,
+            'mainEntity' => [
+                '@id' => mytheme_seo_person_id(),
+            ],
+        ];
+        $graph[] = $person;
+    }
+
+    if ( is_singular(['post', 'news', 'beengineer-news']) ) {
         $post_id = get_queried_object_id();
+        $type = is_singular('post') ? 'BlogPosting' : 'Article';
         $article_data = [
-            '@context' => 'https://schema.org',
-            '@type' => 'Article',
+            '@type' => $type,
+            '@id' => get_permalink($post_id) . '#article',
             'headline' => get_the_title($post_id),
+            'description' => $description,
+            'url' => get_permalink($post_id),
             'datePublished' => get_the_date('c', $post_id),
-            'dateModified' => get_the_modified_date('c', $post_id),
             'author' => [
-                '@type' => 'Person',
-                'name' => get_the_author_meta('display_name', get_post_field('post_author', $post_id))
+                '@id' => mytheme_seo_person_id(),
             ],
             'publisher' => [
-                '@type' => 'Organization',
-                'name' => $site_name,
-                'url' => $site_url
+                '@id' => mytheme_seo_person_id(),
             ],
             'mainEntityOfPage' => [
                 '@type' => 'WebPage',
-                '@id' => get_permalink($post_id)
-            ]
-        ];
-        
-        if (has_post_thumbnail($post_id)) {
-            $article_data['image'] = [
+                '@id' => get_permalink($post_id),
+            ],
+            'image' => [
                 '@type' => 'ImageObject',
-                'url' => get_the_post_thumbnail_url($post_id, 'large')
-            ];
+                'url' => mytheme_seo_get_image_url($post_id),
+            ],
+        ];
+
+        if ( function_exists('mytheme_learning_column_modified_datetime') ) {
+            $modified = mytheme_learning_column_modified_datetime($post_id);
+            if ( $modified !== '' ) {
+                $article_data['dateModified'] = $modified;
+            }
         }
-        
-        $content = get_post_field('post_content', $post_id);
-        $article_data['articleBody'] = wp_strip_all_tags($content);
-        
-        echo '<script type="application/ld+json">' . wp_json_encode($article_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+
+        $graph[] = $article_data;
+        $graph[] = $person;
     }
-    
-    // パンくずリスト構造化データ
-    if ( ! is_front_page() ) {
-        mytheme_breadcrumb_schema();
+
+    if ( ! is_front_page() && ! is_404() ) {
+        $breadcrumb_data = mytheme_get_breadcrumb_schema_data();
+        if ( ! empty($breadcrumb_data['itemListElement']) ) {
+            $graph[] = $breadcrumb_data;
+        }
     }
-    
-    // FAQスキーマ（トップページ用）
-    if ( is_front_page() ) {
-        $faq_data = [
-            '@context' => 'https://schema.org',
-            '@type' => 'FAQPage',
-            'mainEntity' => [
-                [
-                    '@type' => 'Question',
-                    'name' => 'このサイトはどのような情報を提供していますか？',
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => '教育・自己啓発・プログラミング学習に関する情報を提供しています。Python開発、機械学習、データ分析の実践的なノウハウや、資格取得の経験を共有し、学び続ける方を支援します。'
-                    ]
-                ],
-                [
-                    '@type' => 'Question',
-                    'name' => 'どのようなプロジェクトを紹介していますか？',
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => 'ロト6予測ツール（機械学習を使用したAI予測システム）、自動タイピングシステム、データ分析ツールなど、Pythonを活用した実践的な開発プロジェクトを紹介しています。'
-                    ]
-                ],
-                [
-                    '@type' => 'Question',
-                    'name' => '学習方法について知ることができますか？',
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text' => 'はい。実際の学習経験や資格取得の過程、効果的な学習方法について情報を共有しています。プログラミング学習から資格試験対策まで、実践的なアドバイスを提供します。'
-                    ]
-                ]
-            ]
-        ];
-        echo '<script type="application/ld+json">' . wp_json_encode($faq_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+
+    if ( empty($graph) ) {
+        return;
     }
-    
-    // 著者情報のPersonスキーマ（自己紹介ページ用）
-    if ( is_page('about') ) {
-        $person_data = [
-            '@context' => 'https://schema.org',
-            '@type' => 'Person',
-            'name' => '藤原圭吾',
-            'url' => get_permalink(),
-            'jobTitle' => 'プログラミング教育・情報I指導',
-            'description' => 'Python、機械学習、データ分析を専門とするエンジニア。教育・自己啓発分野での学習経験と開発プロジェクトを共有。',
-            'alumniOf' => [
-                [
-                    '@type' => 'CollegeOrUniversity',
-                    'name' => '明治大学 理工学部 情報科学系'
-                ],
-                [
-                    '@type' => 'CollegeOrUniversity',
-                    'name' => '明治大学大学院 理工学研究科 基礎理工学専攻 情報科学系'
-                ]
-            ],
-            'award' => [
-                '第九回 明治大学大学院長賞 受賞',
-                '2020年 社長賞：新人賞 受賞',
-                '2023年 社長賞：優秀賞 受賞'
-            ],
-            'hasCredential' => [
-                '基本情報技術者',
-                '情報セキュリティマネジメント',
-                'ファイナンシャル・プランニング技能検定3級',
-                'ビジネス実務マナー検定3級',
-                '統計検定2級',
-                '日商簿記3級'
-            ],
-            'worksFor' => [
-                [
-                    '@type' => 'Organization',
-                    'name' => 'BeEngineer 梅田校'
-                ]
-            ],
-            'knowsAbout' => [
-                'Python',
-                '機械学習',
-                'データ分析',
-                'プログラミング教育'
-            ],
-            'sameAs' => [
-                'https://note.com/k5fujiwara',
-                'https://www.youtube.com/channel/UCp0Bt81y7Dd5uuXNOaErNkw',
-                'https://x.com/K5_jukukoshi',
-                'https://www.instagram.com/k5_jukukoshi/',
-                'https://www.threads.com/@k5_jukukoshi',
-                'https://www.facebook.com/profile.php?id=100067108881612'
-            ]
-        ];
-        echo '<script type="application/ld+json">' . wp_json_encode($person_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
-    }
-    
-    // 基本情報の出力
-    echo '<script type="application/ld+json">' . wp_json_encode($structured_data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+
+    $data = [
+        '@context' => 'https://schema.org',
+        '@graph' => $graph,
+    ];
+    echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
 }
 add_action('wp_head', 'mytheme_structured_data', 10);
 
 /**
  * パンくずリスト用の構造化データ
  */
-function mytheme_breadcrumb_schema() {
+function mytheme_get_breadcrumb_schema_data(): array {
     $breadcrumbs = [
-        '@context' => 'https://schema.org',
+        '@id' => mytheme_seo_get_canonical_url() . '#breadcrumb',
         '@type' => 'BreadcrumbList',
         'itemListElement' => []
     ];
@@ -476,7 +502,18 @@ function mytheme_breadcrumb_schema() {
         ];
     }
     
-    echo '<script type="application/ld+json">' . wp_json_encode($breadcrumbs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+    return $breadcrumbs;
+}
+
+function mytheme_breadcrumb_schema() {
+    $breadcrumbs = mytheme_get_breadcrumb_schema_data();
+    if ( empty($breadcrumbs['itemListElement']) ) {
+        return;
+    }
+    $data = [
+        '@context' => 'https://schema.org',
+    ] + $breadcrumbs;
+    echo '<script type="application/ld+json">' . wp_json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
 }
 
 /**
@@ -521,15 +558,23 @@ function mytheme_enable_xml_sitemap() {
 add_action('init', 'mytheme_enable_xml_sitemap');
 
 /**
- * WordPress標準サイトマップから添付ファイルを除外
+ * WordPress標準サイトマップの投稿タイプを整理
  */
-function mytheme_exclude_attachment_post_type_from_sitemap($post_types) {
+function mytheme_filter_sitemap_post_types($post_types) {
     if ( isset($post_types['attachment']) ) {
         unset($post_types['attachment']);
     }
+
+    foreach ( ['dictionary', 'news', 'beengineer-news', 'work', 'youtube_learning'] as $post_type ) {
+        $object = get_post_type_object($post_type);
+        if ( $object && ! empty($object->public) && ! empty($object->publicly_queryable) ) {
+            $post_types[$post_type] = $object;
+        }
+    }
+
     return $post_types;
 }
-add_filter('wp_sitemaps_post_types', 'mytheme_exclude_attachment_post_type_from_sitemap');
+add_filter('wp_sitemaps_post_types', 'mytheme_filter_sitemap_post_types');
 
 /**
  * users サイトマップ provider を無効化

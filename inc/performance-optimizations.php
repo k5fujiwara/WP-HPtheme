@@ -133,6 +133,44 @@ function mytheme_optimize_contact_form_assets() {
 add_action('wp_enqueue_scripts', 'mytheme_optimize_contact_form_assets', 99);
 
 /**
+ * MathJaxは数式を含む単一ページだけで読み込む。
+ */
+function mytheme_content_needs_mathjax(): bool {
+    if ( ! is_singular() ) {
+        return false;
+    }
+
+    $post = get_post();
+    if ( ! $post instanceof WP_Post ) {
+        return false;
+    }
+
+    $content = (string) $post->post_content;
+    return (bool) preg_match('/(\[latex\]|\[mathjax\]|\\\\\(|\\\\\[|\$\$|<math\b|class=["\'][^"\']*(math|latex)[^"\']*["\'])/i', $content);
+}
+
+function mytheme_dequeue_mathjax_when_unused() {
+    if ( is_admin() || mytheme_content_needs_mathjax() ) {
+        return;
+    }
+
+    wp_dequeue_script('mathjax');
+    wp_deregister_script('mathjax');
+}
+add_action('wp_enqueue_scripts', 'mytheme_dequeue_mathjax_when_unused', 101);
+add_action('wp_print_scripts', 'mytheme_dequeue_mathjax_when_unused', 1);
+
+function mytheme_block_mathjax_plugin_when_unused() {
+    if ( is_admin() || mytheme_content_needs_mathjax() || ! class_exists('MathJax_Latex') ) {
+        return;
+    }
+
+    MathJax_Latex::$add_script = false;
+    MathJax_Latex::$block_script = true;
+}
+add_action('wp_footer', 'mytheme_block_mathjax_plugin_when_unused', 0);
+
+/**
  * リソースヒントの最適化
  */
 function mytheme_optimize_resource_hints() {

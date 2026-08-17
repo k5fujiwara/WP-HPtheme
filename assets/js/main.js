@@ -644,10 +644,37 @@
                 if (link.classList.contains('work-link')) {
                     const workItem = link.closest('.work-item');
                     const projectName = workItem?.querySelector('.work-title')?.textContent || 'Unknown Project';
+                    const linkText = link.textContent.trim();
+                    let ctaType = 'detail';
+                    if (link.href.includes('line.me') || linkText.includes('LINE')) {
+                        ctaType = 'line';
+                    } else if (link.href.includes('#demo-video') || linkText.includes('デモ')) {
+                        ctaType = 'demo_video';
+                    } else if (href.startsWith('http') && !link.href.includes(window.location.hostname)) {
+                        ctaType = 'external_site';
+                    }
+
                     sendToGA4('select_content', {
                         content_type: 'project',
                         item_id: link.href,
                         item_name: projectName
+                    });
+                    sendToGA4('works_cta_click', {
+                        work_name: projectName,
+                        cta_type: ctaType,
+                        destination: link.href,
+                        page_path: window.location.pathname
+                    });
+                }
+
+                const relatedCard = link.closest('.related-posts__card');
+                if (relatedCard && link.classList.contains('related-posts__link')) {
+                    const relatedCards = Array.from(document.querySelectorAll('.related-posts__card'));
+                    sendToGA4('related_article_click', {
+                        source_article: document.querySelector('h1')?.textContent?.trim() || document.title,
+                        destination_article: link.textContent.trim(),
+                        destination: link.href,
+                        position: relatedCards.indexOf(relatedCard) + 1
                     });
                 }
 
