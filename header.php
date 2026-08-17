@@ -192,20 +192,6 @@
                     <?php if ( function_exists('mytheme_header_updates_menu') ) : ?>
                         <?php mytheme_header_updates_menu(); ?>
                     <?php endif; ?>
-
-                    <?php if ( function_exists('mytheme_header_channels_menu') ) : ?>
-                        <?php mytheme_header_channels_menu(); ?>
-                    <?php endif; ?>
-
-                    <?php
-                    $contact_url = function_exists('mytheme_get_page_url_by_path')
-                        ? mytheme_get_page_url_by_path('contact', home_url('/contact/'))
-                        : home_url('/contact/');
-                    $contact_is_current = function_exists('mytheme_is_current_page_tree') && mytheme_is_current_page_tree('contact');
-                    ?>
-                    <a class="site-nav__action-link<?php echo $contact_is_current ? ' is-current' : ''; ?>" href="<?php echo esc_url($contact_url); ?>">
-                        お問い合わせ
-                    </a>
                 </div>
             </div>
         </nav>

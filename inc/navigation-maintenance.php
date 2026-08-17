@@ -18,13 +18,16 @@ function mytheme_get_primary_menu_items() {
     $about_url = function_exists('mytheme_get_page_url_by_path')
         ? mytheme_get_page_url_by_path('about', home_url('/about/'))
         : home_url('/about/');
-    $ebooks_url = function_exists('mytheme_get_page_url_by_path')
-        ? mytheme_get_page_url_by_path('ebooks', home_url('/ebooks/'))
-        : home_url('/ebooks/');
+    $beengineer_url = function_exists('get_post_type_archive_link')
+        ? get_post_type_archive_link('beengineer-news')
+        : '';
+    if ( ! $beengineer_url ) {
+        $beengineer_url = home_url('/beengineer-news/');
+    }
 
     return [
         [
-            'label' => 'ホーム',
+            'label' => 'TOP',
             'url'   => home_url('/'),
         ],
         [
@@ -40,8 +43,8 @@ function mytheme_get_primary_menu_items() {
             'url'   => $works_url,
         ],
         [
-            'label' => '電子書籍',
-            'url'   => $ebooks_url,
+            'label' => 'BeEngineer通信',
+            'url'   => $beengineer_url,
         ],
         [
             'label' => '自己紹介',
@@ -80,7 +83,7 @@ function mytheme_is_current_page_tree($path) {
  * プライマリメニュー項目が現在地か判定
  */
 function mytheme_is_primary_menu_item_current(string $label): bool {
-    if ( $label === 'ホーム' ) {
+    if ( $label === 'TOP' || $label === 'ホーム' ) {
         return is_front_page();
     }
 
@@ -98,6 +101,10 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
 
     if ( $label === '開発作品' ) {
         return mytheme_is_current_page_tree('works');
+    }
+
+    if ( $label === 'BeEngineer通信' ) {
+        return is_post_type_archive('beengineer-news') || is_singular('beengineer-news');
     }
 
     if ( $label === '電子書籍' ) {

@@ -238,27 +238,15 @@ function mytheme_header_updates_menu() {
         $news_url = home_url('/news/');
     }
 
-    $beengineer_url = function_exists('get_post_type_archive_link')
-        ? get_post_type_archive_link('beengineer-news')
-        : '';
-    if ( ! $beengineer_url ) {
-        $beengineer_url = home_url('/beengineer-news/');
-    }
-
     mytheme_render_header_dropdown_menu([
         'label'      => '更新情報',
         'aria_label' => '更新情報メニュー',
-        'is_current' => is_post_type_archive('news') || is_singular('news') || is_post_type_archive('beengineer-news') || is_singular('beengineer-news'),
+        'is_current' => is_post_type_archive('news') || is_singular('news'),
         'items'      => [
             [
                 'label'      => 'お知らせ',
                 'url'        => $news_url,
                 'is_current' => is_post_type_archive('news') || is_singular('news'),
-            ],
-            [
-                'label'      => 'BeEngineer通信',
-                'url'        => $beengineer_url,
-                'is_current' => is_post_type_archive('beengineer-news') || is_singular('beengineer-news'),
             ],
         ],
     ]);

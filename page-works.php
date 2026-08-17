@@ -22,10 +22,39 @@ get_header();
         $works_query = function_exists('mytheme_get_work_archive_query') ? mytheme_get_work_archive_query() : null;
         ?>
         <?php if ( $works_query instanceof WP_Query && $works_query->have_posts() ) : ?>
-            <div class="works-grid">
-                <?php while ( $works_query->have_posts() ) : $works_query->the_post(); ?>
-                    <?php mytheme_render_work_card(get_the_ID()); ?>
-                <?php endwhile; ?>
+            <?php
+            $work_groups = function_exists('mytheme_get_work_category_groups') ? mytheme_get_work_category_groups() : [];
+            $grouped_work_ids = [];
+            foreach ( array_keys($work_groups) as $group_key ) {
+                $grouped_work_ids[$group_key] = [];
+            }
+            while ( $works_query->have_posts() ) : $works_query->the_post();
+                $presentation = function_exists('mytheme_get_work_presentation_meta')
+                    ? mytheme_get_work_presentation_meta(get_the_ID())
+                    : ['category' => 'automation'];
+                $category_key = isset($presentation['category']) ? (string) $presentation['category'] : 'automation';
+                if ( ! isset($grouped_work_ids[$category_key]) ) {
+                    $grouped_work_ids[$category_key] = [];
+                }
+                $grouped_work_ids[$category_key][] = get_the_ID();
+            endwhile;
+            ?>
+
+            <div class="works-group-list">
+                <?php foreach ( $work_groups as $group_key => $group ) : ?>
+                    <?php if ( empty($grouped_work_ids[$group_key]) ) continue; ?>
+                    <section class="works-group works-group--<?php echo esc_attr($group_key); ?>" aria-labelledby="works-group-<?php echo esc_attr($group_key); ?>">
+                        <header class="works-group__header">
+                            <h2 id="works-group-<?php echo esc_attr($group_key); ?>" class="works-group__title"><?php echo esc_html((string) $group['title']); ?></h2>
+                            <p class="works-group__description"><?php echo esc_html((string) $group['description']); ?></p>
+                        </header>
+                        <div class="works-grid">
+                            <?php foreach ( $grouped_work_ids[$group_key] as $work_id ) : ?>
+                                <?php mytheme_render_work_card((int) $work_id); ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endforeach; ?>
             </div>
             <?php wp_reset_postdata(); ?>
         <?php else : ?>
