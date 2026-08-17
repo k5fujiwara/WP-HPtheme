@@ -32,13 +32,31 @@ get_header();
             <?php the_content(); ?>
         </div>
 
-        <section class="about-profile-summary" aria-label="プロフィール要約">
+        <section class="about-profile-summary" aria-labelledby="about-profile-overview-title">
+            <p class="about-profile-summary__eyebrow">Profile Overview</p>
+            <h2 id="about-profile-overview-title" class="about-profile-summary__name">藤原圭吾</h2>
+            <p class="about-profile-summary__tagline">教育 × プログラミング × AI × 個人開発</p>
             <p>
-                教育・プログラミングを中心に活動する藤原圭吾です。教育現場での指導・教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールなどを制作しています。
+                教育現場での指導・教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールなどを制作しています。学び続けながら得た知識や経験を、このサイトに整理しています。
             </p>
-            <p>
-                学び続けながら、実際に使った知識や経験をこのサイトに整理しています。
-            </p>
+            <div class="about-overview-grid" aria-label="活動領域の概要">
+                <div class="about-overview-card">
+                    <h3 class="about-overview-card__title">教育</h3>
+                    <p>指導・教室運営・情報Ⅰ・プログラミング教育を実践しています。</p>
+                </div>
+                <div class="about-overview-card">
+                    <h3 class="about-overview-card__title">開発</h3>
+                    <p>学習アプリ、Web、AI自動化など、使える形の制作に取り組んでいます。</p>
+                </div>
+                <div class="about-overview-card">
+                    <h3 class="about-overview-card__title">研究</h3>
+                    <p>情報科学と大学院での研究経験を、学びの整理に活かしています。</p>
+                </div>
+                <div class="about-overview-card">
+                    <h3 class="about-overview-card__title">学習</h3>
+                    <p>資格・統計・継続学習を通して、実践知を更新し続けています。</p>
+                </div>
+            </div>
         </section>
 
         <div class="about-sections">
