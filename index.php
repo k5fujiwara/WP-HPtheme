@@ -47,7 +47,7 @@ $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_co
                             <?php if ( $single_updated_ts > 0 ) : ?>
                                 <time class="single-post-meta__date" datetime="<?php echo esc_attr(mytheme_learning_column_modified_datetime(get_the_ID())); ?>">更新：<?php echo esc_html(mytheme_learning_column_modified_date(get_the_ID())); ?></time>
                             <?php endif; ?>
-                            <span class="single-post-meta__author"><?php echo esc_html(get_the_author()); ?></span>
+                            <span class="single-post-meta__author"><?php echo esc_html(function_exists('mytheme_get_learning_column_author_name') ? mytheme_get_learning_column_author_name(get_the_ID()) : get_the_author()); ?></span>
                         </div>
                     <?php endif; ?>
                 </header>

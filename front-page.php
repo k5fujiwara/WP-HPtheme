@@ -134,50 +134,16 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
 
             <div class="front-latest-posts__list">
                 <?php if ( $latest_posts->have_posts() ) : ?>
-                    <?php
-                    $front_cat_meta = [
-                        'education' => [
-                            'key' => 'education',
-                            'label' => '教育',
-                            'badge_class' => 'is-education',
-                            'icon' => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="10" y1="8" x2="16" y2="8"></line><line x1="10" y1="12" x2="16" y2="12"></line><line x1="10" y1="16" x2="16" y2="16"></line></svg>',
-                        ],
-                        'programming' => [
-                            'key' => 'programming',
-                            'label' => 'プログラミング',
-                            'badge_class' => 'is-programming',
-                            'icon' => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline><line x1="12" y1="2" x2="12" y2="22" opacity=".0"></line></svg>',
-                        ],
-                        'self-development' => [
-                            'key' => 'self-development',
-                            'label' => '学習法・仕事術',
-                            'badge_class' => 'is-self-development',
-                            'icon' => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M15 9l-3 3"></path></svg>',
-                        ],
-                    ];
-                    ?>
                     <?php while ( $latest_posts->have_posts() ) : $latest_posts->the_post(); ?>
                         <?php
                         $post_url = get_permalink(get_the_ID());
-                        $primary_meta = null;
-                        $cats = get_the_category();
-                        if ( is_array($cats) ) {
-                            foreach ( $cats as $c ) {
-                                $slug = isset($c->slug) ? (string) $c->slug : '';
-                                if ( $slug !== '' && isset($front_cat_meta[$slug]) ) {
-                                    $primary_meta = $front_cat_meta[$slug];
-                                    break;
-                                }
-                            }
-                        }
-                        if ( ! $primary_meta ) {
-                            $primary_meta = [
-                                'key' => 'default',
+                        $primary_meta = function_exists('mytheme_get_learning_column_theme_meta')
+                            ? mytheme_get_learning_column_theme_meta(get_the_ID())
+                            : [
+                                'slug'  => 'default',
                                 'label' => '学習コラム',
-                                'badge_class' => 'is-default',
-                                'icon' => '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+                                'class' => 'is-default',
                             ];
-                        }
 
                         $raw_excerpt = get_the_excerpt();
                         $excerpt_text = wp_strip_all_tags((string) $raw_excerpt);
@@ -186,12 +152,11 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
                             : $excerpt_text;
                         ?>
 
-                        <article <?php post_class('front-latest-card front-latest-card--' . esc_attr($primary_meta['key'])); ?>>
+                        <article <?php post_class('front-latest-card front-latest-card--' . esc_attr((string) $primary_meta['slug'])); ?>>
                             <a class="front-latest-card__link" href="<?php echo esc_url($post_url); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
                                 <div class="front-latest-card__meta">
-                                    <span class="front-latest-card__badge <?php echo esc_attr($primary_meta['badge_class']); ?>">
-                                        <span class="front-latest-card__badge-icon" aria-hidden="true"><?php echo $primary_meta['icon']; ?></span>
-                                        <span class="front-latest-card__badge-text"><?php echo esc_html($primary_meta['label']); ?></span>
+                                    <span class="front-latest-card__badge <?php echo esc_attr((string) $primary_meta['class']); ?>">
+                                        <span class="front-latest-card__badge-text"><?php echo esc_html((string) $primary_meta['label']); ?></span>
                                     </span>
                                     <time class="front-latest-card__date" datetime="<?php echo esc_attr( get_the_date('c') ); ?>">
                                         <?php echo esc_html( get_the_date() ); ?>

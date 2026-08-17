@@ -102,21 +102,11 @@ function mytheme_get_related_post_ids(int $post_id, int $limit = 3): array {
     }
 
     // 2) 同一表示テーマで補完（表示用分類は投稿メタ/タグ/カテゴリから判定）
-    if ( count($found) < $limit && $theme_slug !== '' && $theme_slug !== 'review-required' ) {
-        $candidate_ids = get_posts([
-            'post_type'      => 'post',
-            'post_status'    => 'publish',
-            'fields'         => 'ids',
-            'posts_per_page' => 40,
-            'post__not_in'   => $exclude,
-            'orderby'        => 'date',
-            'order'          => 'DESC',
-            'no_found_rows'  => true,
-        ]);
+    if ( count($found) < $limit && $theme_slug !== '' && $theme_slug !== 'review-required' && function_exists('mytheme_get_learning_column_theme_post_ids') ) {
+        $candidate_ids = mytheme_get_learning_column_theme_post_ids($theme_slug);
         foreach ( (array) $candidate_ids as $candidate_id ) {
             $candidate_id = (int) $candidate_id;
             if ( $candidate_id <= 0 || in_array($candidate_id, $exclude, true) ) continue;
-            if ( function_exists('mytheme_get_learning_column_theme_slug') && mytheme_get_learning_column_theme_slug($candidate_id) !== $theme_slug ) continue;
             $found[] = $candidate_id;
             $exclude[] = $candidate_id;
             if ( count($found) >= $limit ) break;
@@ -237,17 +227,6 @@ function mytheme_render_related_posts(int $post_id, int $limit = 3): void {
                 echo '<span class="related-posts__tag">#' . esc_html($tag_name) . '</span>';
             }
             echo '</div>';
-        } elseif ( has_category() ) {
-            $cats = get_the_category();
-            if ( is_array($cats) && ! empty($cats) ) {
-                echo '<div class="related-posts__tags" aria-label="カテゴリ">';
-                foreach ( array_slice($cats, 0, 2) as $cat ) {
-                    $cat_name = isset($cat->name) ? (string) $cat->name : '';
-                    if ( $cat_name === '' ) continue;
-                    echo '<span class="related-posts__tag related-posts__tag--category">' . esc_html($cat_name) . '</span>';
-                }
-                echo '</div>';
-            }
         }
         $raw_excerpt = get_the_excerpt();
         $excerpt = wp_trim_words( wp_strip_all_tags((string) $raw_excerpt), 22, '…' );

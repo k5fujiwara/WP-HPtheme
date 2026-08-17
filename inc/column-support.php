@@ -13,9 +13,9 @@ function mytheme_get_learning_column_themes(): array {
             'class'       => 'is-theme-ai-programming',
             'description' => 'AI活用、Python、プログラミング、開発に関する記事',
         ],
-        'info-data' => [
+        'information-data' => [
             'label'       => '情報Ⅰ・データ分析',
-            'class'       => 'is-theme-info-data',
+            'class'       => 'is-theme-information-data',
             'description' => '情報Ⅰ、統計、データ分析、アルゴリズムに関する記事',
         ],
         'qualification-career' => [
@@ -38,6 +38,12 @@ function mytheme_get_learning_column_themes(): array {
 
 function mytheme_normalize_learning_column_theme($theme): string {
     $theme = sanitize_key((string) $theme);
+    $aliases = [
+        'info-data' => 'information-data',
+    ];
+    if ( isset($aliases[$theme]) ) {
+        $theme = $aliases[$theme];
+    }
     $themes = mytheme_get_learning_column_themes();
     return isset($themes[$theme]) ? $theme : '';
 }
@@ -62,7 +68,7 @@ function mytheme_get_learning_column_theme_slug($post_id): string {
     $tag_text = implode(' ', array_filter($tag_keys));
 
     if ( preg_match('/情報|info-?1|data|データ|統計|statistics|algorithm|アルゴリズム/u', $tag_text) ) {
-        return 'info-data';
+        return 'information-data';
     }
     if ( preg_match('/ai|chatgpt|gemini|python|programming|プログラミング|コード|開発/u', $tag_text) ) {
         return 'ai-programming';
@@ -95,6 +101,10 @@ function mytheme_get_learning_column_theme_meta($post_id): array {
     return $meta;
 }
 
+function mytheme_get_learning_column_author_name($post_id = 0): string {
+    return '藤原圭吾';
+}
+
 function mytheme_learning_column_modified_timestamp($post_id): int {
     $post_id = (int) $post_id;
     $explicit = trim((string) get_post_meta($post_id, '_mytheme_post_updated_at', true));
@@ -123,42 +133,56 @@ function mytheme_learning_column_modified_datetime($post_id): string {
     return $timestamp > 0 ? wp_date(DATE_W3C, $timestamp) : '';
 }
 
-function mytheme_get_learning_column_theme_tax_query(string $theme): array {
+function mytheme_get_learning_column_legacy_category_theme_map(): array {
+    return [
+        'education'        => 'education-learning',
+        'programming'      => 'ai-programming',
+        'self-development' => 'learning-work',
+    ];
+}
+
+function mytheme_get_learning_column_theme_post_ids(string $theme): array {
     $theme = mytheme_normalize_learning_column_theme($theme);
     if ( $theme === '' || $theme === 'review-required' ) return [];
 
-    $tag_map = [
-        'ai-programming' => ['ai', 'chatgpt', 'gemini', 'python', 'programming', 'programming-learning'],
-        'info-data' => ['information-1', 'info1', 'data', 'statistics', 'python'],
-        'qualification-career' => ['qualification', 'career', 'skill-up'],
-        'learning-work' => ['study-method', 'output', 'work-style'],
-    ];
-    $cat_map = [
-        'education-learning' => ['education'],
-        'ai-programming' => ['programming'],
-        'learning-work' => ['self-development'],
-    ];
-
-    $queries = [];
-    if ( ! empty($cat_map[$theme]) ) {
-        $queries[] = [
-            'taxonomy' => 'category',
-            'field'    => 'slug',
-            'terms'    => $cat_map[$theme],
-        ];
-    }
-    if ( ! empty($tag_map[$theme]) ) {
-        $queries[] = [
-            'taxonomy' => 'post_tag',
-            'field'    => 'slug',
-            'terms'    => $tag_map[$theme],
-        ];
+    $cache_key = 'mytheme_lc_theme_ids_v1_' . $theme;
+    $cached = get_transient($cache_key);
+    if ( is_array($cached) ) {
+        return array_values(array_filter(array_map('intval', $cached)));
     }
 
-    if ( empty($queries) ) return [];
-    if ( count($queries) === 1 ) return $queries[0];
-    return array_merge(['relation' => 'OR'], $queries);
+    $all_ids = get_posts([
+        'post_type'              => 'post',
+        'post_status'            => 'publish',
+        'fields'                 => 'ids',
+        'posts_per_page'         => -1,
+        'orderby'                => 'date',
+        'order'                  => 'DESC',
+        'no_found_rows'          => true,
+        'update_post_meta_cache' => true,
+        'update_post_term_cache' => true,
+    ]);
+
+    $matched = [];
+    foreach ( (array) $all_ids as $post_id ) {
+        $post_id = (int) $post_id;
+        if ( $post_id <= 0 ) continue;
+        if ( mytheme_get_learning_column_theme_slug($post_id) === $theme ) {
+            $matched[] = $post_id;
+        }
+    }
+
+    set_transient($cache_key, $matched, 30 * MINUTE_IN_SECONDS);
+    return $matched;
 }
+
+function mytheme_purge_learning_column_theme_cache($post_id = 0, $post = null, $update = false): void {
+    if ( $post && isset($post->post_type) && $post->post_type !== 'post' ) return;
+    foreach ( array_keys(mytheme_get_learning_column_themes()) as $theme ) {
+        delete_transient('mytheme_lc_theme_ids_v1_' . $theme);
+    }
+}
+add_action('save_post', 'mytheme_purge_learning_column_theme_cache', 10, 3);
 
 function mytheme_parse_post_references($post_id): array {
     $raw = trim((string) get_post_meta((int) $post_id, '_mytheme_post_references', true));

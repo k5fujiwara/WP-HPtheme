@@ -47,21 +47,18 @@ $query_args = [
 ];
 if ( $selected_cat !== '' ) {
     $query_args['category_name'] = $selected_cat;
-} elseif ( $selected_theme !== '' && function_exists('mytheme_get_learning_column_theme_tax_query') ) {
-    $theme_tax_query = mytheme_get_learning_column_theme_tax_query($selected_theme);
-    if ( ! empty($theme_tax_query) ) {
-        $query_args['tax_query'] = isset($theme_tax_query['relation']) ? $theme_tax_query : [$theme_tax_query];
-    }
+} elseif ( $selected_theme !== '' && function_exists('mytheme_get_learning_column_theme_post_ids') ) {
+    $theme_post_ids = mytheme_get_learning_column_theme_post_ids($selected_theme);
+    $query_args['post__in'] = ! empty($theme_post_ids) ? $theme_post_ids : [0];
+    $query_args['orderby'] = 'post__in';
 }
 
 $q = new WP_Query([
     ...$query_args,
 ]);
-$legacy_cat_theme_map = [
-    'education'        => 'education-learning',
-    'programming'      => 'ai-programming',
-    'self-development' => 'learning-work',
-];
+$legacy_cat_theme_map = function_exists('mytheme_get_learning_column_legacy_category_theme_map')
+    ? mytheme_get_learning_column_legacy_category_theme_map()
+    : [];
 $active_theme = $selected_theme !== ''
     ? $selected_theme
     : (isset($legacy_cat_theme_map[$selected_cat]) ? $legacy_cat_theme_map[$selected_cat] : '');
