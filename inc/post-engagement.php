@@ -204,7 +204,10 @@ function mytheme_render_related_posts(int $post_id, int $limit = 3): void {
             echo '</div>';
         }
         $raw_excerpt = get_the_excerpt();
-        $excerpt = wp_trim_words( wp_strip_all_tags((string) $raw_excerpt), 22, '…' );
+        $excerpt_text = wp_strip_all_tags((string) $raw_excerpt);
+        $excerpt = function_exists('wp_html_excerpt')
+            ? wp_html_excerpt($excerpt_text, 90, '…')
+            : $excerpt_text;
         echo '<p class="related-posts__excerpt">' . esc_html($excerpt) . '</p>';
         echo '</article>';
         $rendered++;

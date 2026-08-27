@@ -70,7 +70,12 @@ function mytheme_render_learning_column_card(array $cat_meta = [], bool $show_de
     echo '</a></h2>';
 
     $raw_excerpt = get_the_excerpt($post_id);
-    $excerpt = wp_trim_words(wp_strip_all_tags((string) $raw_excerpt), 36, '…');
+    $excerpt_text = wp_strip_all_tags((string) $raw_excerpt);
+    // wp_trim_words は日本語ロケールだと「語数」ではなく「文字数」になる。
+    // 本番 ja では 36 文字≒1行で切れるため、文字数ベースで 3 行分を渡して CSS line-clamp に任せる。
+    $excerpt = function_exists('wp_html_excerpt')
+        ? wp_html_excerpt($excerpt_text, 120, '…')
+        : $excerpt_text;
     echo '<div class="post-excerpt">' . esc_html($excerpt) . '</div>';
     echo '<p class="post-readmore"><a class="read-more" href="' . esc_url($post_url) . '">続きを読む</a></p>';
     echo '</article>';
