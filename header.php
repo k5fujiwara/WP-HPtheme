@@ -56,9 +56,8 @@
     <style>
         /* ベース（最小限） */
         *,*:before,*:after{box-sizing:border-box}
-        .site-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.75;color:#161616;background:linear-gradient(180deg,#edf5ff 0%,#f8fcff 40%,#fff 100%);background-attachment:scroll;font-size:16px;-webkit-font-smoothing:antialiased;opacity:1}
-        .site-body.loaded{animation:fadeIn .15s ease-out forwards}
-        @keyframes fadeIn{from{opacity:.95}to{opacity:1}}
+        .site-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.75;color:#161616;background:#f7fbff;font-size:16px;-webkit-font-smoothing:antialiased;opacity:1}
+        .site-body.loaded{opacity:1}
         
         /* ヘッダー（ATF） */
         .site-header-shell{position:sticky;top:0;z-index:102;background:#fff;box-shadow:0 10px 24px rgba(15,98,254,.08)}
@@ -73,7 +72,7 @@
             radial-gradient(circle at 82% 22%,rgba(0,212,255,.18),transparent 24%),
             linear-gradient(135deg,#001d6c 0%,#0f62fe 52%,#4589ff 100%);border-radius:32px;margin:40px 20px;box-shadow:0 12px 40px rgba(0,45,156,.25);overflow:hidden;border:1px solid rgba(255,255,255,.12);min-height:220px;display:flex;align-items:center;justify-content:center}
         .hero-section__inner{max-width:720px;position:relative;z-index:1}
-        .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 16px;padding:8px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.92);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(8px)}
+        .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 16px;padding:8px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.92);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
         .hero-title{font-size:2.9rem;margin:0 auto;font-weight:900;color:#fff;text-shadow:0 4px 12px rgba(0,0,0,.3);letter-spacing:-.03em;line-height:1.12;z-index:1;max-width:none;white-space:nowrap}
         .hero-lead{margin:18px auto 0;max-width:36rem;color:rgba(255,255,255,.9);font-size:1rem;line-height:1.75;text-shadow:0 2px 8px rgba(0,0,0,.16)}
         
@@ -94,7 +93,7 @@
         @media(max-width:768px){
             .hero-section{padding:34px 22px;margin:32px 16px;min-height:0}
             .hero-eyebrow{margin-bottom:12px;padding:6px 11px;font-size:.64rem;letter-spacing:.06em}
-            .hero-title{font-size:1.45rem;max-width:none;white-space:nowrap}
+            .hero-title{font-size:1.45rem;max-width:none;white-space:normal}
             .hero-lead{margin-top:14px;font-size:.92rem;line-height:1.7}
         }
         @media(max-width:782px){
@@ -102,7 +101,7 @@
         }
 
         @media(min-width:1024px){
-            .site-body{background-attachment:fixed}
+            .site-body{background:#f7fbff}
         }
     </style>
     
@@ -124,16 +123,15 @@
 
         function scheduleLoad() {
             if ('requestIdleCallback' in window) {
-                window.requestIdleCallback(loadAdsScript, { timeout: 4000 });
+                window.requestIdleCallback(loadAdsScript, { timeout: 8000 });
             } else {
-                setTimeout(loadAdsScript, 1500);
+                setTimeout(loadAdsScript, 4000);
             }
         }
 
         window.addEventListener('load', scheduleLoad, { once: true });
 
-        // 先に操作があれば、その時点で読み込む
-        ['pointerdown', 'keydown', 'scroll'].forEach(function(eventName) {
+        ['pointerdown', 'keydown'].forEach(function(eventName) {
             window.addEventListener(eventName, loadAdsScript, { once: true, passive: true });
         });
     })();

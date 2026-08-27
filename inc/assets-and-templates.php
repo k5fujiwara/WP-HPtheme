@@ -133,17 +133,15 @@ function mytheme_assets() {
 add_action('wp_enqueue_scripts', 'mytheme_assets');
 
 /**
- * 学習コラム/辞書の追加CSSだけを非同期読み込み
- *
- * main.css は初期描画に必要なので通常読込のまま維持し、
- * ページ個別CSSだけ render-blocking を外す。
+ * 初期描画用の Critical CSS は header.php にインライン済みのため、
+ * テーマCSSは render-blocking を外す。
  */
 function mytheme_async_page_styles($html, $handle, $href, $media) {
     if ( is_admin() ) {
         return $html;
     }
 
-    if ( ! in_array($handle, ['mytheme-learning-column', 'mytheme-dictionary', 'mytheme-beengineer-news', 'mytheme-youtube-learning'], true) ) {
+    if ( ! in_array($handle, ['mytheme-main', 'mytheme-learning-column', 'mytheme-dictionary', 'mytheme-beengineer-news', 'mytheme-youtube-learning'], true) ) {
         return $html;
     }
 
@@ -189,16 +187,3 @@ function mytheme_add_bem_classes_to_nav_menu_link($atts, $item, $args, $depth) {
     return $atts;
 }
 add_filter('nav_menu_link_attributes', 'mytheme_add_bem_classes_to_nav_menu_link', 10, 4);
-
-// 重要なCSSファイルにpreloadを追加（パフォーマンス最適化）
-function mytheme_preload_critical_css() {
-    $theme_version = wp_get_theme()->get('Version');
-    $theme_dir = get_template_directory();
-    
-    // main.css は常に最新の配信用ファイルをプリロード
-    $main_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/main', '.css');
-    $main_css_path = $theme_dir . $main_css_rel;
-    $ver = file_exists($main_css_path) ? (string) filemtime($main_css_path) : $theme_version;
-    echo '<link rel="preload" href="' . get_template_directory_uri() . $main_css_rel . '?ver=' . $ver . '" as="style">' . "\n";
-}
-add_action('wp_head', 'mytheme_preload_critical_css', 5);

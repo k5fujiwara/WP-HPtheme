@@ -542,11 +542,7 @@ html {
     font-size: 0.84rem;
     font-weight: 700;
     line-height: 1;
-}
-.page-content:not(.legal-page) .page-body .post-tags__link:hover {
-    background: rgba(15, 98, 254, 0.12);
-    border-color: rgba(15, 98, 254, 0.22);
-    text-decoration: none;
+    cursor: default;
 }
 
 /* 投稿：関連記事 */

@@ -55,17 +55,6 @@ function mytheme_add_dns_prefetch($urls, $relation_type) {
     if ('dns-prefetch' === $relation_type) {
         $urls[] = '//www.youtube.com';
         $urls[] = '//i.ytimg.com';
-        // AdSense（表示速度の下支え）
-        $urls[] = '//pagead2.googlesyndication.com';
-        $urls[] = '//googleads.g.doubleclick.net';
-        $urls[] = '//tpc.googlesyndication.com';
-        $urls[] = '//www.googletagmanager.com';
-        $urls[] = '//cdn.jsdelivr.net';
-    }
-    if ('preconnect' === $relation_type) {
-        $urls[] = 'https://www.googletagmanager.com';
-        $urls[] = 'https://pagead2.googlesyndication.com';
-        $urls[] = 'https://ep1.adtrafficquality.google';
     }
     return $urls;
 }
@@ -185,25 +174,6 @@ function mytheme_optimize_resource_hints() {
     }
 }
 add_action('wp_head', 'mytheme_optimize_resource_hints', 3);
-
-/**
- * ページネーションのprefetch
- */
-function mytheme_prefetch_pages() {
-    if (is_front_page()) {
-        // トップページから主要ページへのprefetch
-        $about_url = mytheme_get_page_url_by_path('about', '');
-        $works_url = mytheme_get_page_url_by_path('works', '');
-        
-        if ($about_url !== '') {
-            echo '<link rel="prefetch" href="' . esc_url($about_url) . '">' . "\n";
-        }
-        if ($works_url !== '') {
-            echo '<link rel="prefetch" href="' . esc_url($works_url) . '">' . "\n";
-        }
-    }
-}
-add_action('wp_head', 'mytheme_prefetch_pages', 4);
 
 /**
  * HTTPヘッダーでキャッシュ制御（WordPress標準機能の補助）

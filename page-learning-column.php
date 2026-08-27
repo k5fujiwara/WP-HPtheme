@@ -96,7 +96,7 @@ $active_theme = $selected_theme !== ''
                 $is_active = $active_theme === $slug;
                 $url = add_query_arg('theme', $slug, remove_query_arg(['cat', 'cats', 'paged'], $base_url));
                 ?>
-                <a class="learning-column-filters__item <?php echo ! empty($m['class']) ? esc_attr($m['class']) : ''; ?> <?php echo $is_active ? 'is-active' : ''; ?>" href="<?php echo esc_url($url); ?>" data-cat="<?php echo esc_attr($slug); ?>">
+                <a class="learning-column-filters__item <?php echo ! empty($m['class']) ? esc_attr($m['class']) : ''; ?> <?php echo $is_active ? 'is-active' : ''; ?>" href="<?php echo esc_url($url); ?>" rel="nofollow" data-cat="<?php echo esc_attr($slug); ?>">
                     <?php if ( ! empty($m['icon']) ) : ?>
                         <span class="lc-filter-icon" aria-hidden="true"><?php echo $m['icon']; ?></span>
                     <?php else : ?>

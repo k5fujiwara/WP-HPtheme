@@ -28,6 +28,9 @@ function mytheme_seo_request_url(): string {
 }
 
 function mytheme_seo_is_learning_filter_url(): bool {
+    if ( is_post_type_archive('dictionary') && isset($_GET['dic_cat']) ) {
+        return true;
+    }
     if ( ! ( is_page('learning-column') || is_home() ) ) {
         return false;
     }
@@ -150,12 +153,22 @@ function mytheme_seo_get_description(): string {
 
 function mytheme_seo_get_robots_content(): string {
     $index = true;
+    $follow = true;
 
-    if ( is_404() || is_search() || is_feed() || is_attachment() || mytheme_seo_is_learning_filter_url() || is_author() || is_date() ) {
+    if ( is_404() || is_search() || is_feed() || is_attachment() || mytheme_seo_is_learning_filter_url() || is_author() || is_date() || is_tag() ) {
         $index = false;
     }
 
-    $prefix = $index ? 'index, follow' : 'noindex, follow';
+    $paged_number = max((int) get_query_var('paged'), (int) get_query_var('page'));
+    if ( $paged_number > 1 && ! is_singular() ) {
+        $index = false;
+    }
+
+    if ( is_search() || mytheme_seo_is_learning_filter_url() ) {
+        $follow = false;
+    }
+
+    $prefix = ($index ? 'index' : 'noindex') . ', ' . ($follow ? 'follow' : 'nofollow');
     return $prefix . ', max-snippet:-1, max-image-preview:large, max-video-preview:-1';
 }
 
@@ -517,34 +530,44 @@ function mytheme_breadcrumb_schema() {
 }
 
 /**
- * robots.txt の最適化
- * 注意: 物理ファイル /public/robots.txt が存在する場合、そちらが優先されます
- * このフィルターは物理ファイルが存在しない場合のフォールバックです
+ * クロール対象を絞る robots.txt
+ * 物理ファイル ABSPATH/robots.txt がある環境では Web サーバーがそちらを返すため、
+ * 本番では同じ内容へ差し替えるか、物理ファイルを削除して WordPress 生成に任せる。
  */
+function mytheme_get_robots_txt_body(): string {
+    $sitemap = home_url('/wp-sitemap.xml');
+    return implode("\n", [
+        'User-agent: *',
+        'Disallow: /wp-admin/',
+        'Allow: /wp-admin/admin-ajax.php',
+        'Disallow: /wp-includes/',
+        'Disallow: /wp-json/',
+        'Disallow: /feed/',
+        'Disallow: */feed/',
+        'Disallow: */attachment/',
+        'Disallow: /wp-login.php',
+        'Disallow: /wp-signup.php',
+        'Disallow: /trackback/',
+        'Disallow: /xmlrpc.php',
+        'Disallow: /?s=',
+        'Disallow: /*?s=',
+        'Disallow: /*?*s=',
+        'Disallow: /*?*theme=',
+        'Disallow: /*?*cat=',
+        'Disallow: /*?*cats=',
+        'Disallow: /*?*dic_cat=',
+        '',
+        '# サイトマップ（WordPress標準）',
+        'Sitemap: ' . esc_url_raw($sitemap),
+        '',
+    ]);
+}
+
 function mytheme_custom_robots_txt($output, $public) {
-    // 物理ファイルが存在する場合は何もしない
-    $robots_file = ABSPATH . 'robots.txt';
-    if (file_exists($robots_file)) {
-        // 物理ファイルの内容を読み込んで返す
-        return file_get_contents($robots_file);
+    if ( ! $public ) {
+        return $output;
     }
-    
-    // 物理ファイルがない場合は仮想robots.txtを生成
-    if ($public) {
-        $wp_sitemap_url = home_url('/wp-sitemap.xml');
-        $output = "User-agent: *\n";
-        $output .= "Disallow: /wp-admin/\n";
-        $output .= "Allow: /wp-admin/admin-ajax.php\n";
-        $output .= "Disallow: /wp-includes/\n";
-        $output .= "Allow: /wp-content/uploads/\n";
-        $output .= "Disallow: /feed/\n";
-        $output .= "Disallow: */feed/\n";
-        $output .= "Disallow: */attachment/\n";
-        $output .= "\n";
-        $output .= "# サイトマップ（WordPress標準）\n";
-        $output .= "Sitemap: " . esc_url($wp_sitemap_url) . "\n";
-    }
-    return $output;
+    return mytheme_get_robots_txt_body();
 }
 add_filter('robots_txt', 'mytheme_custom_robots_txt', 10, 2);
 
@@ -587,3 +610,38 @@ function mytheme_disable_users_sitemap_provider($provider, $name) {
     return $provider;
 }
 add_filter('wp_sitemaps_add_provider', 'mytheme_disable_users_sitemap_provider', 10, 2);
+
+/**
+ * タグアーカイブはサイトマップから外す（検出済み未登録の主因になりやすい）
+ */
+function mytheme_filter_sitemap_taxonomies($taxonomies) {
+    unset($taxonomies['post_tag']);
+    return $taxonomies;
+}
+add_filter('wp_sitemaps_taxonomies', 'mytheme_filter_sitemap_taxonomies');
+
+/**
+ * 著者・日付・タグ・添付ファイルは学習コラムへ集約
+ */
+function mytheme_redirect_thin_archives() {
+    if ( is_admin() || wp_doing_ajax() || ( defined('REST_REQUEST') && REST_REQUEST ) ) {
+        return;
+    }
+
+    $learning_url = function_exists('mytheme_get_page_url_by_path')
+        ? mytheme_get_page_url_by_path('learning-column', home_url('/learning-column/'))
+        : home_url('/learning-column/');
+
+    if ( is_author() || is_date() || is_tag() ) {
+        wp_safe_redirect($learning_url, 301);
+        exit;
+    }
+
+    if ( is_attachment() ) {
+        $parent_id = (int) wp_get_post_parent_id(get_queried_object_id());
+        $target = $parent_id > 0 ? get_permalink($parent_id) : $learning_url;
+        wp_safe_redirect($target, 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'mytheme_redirect_thin_archives', 1);

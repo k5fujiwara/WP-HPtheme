@@ -64,7 +64,7 @@ get_header();
                         $icon_svg = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M2 12h4"></path><path d="M18 12h4"></path></svg>';
                     }
                     ?>
-                    <a class="learning-column-filters__item <?php echo esc_attr(trim($kind_class . ' ' . ($active ? 'is-active' : ''))); ?>" href="<?php echo esc_url($url); ?>">
+                    <a class="learning-column-filters__item <?php echo esc_attr(trim($kind_class . ' ' . ($active ? 'is-active' : ''))); ?>" href="<?php echo esc_url($url); ?>" rel="nofollow">
                         <?php if ( $icon_svg !== '' ) : ?>
                             <span class="lc-filter-icon" aria-hidden="true"><?php echo $icon_svg; ?></span>
                         <?php endif; ?>

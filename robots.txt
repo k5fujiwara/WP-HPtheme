@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /wp-admin/
 Allow: /wp-admin/admin-ajax.php
+Disallow: /wp-includes/
+Disallow: /wp-json/
 Disallow: /feed/
 Disallow: */feed/
 Disallow: */attachment/
@@ -8,6 +10,13 @@ Disallow: /wp-login.php
 Disallow: /wp-signup.php
 Disallow: /trackback/
 Disallow: /xmlrpc.php
+Disallow: /?s=
+Disallow: /*?s=
+Disallow: /*?*s=
+Disallow: /*?*theme=
+Disallow: /*?*cat=
+Disallow: /*?*cats=
+Disallow: /*?*dic_cat=
 
 # サイトマップ（WordPress標準）
 Sitemap: https://info-study.com/wp-sitemap.xml

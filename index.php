@@ -80,13 +80,9 @@ $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_co
                                 <h2 class="post-tags__title">この記事のタグ</h2>
                                 <div class="post-tags__list">
                                     <?php foreach ( $post_tags as $tag ) : ?>
-                                        <?php
-                                        $tag_link = get_tag_link($tag);
-                                        if ( is_wp_error($tag_link) ) continue;
-                                        ?>
-                                        <a class="post-tags__link" href="<?php echo esc_url($tag_link); ?>">
+                                        <span class="post-tags__link">
                                             #<?php echo esc_html( (string) $tag->name ); ?>
-                                        </a>
+                                        </span>
                                     <?php endforeach; ?>
                                 </div>
                             </section>
