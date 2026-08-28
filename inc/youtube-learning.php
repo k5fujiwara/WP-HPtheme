@@ -26,7 +26,7 @@ function mytheme_register_youtube_learning_cpt_and_taxonomies() {
         'menu_position'       => 25,
         'menu_icon'           => 'dashicons-video-alt3',
         'supports'            => ['title', 'editor', 'excerpt'],
-        'exclude_from_search' => false,
+        'exclude_from_search' => true,
         'publicly_queryable'  => true,
     ]);
 

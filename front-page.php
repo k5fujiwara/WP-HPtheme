@@ -12,12 +12,6 @@ $works_url = function_exists('mytheme_get_page_url_by_path')
 $learning_column_url = function_exists('mytheme_get_page_url_by_path')
     ? mytheme_get_page_url_by_path('learning-column', home_url('/learning-column/'))
     : home_url('/learning-column/');
-$learning_tools_url = function_exists('get_post_type_archive_link')
-    ? get_post_type_archive_link('youtube_learning')
-    : home_url('/youtube-learning/');
-if ( ! $learning_tools_url ) {
-    $learning_tools_url = home_url('/youtube-learning/');
-}
 $news_url = function_exists('get_post_type_archive_link')
     ? get_post_type_archive_link('news')
     : home_url('/news/');
@@ -85,7 +79,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
             </a>
             <a class="front-choice-card" href="<?php echo esc_url($works_url); ?>">
                 <span class="front-choice-card__label">使ってみたい</span>
-                <span class="front-choice-card__title">学習ツール / 開発作品</span>
+                <span class="front-choice-card__title">開発作品</span>
                 <span class="front-choice-card__text">情報Ⅰ対策や学習支援など、実際に制作したツールやプロジェクト。</span>
             </a>
             <a class="front-choice-card" href="<?php echo esc_url($about_url); ?>">
@@ -190,12 +184,11 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     <section class="front-tools" aria-labelledby="front-tools-title">
         <div class="front-section-heading">
             <p class="front-section-kicker">Works</p>
-            <h2 id="front-tools-title" class="front-section-title">開発・学習ツール</h2>
+            <h2 id="front-tools-title" class="front-section-title">開発作品</h2>
             <p class="front-section-lead">技術スタックよりも、「誰の何を解決するか」が先に伝わるように整理しています。</p>
         </div>
 
         <div class="front-tools__actions">
-            <a class="work-link" href="<?php echo esc_url($learning_tools_url); ?>">学習ツールを見る</a>
             <a class="work-link work-link-demo" href="<?php echo esc_url($works_url); ?>">開発作品を見る</a>
         </div>
 

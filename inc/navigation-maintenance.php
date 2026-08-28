@@ -8,10 +8,6 @@ function mytheme_get_primary_menu_items() {
     $learning_column_url = function_exists('mytheme_get_page_url_by_path')
         ? mytheme_get_page_url_by_path('learning-column', home_url('/learning-column/'))
         : home_url('/learning-column/');
-    $learning_url = get_post_type_archive_link('youtube_learning');
-    if ( ! $learning_url ) {
-        $learning_url = home_url('/youtube-learning/');
-    }
     $works_url = function_exists('mytheme_get_page_url_by_path')
         ? mytheme_get_page_url_by_path('works', home_url('/works/'))
         : home_url('/works/');
@@ -33,10 +29,6 @@ function mytheme_get_primary_menu_items() {
         [
             'label' => '学習コラム',
             'url'   => $learning_column_url,
-        ],
-        [
-            'label' => '学習ツール',
-            'url'   => $learning_url,
         ],
         [
             'label' => '開発作品',
@@ -93,10 +85,6 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
         }
 
         return is_page('learning-column') || is_home() || is_singular('post') || is_search() || is_category() || is_tag() || is_tax();
-    }
-
-    if ( $label === '学習ツール' ) {
-        return is_post_type_archive('youtube_learning') || is_singular('youtube_learning');
     }
 
     if ( $label === '開発作品' ) {
@@ -211,10 +199,19 @@ function mytheme_dedupe_primary_menu_items($items, $args) {
 
     $seen = [];
     $deduped = [];
+    $hidden_url_needles = ['/youtube-learning', '/youtube-topic', '/youtube-channel'];
 
     foreach ( $items as $item ) {
         $title = isset($item->title) ? trim(wp_strip_all_tags((string) $item->title)) : '';
         $url   = isset($item->url) ? rtrim((string) $item->url, '/') : '';
+        if ( $title === '学習ツール' ) {
+            continue;
+        }
+        foreach ( $hidden_url_needles as $needle ) {
+            if ( $url !== '' && strpos($url, $needle) !== false ) {
+                continue 2;
+            }
+        }
         $key   = strtolower($title) . '|' . strtolower($url);
 
         if ( $title !== '' && isset($seen[$key]) ) {
@@ -232,10 +229,10 @@ add_filter('wp_nav_menu_objects', 'mytheme_dedupe_primary_menu_items', 20, 2);
 /**
  * プライマリメニューを必要最小限に整備（冪等）
  * - 外部誘導（YouTube/note 等）をナビから排除し、情報メディアとしての導線に絞る
- * - ホーム / 学習コラム / 学習ツール / 開発作品 / 電子書籍 / 自己紹介
+ * - ホーム / 学習コラム / 開発作品 / 電子書籍 / 自己紹介
  */
 function mytheme_ensure_primary_menu_links() {
-    $sync_key = 'mytheme_primary_menu_links_done_v3';
+    $sync_key = 'mytheme_primary_menu_links_done_v4';
     // Gutenberg/REST中に走ると遅延やエラーの原因になるため、管理画面でのみ実行
     if ( function_exists('wp_doing_ajax') && wp_doing_ajax() ) return;
     if ( defined('REST_REQUEST') && REST_REQUEST ) return;
@@ -258,6 +255,7 @@ function mytheme_ensure_primary_menu_links() {
             'https://note.com/k5fujiwara',
             'https://www.youtube.com/channel/UCp0Bt81y7Dd5uuXNOaErNkw',
             'https://www.youtube.com/@KoshiK5',
+            home_url('/youtube-learning/'),
         ];
         $managed_titles = ['ホーム', '学習コラム', '学習', '学習ツール', 'お知らせ', '辞書一覧', '電子書籍', '自己紹介', 'お問い合わせ', '開発作品'];
 
@@ -381,25 +379,6 @@ function mytheme_ensure_primary_menu_links() {
         } elseif ( ! $has_by_object($learning_column_id) ) {
             wp_update_nav_menu_item($menu_id, 0, $learning_column_item_args);
         }
-    }
-
-    // 学習ツール（学習動画、将来的な数学・理科の問題演習などの入口）
-    $learning_url = get_post_type_archive_link('youtube_learning');
-    if ( ! $learning_url ) {
-        $learning_url = home_url('/youtube-learning/');
-    }
-    $learning_item_id = $get_item_id_by_url($learning_url);
-    $learning_item_args = [
-        'menu-item-type'      => 'custom',
-        'menu-item-title'     => '学習ツール',
-        'menu-item-url'       => $learning_url,
-        'menu-item-status'    => 'publish',
-        'menu-item-position'  => 3,
-    ];
-    if ( $learning_item_id ) {
-        wp_update_nav_menu_item($menu_id, $learning_item_id, $learning_item_args);
-    } elseif ( ! $has_by_url($learning_url) ) {
-        wp_update_nav_menu_item($menu_id, 0, $learning_item_args);
     }
 
     // 開発作品

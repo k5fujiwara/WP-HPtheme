@@ -151,11 +151,17 @@ function mytheme_seo_get_description(): string {
     return mytheme_seo_clean_text($site_desc);
 }
 
+function mytheme_seo_is_youtube_learning(): bool {
+    return is_post_type_archive('youtube_learning')
+        || is_singular('youtube_learning')
+        || is_tax(['yt_topic', 'yt_channel']);
+}
+
 function mytheme_seo_get_robots_content(): string {
     $index = true;
     $follow = true;
 
-    if ( is_404() || is_search() || is_feed() || is_attachment() || mytheme_seo_is_learning_filter_url() || is_author() || is_date() || is_tag() ) {
+    if ( is_404() || is_search() || is_feed() || is_attachment() || mytheme_seo_is_learning_filter_url() || is_author() || is_date() || is_tag() || mytheme_seo_is_youtube_learning() ) {
         $index = false;
     }
 
@@ -587,8 +593,11 @@ function mytheme_filter_sitemap_post_types($post_types) {
     if ( isset($post_types['attachment']) ) {
         unset($post_types['attachment']);
     }
+    if ( isset($post_types['youtube_learning']) ) {
+        unset($post_types['youtube_learning']);
+    }
 
-    foreach ( ['dictionary', 'news', 'beengineer-news', 'work', 'youtube_learning'] as $post_type ) {
+    foreach ( ['dictionary', 'news', 'beengineer-news', 'work'] as $post_type ) {
         $object = get_post_type_object($post_type);
         if ( $object && ! empty($object->public) && ! empty($object->publicly_queryable) ) {
             $post_types[$post_type] = $object;
@@ -615,7 +624,7 @@ add_filter('wp_sitemaps_add_provider', 'mytheme_disable_users_sitemap_provider',
  * タグアーカイブはサイトマップから外す（検出済み未登録の主因になりやすい）
  */
 function mytheme_filter_sitemap_taxonomies($taxonomies) {
-    unset($taxonomies['post_tag']);
+    unset($taxonomies['post_tag'], $taxonomies['yt_topic'], $taxonomies['yt_channel']);
     return $taxonomies;
 }
 add_filter('wp_sitemaps_taxonomies', 'mytheme_filter_sitemap_taxonomies');

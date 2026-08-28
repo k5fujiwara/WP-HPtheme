@@ -18,12 +18,6 @@
             $works_url = function_exists('mytheme_get_page_url_by_path')
                 ? mytheme_get_page_url_by_path('works', home_url('/works/'))
                 : home_url('/works/');
-            $learning_tools_url = function_exists('get_post_type_archive_link')
-                ? get_post_type_archive_link('youtube_learning')
-                : '';
-            if ( ! $learning_tools_url ) {
-                $learning_tools_url = home_url('/youtube-learning/');
-            }
             $ebooks_url = function_exists('mytheme_get_page_url_by_path')
                 ? mytheme_get_page_url_by_path('ebooks', home_url('/ebooks/'))
                 : home_url('/ebooks/');
@@ -31,10 +25,6 @@
                 [
                     'label' => '学習コラム',
                     'url'   => $learning_column_url,
-                ],
-                [
-                    'label' => '学習ツール',
-                    'url'   => $learning_tools_url,
                 ],
                 [
                     'label' => '開発作品',
