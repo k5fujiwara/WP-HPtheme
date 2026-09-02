@@ -14,6 +14,9 @@ function mytheme_get_primary_menu_items() {
     $about_url = function_exists('mytheme_get_page_url_by_path')
         ? mytheme_get_page_url_by_path('about', home_url('/about/'))
         : home_url('/about/');
+    $science_quiz_url = function_exists('mytheme_get_page_url_by_path')
+        ? mytheme_get_page_url_by_path('science-quiz', home_url('/science-quiz/'))
+        : home_url('/science-quiz/');
     $beengineer_url = function_exists('get_post_type_archive_link')
         ? get_post_type_archive_link('beengineer-news')
         : '';
@@ -29,6 +32,15 @@ function mytheme_get_primary_menu_items() {
         [
             'label' => '学習コラム',
             'url'   => $learning_column_url,
+        ],
+        [
+            'label' => '学習ツール',
+            'children' => [
+                [
+                    'label' => '中学理科クイズ',
+                    'url'   => $science_quiz_url,
+                ],
+            ],
         ],
         [
             'label' => '開発作品',
@@ -87,6 +99,10 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
         return is_page('learning-column') || is_home() || is_singular('post') || is_search() || is_category() || is_tag() || is_tax();
     }
 
+    if ( $label === '学習ツール' || $label === '中学理科クイズ' ) {
+        return is_page('science-quiz');
+    }
+
     if ( $label === '開発作品' ) {
         return mytheme_is_current_page_tree('works');
     }
@@ -141,25 +157,81 @@ function mytheme_primary_menu_fallback($args = []) {
 
     echo '<ul id="' . esc_attr((string) $args['menu_id']) . '" class="' . esc_attr((string) $args['menu_class']) . '">';
     foreach ( $menu_items as $it ) {
-        if ( ! isset($it['label'], $it['url']) ) {
-            continue;
-        }
-
-        $classes = ['menu-item', 'site-nav__item'];
-        $url = (string) $it['url'];
-        $label = (string) $it['label'];
-        $is_current = mytheme_is_primary_menu_item_current($label);
-
-        if ( $is_current ) {
-            $classes[] = 'current-menu-item';
-            $classes[] = 'site-nav__item--current';
-        }
-
-        echo '<li class="' . esc_attr(implode(' ', $classes)) . '">';
-        echo '<a class="site-nav__link" href="' . esc_url($url) . '"' . ( $is_current ? ' aria-current="page"' : '' ) . '>' . esc_html($label) . '</a>';
-        echo '</li>';
+        mytheme_render_primary_menu_item($it);
     }
     echo '</ul>';
+}
+
+/**
+ * プライマリメニューの1項目を描画
+ */
+function mytheme_render_primary_menu_item(array $it): void {
+    if ( ! isset($it['label']) ) {
+        return;
+    }
+
+    $label = (string) $it['label'];
+    $url = isset($it['url']) ? (string) $it['url'] : '';
+    $children = (isset($it['children']) && is_array($it['children'])) ? $it['children'] : [];
+    $has_children = $children !== [];
+
+    if ( ! $has_children && $url === '' ) {
+        return;
+    }
+
+    $child_current = false;
+    foreach ( $children as $child ) {
+        if ( isset($child['label']) && mytheme_is_primary_menu_item_current((string) $child['label']) ) {
+            $child_current = true;
+            break;
+        }
+    }
+
+    $is_current = mytheme_is_primary_menu_item_current($label);
+    $classes = ['menu-item', 'site-nav__item'];
+
+    if ( $has_children ) {
+        $classes[] = 'menu-item-has-children';
+        $classes[] = 'site-nav__item--has-children';
+        if ( $child_current || $is_current ) {
+            $classes[] = 'current-menu-ancestor';
+            $classes[] = 'site-nav__item--current';
+        }
+    } elseif ( $is_current ) {
+        $classes[] = 'current-menu-item';
+        $classes[] = 'site-nav__item--current';
+    }
+
+    echo '<li class="' . esc_attr(implode(' ', $classes)) . '">';
+
+    if ( $has_children ) {
+        $submenu_id = 'site-nav-submenu-' . substr(md5($label), 0, 10);
+        echo '<button type="button" class="site-nav__link site-nav__submenu-toggle" aria-expanded="false" aria-haspopup="true" aria-controls="' . esc_attr($submenu_id) . '">';
+        echo esc_html($label);
+        echo '<span class="site-nav__caret" aria-hidden="true"></span>';
+        echo '</button>';
+        echo '<ul id="' . esc_attr($submenu_id) . '" class="site-nav__submenu">';
+        foreach ( $children as $child ) {
+            if ( ! isset($child['label'], $child['url']) ) {
+                continue;
+            }
+            $child_label = (string) $child['label'];
+            $child_url = (string) $child['url'];
+            $child_is_current = mytheme_is_primary_menu_item_current($child_label);
+            $child_classes = ['menu-item', 'site-nav__subitem'];
+            if ( $child_is_current ) {
+                $child_classes[] = 'current-menu-item';
+            }
+            echo '<li class="' . esc_attr(implode(' ', $child_classes)) . '">';
+            echo '<a class="site-nav__link" href="' . esc_url($child_url) . '"' . ( $child_is_current ? ' aria-current="page"' : '' ) . '>' . esc_html($child_label) . '</a>';
+            echo '</li>';
+        }
+        echo '</ul>';
+    } else {
+        echo '<a class="site-nav__link" href="' . esc_url($url) . '"' . ( $is_current ? ' aria-current="page"' : '' ) . '>' . esc_html($label) . '</a>';
+    }
+
+    echo '</li>';
 }
 
 /**

@@ -16,3 +16,7 @@ Thumbs.db
 
 # 開発作品詳細ページ 入力テンプレート
 dev_intro.md
+
+data/science-quiz/questions.local.csv
+data/science-quiz/incoming/*
+!data/science-quiz/incoming/.gitkeep

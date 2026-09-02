@@ -1,6 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 </main>
 
+<?php if ( ! is_page('science-quiz') ) : ?>
 <footer class="site-footer" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
     <div class="container">
         <div class="site-footer__top">
@@ -111,6 +112,7 @@
     </div>
 
 </footer>
+<?php endif; ?>
 
 <?php wp_footer(); ?>
 </body>

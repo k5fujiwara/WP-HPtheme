@@ -1,0 +1,464 @@
+.science-quiz-app {
+  background: #efe6d4 !important;
+  color: #1f1a14;
+}
+
+.science-quiz-app .skip-link,
+.science-quiz-app .scroll-progress,
+.science-quiz-app .site-description,
+.science-quiz-app .menu-toggle,
+.science-quiz-app .site-nav,
+.science-quiz-app .site-footer {
+  display: none !important;
+}
+
+.science-quiz-app .site-header-shell {
+  background: #efe6d4;
+  box-shadow: none;
+}
+
+.science-quiz-app .site-header {
+  padding: 14px 0 12px;
+  background: #efe6d4;
+  box-shadow: 0 12px 14px #efe6d4;
+}
+
+.science-quiz-app .site-title,
+.science-quiz-app .site-title span {
+  color: #1f6b4a !important;
+  font-size: 1.05rem !important;
+  font-weight: 800;
+}
+
+.science-quiz-app .site-main.container {
+  width: min(1200px, 96%);
+  padding: 12px 0 64px;
+}
+
+.sq {
+  position: relative;
+  width: min(640px, 100%);
+  margin: 0 auto;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, serif;
+}
+
+.sq-kicker {
+  margin: 0 0 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #1f6b4a;
+}
+
+.sq-title {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.sq-lead {
+  margin: 10px 0 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #53483c;
+}
+
+.sq-panel {
+  background: #fbf6ec;
+  border: 1px solid rgba(31, 26, 20, 0.1);
+  border-radius: 18px;
+  padding: 22px 20px;
+  box-shadow: 0 10px 28px rgba(80, 58, 30, 0.08);
+}
+
+.sq-field + .sq-field {
+  margin-top: 18px;
+}
+
+.sq-label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #6a5c4c;
+}
+
+.sq-chips {
+  display: grid;
+  gap: 8px;
+}
+
+[data-sq-grades] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+[data-sq-units] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+[data-sq-units] .sq-chip--span,
+[data-sq-units] .sq-chip-spacer {
+  grid-column: 1 / -1;
+}
+
+[data-sq-units] .sq-chip-spacer {
+  padding: 10px 8px;
+  border: 1px solid transparent;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  font-weight: 700;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+[data-sq-units] .sq-chip-spacer::before {
+  content: "\00a0";
+}
+
+[data-sq-counts] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (min-width: 520px) {
+  [data-sq-units] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.sq-chip,
+.sq-start,
+.sq-next,
+.sq-choice {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  border: 1px solid rgba(31, 26, 20, 0.16);
+  background: #fff;
+  color: #1f1a14;
+  cursor: pointer;
+}
+
+.sq-chip {
+  width: 100%;
+  padding: 10px 8px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.sq-chip.is-on {
+  background: #1f6b4a;
+  border-color: #1f6b4a;
+  color: #fff;
+}
+
+.sq-chip:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.sq-hint {
+  margin: 16px 0 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.86rem;
+  color: #6a5c4c;
+}
+
+.sq-hint:empty {
+  display: none;
+}
+
+.sq-start,
+.sq-next {
+  display: block;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #1f6b4a;
+  border-color: #1f6b4a;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.sq-start:disabled,
+.sq-next:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sq-progress {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1f6b4a;
+}
+
+.sq-question {
+  margin: 0 0 18px;
+  font-size: 1.22rem;
+  font-weight: 700;
+  line-height: 1.65;
+}
+
+.sq-choices {
+  display: grid;
+  gap: 10px;
+}
+
+.sq-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.sq-choice-mark {
+  flex: 0 0 auto;
+  width: 1.7em;
+  font-weight: 800;
+  color: #1f6b4a;
+}
+
+.sq-choice-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sq-play-stage {
+  position: relative;
+}
+
+.sq-stamp {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 7.2rem;
+  height: 7.2rem;
+  margin: 0;
+  pointer-events: none;
+  font-size: 6.4rem;
+  font-weight: 900;
+  line-height: 1;
+  transform: translate(-50%, -50%) rotate(-14deg) scale(0.55);
+  opacity: 0;
+}
+
+.sq-stamp[hidden] {
+  display: none !important;
+}
+
+.sq-stamp.is-ok {
+  color: #e11d2e;
+}
+
+.sq-stamp.is-ng {
+  color: #161616;
+  font-size: 5.6rem;
+}
+
+.sq-stamp.is-show {
+  opacity: 0.92;
+  transform: translate(-50%, -50%) rotate(-14deg) scale(1);
+  transition: opacity 0.12s ease-out, transform 0.22s cubic-bezier(0.2, 1.5, 0.35, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sq-stamp.is-show {
+    transition: none;
+    transform: translate(-50%, -50%) rotate(-14deg) scale(1);
+  }
+}
+
+.sq-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sq-choice.is-correct {
+  background: #d9efe4;
+  border-color: #1f6b4a;
+}
+
+.sq-choice.is-wrong {
+  background: #f6d9d2;
+  border-color: #a33b2b;
+}
+
+.sq-score {
+  margin: 0 0 20px;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.sq-review {
+  display: grid;
+  gap: 18px;
+}
+
+.sq-review-item {
+  padding-top: 16px;
+  border-top: 1px solid rgba(31, 26, 20, 0.12);
+}
+
+.sq-review-status {
+  margin: 0 0 6px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.sq-review-status.is-ok {
+  color: #1f6b4a;
+}
+
+.sq-review-status.is-ng {
+  color: #a33b2b;
+}
+
+.sq-review-q {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.sq-review-choices {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.sq-review-choices li {
+  padding: 6px 0;
+}
+
+.sq-review-choices .is-correct {
+  color: #1f6b4a;
+  font-weight: 700;
+}
+
+.sq-review-choices .is-wrong {
+  color: #a33b2b;
+}
+
+.sq-ad {
+  margin: 20px 0 0;
+}
+
+.sq-ad[hidden] {
+  display: none !important;
+}
+
+.sq-ad--rail {
+  display: none;
+}
+
+.sq-ad--bottom:not(.is-filled) {
+  margin: 0;
+  min-height: 0;
+}
+
+.sq-ad--bottom:not(.is-filled) .adsbygoogle {
+  min-height: 0;
+}
+
+@media (min-width: 1100px) {
+  .sq-ad--rail {
+    display: block;
+    position: fixed;
+    top: 88px;
+    z-index: 80;
+    width: 160px;
+    margin: 0;
+  }
+
+  .sq-ad--rail .adsbygoogle {
+    min-height: 600px;
+  }
+
+  .sq-ad--left {
+    left: max(12px, calc(50% - 320px - 176px));
+  }
+
+  .sq-ad--right {
+    right: max(12px, calc(50% - 320px - 176px));
+  }
+}
+
+@media (max-width: 1099px) {
+  .science-quiz-app .site-main.container {
+    padding-bottom: 24px;
+  }
+
+  .sq.has-bottom-ad {
+    padding-bottom: 128px;
+  }
+
+  .sq-ad--bottom.is-filled {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    margin: 0;
+    padding: 8px 12px 12px;
+    background: #efe6d4;
+    box-shadow: 0 -10px 16px #efe6d4;
+  }
+}
+
+.sq-home {
+  margin: 28px 0 0;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.sq-home a {
+  color: #1f6b4a;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .sq-title {
+    font-size: 1.55rem;
+  }
+
+  .sq-question {
+    font-size: 1.1rem;
+  }
+
+  .sq-choice {
+    min-height: 48px;
+  }
+}

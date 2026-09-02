@@ -51,6 +51,31 @@ function mytheme_get_theme_asset_rel_path($base_rel, $extension) {
 function mytheme_assets() {
     $theme_version = wp_get_theme()->get('Version');
     $theme_dir = get_template_directory();
+
+    if ( is_page('science-quiz') ) {
+        $sq_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/pages/science-quiz', '.css');
+        $sq_css_path = $theme_dir . $sq_css_rel;
+        if ( file_exists($sq_css_path) ) {
+            $sq_css_ver = (string) filemtime($sq_css_path);
+            wp_enqueue_style('mytheme-science-quiz', get_template_directory_uri() . $sq_css_rel, [], $sq_css_ver);
+        }
+
+        $sq_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/science-quiz', '.js');
+        $sq_js_path = $theme_dir . $sq_js_rel;
+        if ( file_exists($sq_js_path) ) {
+            $sq_js_ver = (string) filemtime($sq_js_path);
+            wp_enqueue_script('mytheme-science-quiz', get_template_directory_uri() . $sq_js_rel, [], $sq_js_ver, true);
+            wp_localize_script('mytheme-science-quiz', 'mythemeScienceQuiz', [
+                'rest'  => rest_url('mytheme/v1/science-quiz/'),
+                'nonce' => wp_create_nonce('wp_rest'),
+                'sounds' => [
+                    'ok' => get_template_directory_uri() . '/assets/audio/quiz-correct.mp3',
+                    'ng' => get_template_directory_uri() . '/assets/audio/quiz-incorrect.mp3',
+                ],
+            ]);
+        }
+        return;
+    }
     
     // ===== メインCSS読み込み =====
     $main_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/main', '.css');

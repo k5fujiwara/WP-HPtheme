@@ -58,6 +58,7 @@
         initStickyHeader();
         initFrontPageIntroDetails();
         initMobileMenu();
+        initNavSubmenus();
         initHashScroll(); // ページ読み込み時のハッシュスクロール
         initImageLoading(); // LCP対象画像は待たずに状態反映
 
@@ -308,6 +309,10 @@
                 siteBody.style.overflow = isOpen ? 'hidden' : '';
             }
 
+            if (!isOpen) {
+                closeNavSubmenus(siteNav);
+            }
+
             requestAnimationFrame(() => {
                 window.dispatchEvent(new Event('resize'));
             });
@@ -330,8 +335,48 @@
                 siteNav.classList.remove('is-open');
                 menuToggle.setAttribute('aria-expanded', 'false');
                 siteBody.style.overflow = '';
+                closeNavSubmenus(siteNav);
             }
         }, 250));
+    }
+
+    function closeNavSubmenus(nav) {
+        if (!nav) return;
+        nav.querySelectorAll('.site-nav__item--has-children.is-open').forEach((item) => {
+            item.classList.remove('is-open');
+            const toggle = item.querySelector('.site-nav__submenu-toggle');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    function initNavSubmenus() {
+        const nav = document.querySelector('.site-nav');
+        if (!nav) return;
+        const mobileNavBreakpoint = 900;
+
+        nav.querySelectorAll('.site-nav__submenu-toggle').forEach((toggle) => {
+            toggle.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const item = toggle.closest('.site-nav__item--has-children');
+                if (!item) return;
+                const willOpen = !item.classList.contains('is-open');
+                closeNavSubmenus(nav);
+                item.classList.toggle('is-open', willOpen);
+                toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+            });
+        });
+
+        document.addEventListener('click', (event) => {
+            if (window.innerWidth <= mobileNavBreakpoint) return;
+            if (nav.contains(event.target)) return;
+            closeNavSubmenus(nav);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key !== 'Escape') return;
+            closeNavSubmenus(nav);
+        });
     }
     
     // ===== マイクロインタラクション（リップルエフェクト） =====

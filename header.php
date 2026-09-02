@@ -81,6 +81,8 @@
         .site-nav .container{display:flex;align-items:center;padding:12px 0;gap:20px;flex-wrap:nowrap}
         .site-nav__menu{list-style:none;padding:0;margin:0;display:flex;gap:28px;flex-wrap:nowrap;align-items:center}
         .site-nav__link{display:inline-block;padding:10px 6px;text-decoration:none;color:#161616;font-weight:500;transition:color .2s ease;white-space:nowrap}
+        .site-nav__submenu{display:none;list-style:none;margin:0;padding:0}
+        .site-nav__submenu-toggle{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:inherit}
         .site-nav__actions{display:flex;align-items:center;gap:12px;margin-left:auto}
         .site-nav__action-toggle,.site-nav__action-link{display:inline-flex;align-items:center;gap:6px;padding:10px 6px;background:none;border:none;color:#161616;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
         body.admin-bar .site-header-shell{top:32px}
@@ -103,13 +105,24 @@
         @media(min-width:1024px){
             .site-body{background:#f7fbff}
         }
+        <?php if ( is_page('science-quiz') ) : ?>
+        .site-body{background:#efe6d4!important}
+        .site-header-shell{background:#efe6d4;box-shadow:none}
+        .site-header{padding:14px 0 12px;background:#efe6d4}
+        .site-title,.site-title span{color:#1f6b4a!important;font-size:1.05rem!important}
+        .site-nav,.site-description,.menu-toggle,.scroll-progress,.skip-link{display:none!important}
+        <?php endif; ?>
     </style>
     
+    <?php
+    $mytheme_adsense_client = 'ca-pub-6924336257757707';
+    ?>
     <!-- Google AdSense（初回描画を優先するため遅延ロード） -->
     <script>
     (function() {
-        var ADS_SRC = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707';
+        var ADS_SRC = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo esc_js($mytheme_adsense_client); ?>';
         var loaded = false;
+        var isQuiz = document.documentElement && <?php echo is_page('science-quiz') ? 'true' : 'false'; ?>;
 
         function loadAdsScript() {
             if (loaded) return;
@@ -118,6 +131,16 @@
             s.async = true;
             s.src = ADS_SRC;
             s.crossOrigin = 'anonymous';
+            if (isQuiz) {
+                s.onload = function() {
+                    try {
+                        (window.adsbygoogle = window.adsbygoogle || []).push({
+                            overlays: { bottom: false }
+                        });
+                    } catch (e) {}
+                    document.dispatchEvent(new Event('mytheme-adsense-ready'));
+                };
+            }
             document.head.appendChild(s);
         }
 
@@ -131,9 +154,11 @@
 
         window.addEventListener('load', scheduleLoad, { once: true });
 
-        ['pointerdown', 'keydown'].forEach(function(eventName) {
-            window.addEventListener(eventName, loadAdsScript, { once: true, passive: true });
-        });
+        if (!isQuiz) {
+            ['pointerdown', 'keydown'].forEach(function(eventName) {
+                window.addEventListener(eventName, loadAdsScript, { once: true, passive: true });
+            });
+        }
     })();
     </script>
     
