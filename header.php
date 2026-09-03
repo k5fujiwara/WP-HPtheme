@@ -81,8 +81,14 @@
         .site-nav .container{display:flex;align-items:center;padding:12px 0;gap:20px;flex-wrap:nowrap}
         .site-nav__menu{list-style:none;padding:0;margin:0;display:flex;gap:28px;flex-wrap:nowrap;align-items:center}
         .site-nav__link{display:inline-block;padding:10px 6px;text-decoration:none;color:#161616;font-weight:500;transition:color .2s ease;white-space:nowrap}
-        .site-nav__submenu{display:none;list-style:none;margin:0;padding:0}
+        .site-nav__item--has-children{position:relative}
+        .site-nav__submenu{display:none;list-style:none;margin:0;padding:8px 0;position:absolute;left:0;top:100%;min-width:12.5rem;background:#fff;border:1px solid rgba(15,98,254,.12);border-radius:14px;box-shadow:0 14px 32px rgba(15,98,254,.12);z-index:120}
+        .site-nav__item--has-children:hover>.site-nav__submenu,
+        .site-nav__item--has-children:focus-within>.site-nav__submenu,
+        .site-nav__item--has-children.is-open>.site-nav__submenu{display:block}
+        .site-nav__submenu .site-nav__link{display:block;padding:10px 16px}
         .site-nav__submenu-toggle{display:inline-flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font-family:inherit}
+        .site-nav__caret{display:inline-block;width:0;height:0;margin-top:1px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor}
         .site-nav__actions{display:flex;align-items:center;gap:12px;margin-left:auto}
         .site-nav__action-toggle,.site-nav__action-link{display:inline-flex;align-items:center;gap:6px;padding:10px 6px;background:none;border:none;color:#161616;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
         body.admin-bar .site-header-shell{top:32px}
@@ -91,6 +97,10 @@
         @media(max-width:900px){
             .site-nav__menu{display:none}
             .site-nav__actions{display:none}
+            .site-nav__submenu{position:static;border:none;box-shadow:none;background:transparent;min-width:0;width:100%;padding:0 0 8px}
+            .site-nav__item--has-children:hover>.site-nav__submenu{display:none}
+            .site-nav__item--has-children.is-open>.site-nav__submenu{display:block}
+            .site-nav__submenu .site-nav__link{padding:12px 12px 12px 28px}
         }
         @media(max-width:768px){
             .hero-section{padding:34px 22px;margin:32px 16px;min-height:0}

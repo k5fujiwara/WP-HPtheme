@@ -40,8 +40,11 @@ function mytheme_get_theme_asset_rel_path($base_rel, $extension) {
     $normal_path = $theme_dir . $normal_rel;
     $min_path    = $theme_dir . $min_rel;
 
-    // min が最新なら優先配信。古い min を誤配信しない。
-    if ( file_exists($min_path) && ( ! file_exists($normal_path) || filemtime($min_path) >= filemtime($normal_path) ) ) {
+    // min がソースより新しいときだけ優先。同時アップロードで時刻が同じならソースを使う。
+    if ( file_exists($min_path) && file_exists($normal_path) && filemtime($min_path) > filemtime($normal_path) ) {
+        return $min_rel;
+    }
+    if ( file_exists($min_path) && ! file_exists($normal_path) ) {
         return $min_rel;
     }
 
