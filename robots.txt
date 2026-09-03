@@ -17,6 +17,7 @@ Disallow: /*?*theme=
 Disallow: /*?*cat=
 Disallow: /*?*cats=
 Disallow: /*?*dic_cat=
+Disallow: /wp-content/themes/*/data/
 
 # サイトマップ（WordPress標準）
 Sitemap: https://info-study.com/wp-sitemap.xml

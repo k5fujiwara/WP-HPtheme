@@ -563,6 +563,7 @@ function mytheme_get_robots_txt_body(): string {
         'Disallow: /*?*cat=',
         'Disallow: /*?*cats=',
         'Disallow: /*?*dic_cat=',
+        'Disallow: /wp-content/themes/*/data/',
         '',
         '# サイトマップ（WordPress標準）',
         'Sitemap: ' . esc_url_raw($sitemap),

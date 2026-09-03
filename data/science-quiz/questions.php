@@ -1,3 +1,10 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+    http_response_code(403);
+    header('X-Robots-Tag: noindex, nofollow');
+    exit;
+}
+__halt_compiler();
 ﻿id,grade,unit,unit_label,question,choice1,choice2,choice3,choice4,answer
 1,1,physics,物理,光がまっすぐ進む性質を何というか。,光の反射,光の屈折,光の直進,全反射,3
 2,1,physics,物理,鏡で光がはね返る現象を何というか。,光の直進,光源,光の反射,光の屈折,3

@@ -2,12 +2,37 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function mytheme_science_quiz_csv_path(): string {
+    // HTTP直リンク防止: .php は直アクセスで403。.csv は data/.htaccess で拒否。
     $dir = get_template_directory() . '/data/science-quiz';
-    $local = $dir . '/questions.local.csv';
-    if ( file_exists($local) ) {
-        return $local;
+    $candidates = [
+        $dir . '/questions.local.php',
+        $dir . '/questions.local.csv',
+        $dir . '/questions.php',
+        $dir . '/questions.csv',
+    ];
+    foreach ( $candidates as $path ) {
+        if ( file_exists($path) ) {
+            return $path;
+        }
     }
-    return $dir . '/questions.csv';
+    return $dir . '/questions.php';
+}
+
+function mytheme_science_quiz_read_source(string $path): string {
+    $raw = file_get_contents($path);
+    if ( ! is_string($raw) || $raw === '' ) {
+        return '';
+    }
+    $marker = '__halt_compiler();';
+    $pos = strpos($raw, $marker);
+    if ( $pos !== false ) {
+        $raw = substr($raw, $pos + strlen($marker));
+        $raw = ltrim($raw, "\r\n");
+    }
+    if ( strncmp($raw, "\xEF\xBB\xBF", 3) === 0 ) {
+        $raw = substr($raw, 3);
+    }
+    return $raw;
 }
 
 function mytheme_science_quiz_unit_key($value): string {
@@ -62,12 +87,9 @@ function mytheme_science_quiz_load_rows(): array {
         return $rows;
     }
 
-    $raw = file_get_contents($path);
-    if ( ! is_string($raw) || $raw === '' ) {
+    $raw = mytheme_science_quiz_read_source($path);
+    if ( $raw === '' ) {
         return $rows;
-    }
-    if ( strncmp($raw, "\xEF\xBB\xBF", 3) === 0 ) {
-        $raw = substr($raw, 3);
     }
     $raw = str_replace(["\r\n", "\r"], "\n", $raw);
 

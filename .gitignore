@@ -18,5 +18,7 @@ Thumbs.db
 dev_intro.md
 
 data/science-quiz/questions.local.csv
+data/science-quiz/questions.local.php
+data/science-quiz/questions.csv
 data/science-quiz/incoming/*
 !data/science-quiz/incoming/.gitkeep
