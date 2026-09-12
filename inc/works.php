@@ -244,14 +244,22 @@ function mytheme_work_is_safe_asset_path($path) {
     return $path !== '' && strpos($path, '..') === false;
 }
 
-function mytheme_work_get_attachment_image_html($attachment_id, $class, $alt = '', $size = 'large') {
+function mytheme_work_get_attachment_image_html($attachment_id, $class, $alt = '', $size = 'large', $loading = '') {
     $attachment_id = (int) $attachment_id;
     if ( $attachment_id <= 0 ) return '';
 
-    return wp_get_attachment_image($attachment_id, $size, false, [
+    $attr = [
         'class' => (string) $class,
         'alt'   => (string) $alt,
-    ]);
+    ];
+    if ( $loading !== '' ) {
+        $attr['loading'] = $loading;
+        if ( $loading === 'eager' ) {
+            $attr['fetchpriority'] = 'high';
+        }
+    }
+
+    return wp_get_attachment_image($attachment_id, $size, false, $attr);
 }
 
 function mytheme_get_work_gallery_items($post_id) {
@@ -1494,15 +1502,18 @@ function mytheme_sort_work_ids_by_presentation(array $work_ids): array {
 
 function mytheme_get_front_featured_work_ids(int $limit = 3): array {
     $limit = max(1, min(6, $limit));
-    $q = mytheme_get_work_archive_query(['posts_per_page' => 50]);
-    $ids = [];
-    if ( $q->have_posts() ) {
-        while ( $q->have_posts() ) {
-            $q->the_post();
-            $ids[] = (int) get_the_ID();
-        }
-        wp_reset_postdata();
+    $cache_key = 'mytheme_front_featured_work_ids_' . $limit;
+    $cached = get_transient($cache_key);
+    if ( is_array($cached) ) {
+        return array_values(array_map('intval', $cached));
     }
+
+    $q = mytheme_get_work_archive_query([
+        'posts_per_page'         => 50,
+        'fields'                 => 'ids',
+        'update_post_term_cache' => false,
+    ]);
+    $ids = array_map('intval', (array) $q->posts);
     $ids = mytheme_sort_work_ids_by_presentation($ids);
 
     $preferred = [];
@@ -1517,7 +1528,9 @@ function mytheme_get_front_featured_work_ids(int $limit = 3): array {
         }
     }
 
-    return array_slice(array_values(array_unique(array_merge($preferred, $fallback))), 0, $limit);
+    $featured_ids = array_slice(array_values(array_unique(array_merge($preferred, $fallback))), 0, $limit);
+    set_transient($cache_key, $featured_ids, 30 * MINUTE_IN_SECONDS);
+    return $featured_ids;
 }
 
 function mytheme_get_work_identity_key($post_id): string {
@@ -1622,17 +1635,23 @@ function mytheme_render_work_card($post_id) {
         $demo_url = $url . $demo_url;
     }
     $secondary_cta = mytheme_get_work_card_secondary_cta($post_id, (string) $url, (string) $demo_url);
+    static $works_lcp_emitted = false;
+    $image_loading = 'lazy';
+    if ( ! $works_lcp_emitted && is_page('works') ) {
+        $image_loading = 'eager';
+        $works_lcp_emitted = true;
+    }
     ?>
     <div class="work-item">
         <div class="work-visual">
             <div class="work-thumbnail">
                 <a class="work-thumbnail__link" href="<?php echo esc_url($url); ?>">
                     <?php if ( $image_id > 0 ) : ?>
-                        <?php echo mytheme_work_get_attachment_image_html($image_id, 'work-thumbnail__image', $image_alt); ?>
+                        <?php echo mytheme_work_get_attachment_image_html($image_id, 'work-thumbnail__image', $image_alt, 'large', $image_loading); ?>
                     <?php elseif ( $image_path !== '' && function_exists('mytheme_picture_tag') ) : ?>
-                        <?php echo mytheme_picture_tag($image_path, $image_alt, 'work-thumbnail__image', 'lazy'); ?>
+                        <?php echo mytheme_picture_tag($image_path, $image_alt, 'work-thumbnail__image', $image_loading); ?>
                     <?php elseif ( has_post_thumbnail($post_id) ) : ?>
-                        <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'work-thumbnail__image', 'alt' => $image_alt]); ?>
+                        <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'work-thumbnail__image', 'alt' => $image_alt, 'loading' => $image_loading]); ?>
                     <?php endif; ?>
                 </a>
             </div>

@@ -11,32 +11,29 @@ function mytheme_auto_image_alt($attr, $attachment) {
     
     // BEMクラスを追加
     $bem_class = 'image';
-    
-    // Lazy Loading属性を追加（ファーストビュー以外の画像）
-    if (!isset($attr['loading'])) {
-        $attr['loading'] = 'lazy';
+
+    // loading はコアの LCP 判定に任せる。ここで一律 lazy にすると LCP 画像まで遅延する。
+    if (isset($attr['loading']) && $attr['loading'] === 'lazy') {
         $bem_class .= ' image--lazy';
-    } else if ($attr['loading'] === 'eager') {
+    } else {
         $bem_class .= ' image--eager';
+        if (empty($attr['fetchpriority'])) {
+            $attr['fetchpriority'] = 'high';
+        }
     }
-    
+
     // 既存のクラスに追加
     if (isset($attr['class'])) {
         $attr['class'] .= ' ' . $bem_class;
     } else {
         $attr['class'] = $bem_class;
     }
-    
+
     // デコード属性を追加（レンダリング最適化）
     if (!isset($attr['decoding'])) {
         $attr['decoding'] = 'async';
     }
-    
-    // fetchpriority属性を追加（LCP画像の場合）
-    if (isset($attr['loading']) && $attr['loading'] === 'eager') {
-        $attr['fetchpriority'] = 'high';
-    }
-    
+
     return $attr;
 }
 add_filter('wp_get_attachment_image_attributes', 'mytheme_auto_image_alt', 10, 2);

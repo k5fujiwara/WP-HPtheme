@@ -44,18 +44,49 @@ function mytheme_remove_block_library_css() {
         wp_dequeue_style('wp-block-library-theme');
         wp_dequeue_style('wc-block-style'); // WooCommerceを使用していない場合
         wp_dequeue_style('global-styles'); // グローバルスタイルを削除
+        wp_dequeue_style('classic-theme-styles');
+        wp_dequeue_style('core-block-supports');
+        wp_dequeue_style('wp-webfonts');
+        if ( ! is_user_logged_in() ) {
+            wp_dequeue_style('dashicons');
+        }
     }
 }
 add_action('wp_enqueue_scripts', 'mytheme_remove_block_library_css', 100);
 
 /**
+ * フロントでは jquery-migrate を外し、メインの jQuery だけにする。
+ */
+function mytheme_remove_jquery_migrate($scripts) {
+    if ( is_admin() || ! isset($scripts->registered['jquery']) ) {
+        return;
+    }
+
+    $script = $scripts->registered['jquery'];
+    if ( $script instanceof _WP_Dependency && ! empty($script->deps) ) {
+        $script->deps = array_values(array_diff($script->deps, ['jquery-migrate']));
+    }
+}
+add_action('wp_default_scripts', 'mytheme_remove_jquery_migrate');
+
+/**
  * DNS Prefetchの追加
  */
 function mytheme_add_dns_prefetch($urls, $relation_type) {
-    if ('dns-prefetch' === $relation_type) {
+    if ('dns-prefetch' !== $relation_type) {
+        return $urls;
+    }
+
+    $needs_youtube = is_singular('youtube_learning')
+        || is_post_type_archive('youtube_learning')
+        || is_singular('work')
+        || is_page(['works', 'loto6', 'auto-typing', 'quest4']);
+
+    if ( $needs_youtube ) {
         $urls[] = '//www.youtube.com';
         $urls[] = '//i.ytimg.com';
     }
+
     return $urls;
 }
 add_filter('wp_resource_hints', 'mytheme_add_dns_prefetch', 10, 2);
@@ -68,27 +99,94 @@ function mytheme_add_defer_to_scripts($tag, $handle, $src) {
     if (is_admin()) {
         return $tag;
     }
-    
-    // 特定のスクリプトにdefer属性を追加
-    $defer_scripts = array(
-        'mytheme-main-js',
-        'mytheme-learning-column',
-    );
-    
-    if (in_array($handle, $defer_scripts, true)) {
+
+    if ( strpos($tag, ' defer') !== false || strpos($tag, ' async') !== false ) {
+        return $tag;
+    }
+
+    $should_defer = (strpos((string) $handle, 'mytheme-') === 0);
+
+    // MathJax は本文がないページではレンダリングブロックになりやすいため defer。
+    if ( ! $should_defer && is_string($src) && (strpos($src, 'mathjax') !== false || strpos($src, 'tex-mml-chtml') !== false) ) {
+        $should_defer = true;
+    }
+
+    if ( $should_defer ) {
         return str_replace(' src', ' defer src', $tag);
     }
 
-    // MathJax は本文がないページではレンダリングブロックになりやすいため defer。
-    if (is_string($src) && (strpos($src, 'mathjax') !== false || strpos($src, 'tex-mml-chtml') !== false)) {
-        if (strpos($tag, ' defer') === false && strpos($tag, ' async') === false) {
-            return str_replace(' src', ' defer src', $tag);
-        }
-    }
-    
     return $tag;
 }
 add_filter('script_loader_tag', 'mytheme_add_defer_to_scripts', 10, 3);
+
+/**
+ * トップページ用の投稿IDクエリを短時間キャッシュして TTFB を下げる。
+ */
+function mytheme_get_cached_id_query(string $cache_key, array $args, int $ttl = 900): WP_Query {
+    $cached_ids = get_transient($cache_key);
+    if ( is_array($cached_ids) ) {
+        if ( $cached_ids === [] ) {
+            return new WP_Query([
+                'post_type'      => $args['post_type'] ?? 'post',
+                'post__in'       => [0],
+                'posts_per_page' => 1,
+                'no_found_rows'  => true,
+            ]);
+        }
+
+        return new WP_Query([
+            'post_type'              => $args['post_type'] ?? 'post',
+            'post_status'            => 'publish',
+            'post__in'               => $cached_ids,
+            'orderby'                => 'post__in',
+            'posts_per_page'         => count($cached_ids),
+            'no_found_rows'          => true,
+            'ignore_sticky_posts'    => true,
+            'update_post_meta_cache' => ! empty($args['update_post_meta_cache']),
+            'update_post_term_cache' => ! empty($args['update_post_term_cache']),
+        ]);
+    }
+
+    $query = new WP_Query(array_merge([
+        'post_status'         => 'publish',
+        'no_found_rows'       => true,
+        'ignore_sticky_posts' => true,
+    ], $args));
+
+    $ids = [];
+    if ( ! empty($query->posts) ) {
+        foreach ( $query->posts as $post ) {
+            $ids[] = (int) ( is_object($post) ? $post->ID : $post );
+        }
+    }
+
+    set_transient($cache_key, $ids, $ttl);
+    return $query;
+}
+
+function mytheme_flush_front_query_cache($post_id = 0): void {
+    $post_id = (int) $post_id;
+    if ( $post_id > 0 && wp_is_post_revision($post_id) ) {
+        return;
+    }
+
+    if ( $post_id > 0 ) {
+        $type = get_post_type($post_id);
+        if ( $type && ! in_array($type, ['post', 'news', 'beengineer-news', 'work'], true) ) {
+            return;
+        }
+    }
+
+    delete_transient('mytheme_front_latest_posts');
+    delete_transient('mytheme_front_latest_news');
+    delete_transient('mytheme_front_latest_beengineer_news');
+    for ( $i = 1; $i <= 6; $i++ ) {
+        delete_transient('mytheme_front_featured_work_ids_' . $i);
+    }
+}
+add_action('save_post', 'mytheme_flush_front_query_cache');
+add_action('deleted_post', 'mytheme_flush_front_query_cache');
+add_action('trashed_post', 'mytheme_flush_front_query_cache');
 
 /**
  * お問い合わせページ以外では Contact Form 7 のアセットを読み込まない

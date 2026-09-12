@@ -27,11 +27,11 @@ $works_url = $works_page ? get_permalink($works_page->ID) : home_url('/works/');
         <?php if ( $show_hero_image && ( $image_id > 0 || has_post_thumbnail($post_id) || $image_path !== '' ) ) : ?>
             <div class="project-hero">
                 <?php if ( $image_id > 0 && function_exists('mytheme_work_get_attachment_image_html') ) : ?>
-                    <?php echo mytheme_work_get_attachment_image_html($image_id, 'project-hero__image', $image_alt); ?>
+                    <?php echo mytheme_work_get_attachment_image_html($image_id, 'project-hero__image', $image_alt, 'large', 'eager'); ?>
                 <?php elseif ( $image_path !== '' && function_exists('mytheme_picture_tag') ) : ?>
                     <?php echo mytheme_picture_tag($image_path, $image_alt, 'project-hero__image', 'eager'); ?>
                 <?php elseif ( has_post_thumbnail($post_id) ) : ?>
-                    <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'project-hero__image', 'alt' => $image_alt]); ?>
+                    <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'project-hero__image', 'alt' => $image_alt, 'loading' => 'eager', 'fetchpriority' => 'high']); ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

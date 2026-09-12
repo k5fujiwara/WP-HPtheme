@@ -32,6 +32,13 @@ function mytheme_locate_template($template) {
 add_filter('page_template', 'mytheme_locate_template', 99);
 
 // CSS/JS 読み込み
+function mytheme_script_loader_args(): array {
+    return [
+        'in_footer' => true,
+        'strategy'  => 'defer',
+    ];
+}
+
 function mytheme_get_theme_asset_rel_path($base_rel, $extension) {
     $theme_dir = get_template_directory();
     $base_rel  = '/' . ltrim($base_rel, '/');
@@ -67,7 +74,7 @@ function mytheme_assets() {
         $sq_js_path = $theme_dir . $sq_js_rel;
         if ( file_exists($sq_js_path) ) {
             $sq_js_ver = (string) filemtime($sq_js_path);
-            wp_enqueue_script('mytheme-science-quiz', get_template_directory_uri() . $sq_js_rel, [], $sq_js_ver, true);
+            wp_enqueue_script('mytheme-science-quiz', get_template_directory_uri() . $sq_js_rel, [], $sq_js_ver, mytheme_script_loader_args());
             wp_localize_script('mytheme-science-quiz', 'mythemeScienceQuiz', [
                 'rest'  => rest_url('mytheme/v1/science-quiz/'),
                 'nonce' => wp_create_nonce('wp_rest'),
@@ -127,7 +134,7 @@ function mytheme_assets() {
         $yt_js_path = $theme_dir . $yt_js_rel;
         if ( file_exists($yt_js_path) ) {
             $yt_js_ver = (string) filemtime($yt_js_path);
-            wp_enqueue_script('mytheme-youtube-learning', get_template_directory_uri() . $yt_js_rel, [], $yt_js_ver, true);
+            wp_enqueue_script('mytheme-youtube-learning', get_template_directory_uri() . $yt_js_rel, [], $yt_js_ver, mytheme_script_loader_args());
         }
     }
 
@@ -136,7 +143,7 @@ function mytheme_assets() {
     $main_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/main', '.js');
     $main_js_path = $theme_dir . $main_js_rel;
     $main_js_ver  = file_exists($main_js_path) ? (string) filemtime($main_js_path) : $theme_version;
-    wp_enqueue_script('mytheme-main-js', get_template_directory_uri() . $main_js_rel, [], $main_js_ver, true);
+    wp_enqueue_script('mytheme-main-js', get_template_directory_uri() . $main_js_rel, [], $main_js_ver, mytheme_script_loader_args());
 
     // 学習コラム（一覧）だけに必要なJS（未使用JS削減）
     if ( is_page('learning-column') || is_home() ) {
@@ -144,7 +151,7 @@ function mytheme_assets() {
         $lc_js_path = $theme_dir . $lc_js_rel;
         if ( file_exists($lc_js_path) ) {
             $lc_js_ver = (string) filemtime($lc_js_path);
-            wp_enqueue_script('mytheme-learning-column', get_template_directory_uri() . $lc_js_rel, [], $lc_js_ver, true);
+            wp_enqueue_script('mytheme-learning-column', get_template_directory_uri() . $lc_js_rel, [], $lc_js_ver, mytheme_script_loader_args());
         }
     }
 
@@ -154,7 +161,7 @@ function mytheme_assets() {
         $dic_js_path = $theme_dir . $dic_js_rel;
         if ( file_exists($dic_js_path) ) {
             $dic_js_ver = (string) filemtime($dic_js_path);
-            wp_enqueue_script('mytheme-dictionary', get_template_directory_uri() . $dic_js_rel, [], $dic_js_ver, true);
+            wp_enqueue_script('mytheme-dictionary', get_template_directory_uri() . $dic_js_rel, [], $dic_js_ver, mytheme_script_loader_args());
         }
     }
 }

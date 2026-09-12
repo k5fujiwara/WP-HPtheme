@@ -124,54 +124,6 @@
         <?php endif; ?>
     </style>
     
-    <?php
-    $mytheme_adsense_client = 'ca-pub-6924336257757707';
-    ?>
-    <!-- Google AdSense（初回描画を優先するため遅延ロード） -->
-    <script>
-    (function() {
-        var ADS_SRC = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo esc_js($mytheme_adsense_client); ?>';
-        var loaded = false;
-        var isQuiz = document.documentElement && <?php echo is_page('science-quiz') ? 'true' : 'false'; ?>;
-
-        function loadAdsScript() {
-            if (loaded) return;
-            loaded = true;
-            var s = document.createElement('script');
-            s.async = true;
-            s.src = ADS_SRC;
-            s.crossOrigin = 'anonymous';
-            if (isQuiz) {
-                s.onload = function() {
-                    try {
-                        (window.adsbygoogle = window.adsbygoogle || []).push({
-                            overlays: { bottom: false }
-                        });
-                    } catch (e) {}
-                    document.dispatchEvent(new Event('mytheme-adsense-ready'));
-                };
-            }
-            document.head.appendChild(s);
-        }
-
-        function scheduleLoad() {
-            if ('requestIdleCallback' in window) {
-                window.requestIdleCallback(loadAdsScript, { timeout: 8000 });
-            } else {
-                setTimeout(loadAdsScript, 4000);
-            }
-        }
-
-        window.addEventListener('load', scheduleLoad, { once: true });
-
-        if (!isQuiz) {
-            ['pointerdown', 'keydown'].forEach(function(eventName) {
-                window.addEventListener(eventName, loadAdsScript, { once: true, passive: true });
-            });
-        }
-    })();
-    </script>
-    
     <?php wp_head(); ?>
     
     <!-- JavaScriptが無効でもページを表示 -->

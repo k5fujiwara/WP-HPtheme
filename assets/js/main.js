@@ -55,12 +55,13 @@
 
     // メイン初期化
     document.addEventListener('DOMContentLoaded', () => {
-        initStickyHeader();
+        // 見た目に直結する操作だけ同期実行し、計測・レイアウト計測は後回しにする
         initFrontPageIntroDetails();
         initMobileMenu();
         initNavSubmenus();
-        initHashScroll(); // ページ読み込み時のハッシュスクロール
-        initImageLoading(); // LCP対象画像は待たずに状態反映
+        if (window.location.hash) {
+            initHashScroll();
+        }
 
         // パフォーマンス最適化（特にモバイル）
         // - TBT低減のため「必須以外」はアイドル時に初期化する
@@ -78,6 +79,19 @@
             } catch (_) {}
         };
 
+        const afterFirstPaint = (fn) => {
+            const run = () => {
+                try { fn(); } catch (_) {}
+            };
+            if (typeof requestAnimationFrame === 'function') {
+                requestAnimationFrame(() => requestAnimationFrame(run));
+            } else {
+                setTimeout(run, 0);
+            }
+        };
+
+        afterFirstPaint(initStickyHeader);
+        runWhenIdle(initImageLoading, 800);
         runWhenIdle(initFadeInAnimation, 1200);
         runWhenIdle(initSmoothScroll, 1200);
         runWhenIdle(initMicroInteractions, 1600);

@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return string <picture>タグのHTML
  */
 function mytheme_picture_tag($image_path, $alt = '', $class = 'image', $loading = 'lazy') {
+    static $dimension_cache = [];
     $theme_uri = get_template_directory_uri();
     $theme_dir = get_template_directory();
     
@@ -34,11 +35,17 @@ function mytheme_picture_tag($image_path, $alt = '', $class = 'image', $loading 
     // フォールバック画像URLを決定（元画像 > WebP > 元のパス）
     $fallback_url = $original_exists ? $original_url : ($webp_exists ? $webp_url : $original_url);
     
-    // 画像のサイズを取得（CLS対策）
+    // 画像のサイズを取得（CLS対策）。同一リクエスト内はファイルパスでキャッシュする。
     $width_height = '';
     $size_file = $original_exists ? $original_file : ($webp_exists ? $webp_file : '');
     if ($size_file && file_exists($size_file)) {
-        $image_size = @getimagesize($size_file);
+        $cache_key = $size_file . '|' . (string) filemtime($size_file);
+        if (array_key_exists($cache_key, $dimension_cache)) {
+            $image_size = $dimension_cache[$cache_key];
+        } else {
+            $image_size = @getimagesize($size_file);
+            $dimension_cache[$cache_key] = $image_size;
+        }
         if ($image_size !== false) {
             $width_height = sprintf(' width="%d" height="%d"', $image_size[0], $image_size[1]);
         }

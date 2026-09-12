@@ -23,32 +23,47 @@ $ebooks_url = function_exists('mytheme_get_page_url_by_path')
     : home_url('/ebooks/');
 
 // 最新の学習コラム（トップで最優先表示）
-$latest_posts = new WP_Query([
-    'post_type'      => 'post',
-    'post_status'    => 'publish',
-    'posts_per_page' => 3,
-    'no_found_rows'  => true,
-]);
-
-$latest_news = new WP_Query([
-    'post_type'              => 'news',
-    'post_status'            => 'publish',
+$latest_posts_args = [
+    'post_type'              => 'post',
     'posts_per_page'         => 3,
-    'no_found_rows'          => true,
-    'ignore_sticky_posts'    => true,
     'update_post_meta_cache' => false,
-    'update_post_term_cache' => false,
-]);
+    'update_post_term_cache' => true,
+];
+$latest_posts = function_exists('mytheme_get_cached_id_query')
+    ? mytheme_get_cached_id_query('mytheme_front_latest_posts', $latest_posts_args)
+    : new WP_Query(array_merge([
+        'post_status'         => 'publish',
+        'no_found_rows'       => true,
+        'ignore_sticky_posts' => true,
+    ], $latest_posts_args));
 
-$latest_beengineer_news = new WP_Query([
-    'post_type'              => 'beengineer-news',
-    'post_status'            => 'publish',
-    'posts_per_page'         => 2,
-    'no_found_rows'          => true,
-    'ignore_sticky_posts'    => true,
+$latest_news_args = [
+    'post_type'              => 'news',
+    'posts_per_page'         => 3,
     'update_post_meta_cache' => false,
     'update_post_term_cache' => false,
-]);
+];
+$latest_news = function_exists('mytheme_get_cached_id_query')
+    ? mytheme_get_cached_id_query('mytheme_front_latest_news', $latest_news_args)
+    : new WP_Query(array_merge([
+        'post_status'         => 'publish',
+        'no_found_rows'       => true,
+        'ignore_sticky_posts' => true,
+    ], $latest_news_args));
+
+$latest_beengineer_news_args = [
+    'post_type'              => 'beengineer-news',
+    'posts_per_page'         => 2,
+    'update_post_meta_cache' => false,
+    'update_post_term_cache' => false,
+];
+$latest_beengineer_news = function_exists('mytheme_get_cached_id_query')
+    ? mytheme_get_cached_id_query('mytheme_front_latest_beengineer_news', $latest_beengineer_news_args)
+    : new WP_Query(array_merge([
+        'post_status'         => 'publish',
+        'no_found_rows'       => true,
+        'ignore_sticky_posts' => true,
+    ], $latest_beengineer_news_args));
 
 $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     ? mytheme_get_front_featured_work_ids(3)

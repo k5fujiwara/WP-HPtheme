@@ -78,13 +78,13 @@ function mytheme_add_ga4_tag() {
         }
         
         // ユーザーインタラクション時に即座に読み込み
-        var events = ['scroll', 'click', 'mousemove', 'touchstart', 'keydown'];
+        var events = ['pointerdown', 'keydown', 'click', 'touchstart'];
         events.forEach(function(event) {
             window.addEventListener(event, loadGA4, { once: true, passive: true });
         });
         
-        // 3秒後に自動読み込み（インタラクションがない場合）
-        setTimeout(loadGA4, 3000);
+        // 操作がない場合のみ遅延読み込み（Lab の TBT 計測窓を外す）
+        setTimeout(loadGA4, 10000);
     })();
     </script>
     <?php
