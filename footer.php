@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 </main>
 
-<?php if ( ! is_page('science-quiz') ) : ?>
+<?php if ( ! ( function_exists('mytheme_is_quiz_page') && mytheme_is_quiz_page() ) ) : ?>
 <footer class="site-footer" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
     <div class="container">
         <div class="site-footer__top">
@@ -123,7 +123,7 @@ $mytheme_adsense_client = 'ca-pub-6924336257757707';
 (function() {
     var ADS_SRC = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo esc_js($mytheme_adsense_client); ?>';
     var loaded = false;
-    var isQuiz = <?php echo is_page('science-quiz') ? 'true' : 'false'; ?>;
+    var isQuiz = <?php echo ( function_exists('mytheme_is_quiz_page') && mytheme_is_quiz_page() ) ? 'true' : 'false'; ?>;
 
     function loadAdsScript() {
         if (loaded) return;

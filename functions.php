@@ -73,6 +73,7 @@ require_once get_template_directory() . '/inc/beengineer-news.php';
 require_once get_template_directory() . '/inc/works.php';
 require_once get_template_directory() . '/inc/youtube-learning.php';
 require_once get_template_directory() . '/inc/science-quiz.php';
+require_once get_template_directory() . '/inc/japanese-quiz.php';
 require_once get_template_directory() . '/inc/legal-content.php';
 
 // SEO / パフォーマンス / 画像

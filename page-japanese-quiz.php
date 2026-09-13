@@ -2,13 +2,13 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 get_header();
 ?>
-<div class="sq" data-science-quiz>
-    <p class="sq-kicker">Science Quiz</p>
-    <h1 class="sq-title">中学理科クイズ</h1>
-    <p class="sq-lead">学年と分野を選ぶと、ランダムに4択が出ます。</p>
+<div class="sq" data-science-quiz data-subject-quiz>
+    <p class="sq-kicker">Japanese Quiz</p>
+    <h1 class="sq-title">中学国語クイズ</h1>
+    <p class="sq-lead">分野を選ぶと、ランダムに4択が出ます。</p>
 
     <section class="sq-panel" data-sq-setup>
-        <div class="sq-field">
+        <div class="sq-field" data-sq-grade-field>
             <span class="sq-label">学年</span>
             <div class="sq-chips" data-sq-grades></div>
         </div>

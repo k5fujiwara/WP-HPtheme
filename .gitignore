@@ -21,4 +21,7 @@ data/science-quiz/questions.local.csv
 data/science-quiz/questions.local.php
 data/science-quiz/questions.csv
 data/science-quiz/incoming/*
+data/japanese-quiz/questions.local.csv
+data/japanese-quiz/questions.local.php
+data/japanese-quiz/questions.csv
 !data/science-quiz/incoming/.gitkeep

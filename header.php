@@ -115,12 +115,21 @@
         @media(min-width:1024px){
             .site-body{background:#f7fbff}
         }
-        <?php if ( is_page('science-quiz') ) : ?>
-        .site-body{background:#efe6d4!important}
-        .site-header-shell{background:#efe6d4;box-shadow:none}
-        .site-header{padding:14px 0 12px;background:#efe6d4}
-        .site-title,.site-title span{color:#1f6b4a!important;font-size:1.05rem!important}
+        <?php if ( function_exists('mytheme_is_quiz_page') && mytheme_is_quiz_page() ) : ?>
+        <?php
+        $quiz_paper = is_page('japanese-quiz') ? '#f3e6d8' : '#efe6d4';
+        $quiz_accent = is_page('japanese-quiz') ? '#9a3b32' : '#1f6b4a';
+        ?>
+        .site-body{background:<?php echo $quiz_paper; ?>!important}
+        .site-header-shell{background:<?php echo $quiz_paper; ?>;box-shadow:none}
+        .site-header{padding:14px 0 12px;background:<?php echo $quiz_paper; ?>}
+        .site-title,.site-title span{color:<?php echo $quiz_accent; ?>!important;font-size:1.05rem!important}
         .site-nav,.site-description,.menu-toggle,.scroll-progress,.skip-link{display:none!important}
+        .sq-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+        .sq-tools__again[hidden]{display:none!important}
+        .sq-tools a,.sq-tools button{flex:1 1 7.5rem;min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 10px;border:1px solid rgba(31,26,20,.16);border-radius:8px;background:#fff;color:<?php echo $quiz_accent; ?>;font-size:.82rem;font-weight:700;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+        .sq-tools a.sq-tools__btn--science,.sq-tools button.sq-tools__btn--science{color:#fff;background:#1f6b4a;border-color:#1f6b4a}
+        .sq-tools a.sq-tools__btn--japanese,.sq-tools button.sq-tools__btn--japanese{color:#fff;background:#9a3b32;border-color:#9a3b32}
         <?php endif; ?>
     </style>
     
@@ -157,6 +166,9 @@
                         <span class="menu-toggle-icon"></span>
                     </button>
                 </div>
+                <?php if ( function_exists('mytheme_is_quiz_page') && mytheme_is_quiz_page() && function_exists('mytheme_quiz_tools_nav') ) : ?>
+                    <?php mytheme_quiz_tools_nav( is_page('japanese-quiz') ? 'japanese-quiz' : 'science-quiz' ); ?>
+                <?php endif; ?>
                 <p class="site-description" itemprop="description"><?php bloginfo('description'); ?></p>
             </div>
         </header>

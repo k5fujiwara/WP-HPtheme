@@ -221,6 +221,7 @@ function mytheme_science_quiz_shuffle_question(array $row): array {
         'question'      => (string) $row['question'],
         'choices'       => $choices,
         'correct_index' => $correct_index,
+        'unit'          => (string) ($row['unit'] ?? ''),
         'unit_label'    => (string) $row['unit_label'],
         'grade'         => (string) $row['grade'],
     ];
@@ -391,6 +392,28 @@ function mytheme_science_quiz_rest_answer(WP_REST_Request $request) {
         delete_transient($key);
     }
     return rest_ensure_response($payload);
+}
+
+function mytheme_is_quiz_page(): bool {
+    return is_page(['science-quiz', 'japanese-quiz']);
+}
+
+function mytheme_quiz_tools_nav(string $current): void {
+    $home_url = home_url('/');
+    $science_url = function_exists('mytheme_get_page_url_by_path')
+        ? mytheme_get_page_url_by_path('science-quiz', home_url('/science-quiz/'))
+        : home_url('/science-quiz/');
+    $japanese_url = function_exists('mytheme_get_page_url_by_path')
+        ? mytheme_get_page_url_by_path('japanese-quiz', home_url('/japanese-quiz/'))
+        : home_url('/japanese-quiz/');
+    $other = $current === 'japanese-quiz'
+        ? ['url' => $science_url, 'label' => '理科クイズへ', 'mod' => 'science']
+        : ['url' => $japanese_url, 'label' => '国語クイズへ', 'mod' => 'japanese'];
+    echo '<nav class="sq-tools" aria-label="クイズの移動">';
+    echo '<button type="button" class="sq-tools__btn sq-tools__again" data-sq-again hidden>選びなおす</button>';
+    echo '<a class="sq-tools__btn sq-tools__btn--' . esc_attr($other['mod']) . '" href="' . esc_url($other['url']) . '">' . esc_html($other['label']) . '</a>';
+    echo '<a class="sq-tools__btn" href="' . esc_url($home_url) . '">トップに戻る</a>';
+    echo '</nav>';
 }
 
 function mytheme_science_quiz_body_class(array $classes): array {

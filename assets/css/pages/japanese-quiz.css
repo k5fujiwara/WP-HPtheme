@@ -1,0 +1,109 @@
+.japanese-quiz-app {
+  background: #f3e6d8 !important;
+}
+
+.japanese-quiz-app .site-header-shell,
+.japanese-quiz-app .site-header {
+  background: #f3e6d8;
+}
+
+.japanese-quiz-app .site-header {
+  box-shadow: 0 12px 14px #f3e6d8;
+}
+
+.japanese-quiz-app .site-title,
+.japanese-quiz-app .site-title span {
+  color: #9a3b32 !important;
+}
+
+.japanese-quiz-app .sq-kicker,
+.japanese-quiz-app .sq-progress,
+.japanese-quiz-app .sq-tools__btn {
+  color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-tools .sq-tools__again {
+  color: #fff;
+  background: #9a3b32;
+  border-color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-tools a.sq-tools__btn--science {
+  color: #fff;
+  background: #1f6b4a;
+  border-color: #1f6b4a;
+}
+
+.japanese-quiz-app .sq-tools a.sq-tools__btn--japanese {
+  color: #fff;
+  background: #9a3b32;
+  border-color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-wait__spin {
+  border-color: rgba(154, 59, 50, 0.2);
+  border-top-color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-wait__label {
+  color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-score {
+  margin: 4px 4px 8px auto;
+  width: fit-content;
+  max-width: 100%;
+  text-align: right;
+  font-family: "Yu Kyokasho", "Yu Kyokasho Yoko", "UD Digi Kyokasho NK-R", "Klee One", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  font-size: 2.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: #d01224;
+  transform: rotate(-8deg);
+  transform-origin: right center;
+}
+
+.japanese-quiz-app .sq-score.is-write {
+  animation: sq-score-write 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.japanese-quiz-app .sq-choice-mark,
+.japanese-quiz-app .sq-review-status.is-ok,
+.japanese-quiz-app .sq-review-choices .is-correct {
+  color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-choice.is-correct {
+  background: #f3ddd8;
+  border-color: #9a3b32;
+}
+
+.japanese-quiz-app .sq-chip.is-on,
+.japanese-quiz-app .sq-start,
+.japanese-quiz-app .sq-next {
+  background: #9a3b32;
+  border-color: #9a3b32;
+  color: #fff;
+}
+
+.japanese-quiz-app [data-sq-units] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (min-width: 520px) {
+  .japanese-quiz-app [data-sq-units] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.japanese-quiz-app .sq-field[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 1099px) {
+  .japanese-quiz-app .sq-ad--bottom.is-filled {
+    background: #f3e6d8;
+    box-shadow: 0 -10px 16px #f3e6d8;
+  }
+}

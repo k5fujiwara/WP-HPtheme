@@ -118,6 +118,7 @@ function mytheme_seo_get_description(): string {
             'works' => '藤原圭吾が制作した学習支援、情報Ⅰ、AI活用、業務効率化などの開発作品を、目的や使い方とあわせて紹介します。',
             'ebooks' => '情報Ⅰ、プログラミング、AI活用、学習法などをテーマにした電子書籍をまとめています。',
             'science-quiz' => '中学理科の4択クイズ。学年と分野からランダムに出題します。',
+            'japanese-quiz' => '中学国語の4択クイズ。ことわざ・慣用句・四字熟語からランダムに出題します。',
         ];
         if ( isset($custom_descriptions[$post_slug]) ) {
             return mytheme_seo_clean_text($custom_descriptions[$post_slug]);

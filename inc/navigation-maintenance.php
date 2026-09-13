@@ -17,6 +17,9 @@ function mytheme_get_primary_menu_items() {
     $science_quiz_url = function_exists('mytheme_get_page_url_by_path')
         ? mytheme_get_page_url_by_path('science-quiz', home_url('/science-quiz/'))
         : home_url('/science-quiz/');
+    $japanese_quiz_url = function_exists('mytheme_get_page_url_by_path')
+        ? mytheme_get_page_url_by_path('japanese-quiz', home_url('/japanese-quiz/'))
+        : home_url('/japanese-quiz/');
     $beengineer_url = function_exists('get_post_type_archive_link')
         ? get_post_type_archive_link('beengineer-news')
         : '';
@@ -39,6 +42,10 @@ function mytheme_get_primary_menu_items() {
                 [
                     'label' => '中学理科クイズ',
                     'url'   => $science_quiz_url,
+                ],
+                [
+                    'label' => '中学国語クイズ',
+                    'url'   => $japanese_quiz_url,
                 ],
             ],
         ],
@@ -99,8 +106,16 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
         return is_page('learning-column') || is_home() || is_singular('post') || is_search() || is_category() || is_tag() || is_tax();
     }
 
-    if ( $label === '学習ツール' || $label === '中学理科クイズ' ) {
+    if ( $label === '学習ツール' ) {
+        return is_page(['science-quiz', 'japanese-quiz']);
+    }
+
+    if ( $label === '中学理科クイズ' ) {
         return is_page('science-quiz');
+    }
+
+    if ( $label === '中学国語クイズ' ) {
+        return is_page('japanese-quiz');
     }
 
     if ( $label === '開発作品' ) {

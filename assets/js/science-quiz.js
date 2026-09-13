@@ -1,8 +1,8 @@
 (function () {
-  const root = document.querySelector('[data-science-quiz]');
-  if (!root || !window.mythemeScienceQuiz) return;
-
-  const cfg = window.mythemeScienceQuiz;
+  const root = document.querySelector('[data-subject-quiz], [data-science-quiz]');
+  if (!root) return;
+  const cfg = window.mythemeQuiz || window.mythemeScienceQuiz;
+  if (!cfg) return;
   const setupEl = root.querySelector('[data-sq-setup]');
   const playEl = root.querySelector('[data-sq-play]');
   const resultEl = root.querySelector('[data-sq-result]');
@@ -21,7 +21,15 @@
   const scoreEl = root.querySelector('[data-sq-score]');
   const reviewEl = root.querySelector('[data-sq-review]');
   const retryBtn = root.querySelector('[data-sq-retry]');
+  const againBtn = document.querySelector('[data-sq-again]');
   const marks = ['ア', 'イ', 'ウ', 'エ'];
+  const waitEl = document.createElement('div');
+  waitEl.className = 'sq-wait';
+  waitEl.hidden = true;
+  waitEl.setAttribute('role', 'status');
+  waitEl.setAttribute('aria-live', 'polite');
+  waitEl.innerHTML = '<span class="sq-wait__spin" aria-hidden="true"></span><span class="sq-wait__label"></span>';
+  const waitLabel = waitEl.querySelector('.sq-wait__label');
 
   const state = {
     catalog: null,
@@ -81,10 +89,54 @@
     });
   }
 
+  function activePanel() {
+    if (!playEl.hidden) return playEl;
+    if (!resultEl.hidden) return resultEl;
+    return setupEl;
+  }
+
+  function setWait(on, message) {
+    [setupEl, playEl, resultEl].forEach(function (panel) {
+      panel.classList.remove('is-waiting');
+    });
+    if (!on) {
+      waitEl.hidden = true;
+      return;
+    }
+    waitLabel.textContent = message || '準備しています…';
+    const panel = activePanel();
+    panel.classList.add('is-waiting');
+    panel.appendChild(waitEl);
+    waitEl.hidden = false;
+  }
+
   function show(el) {
     setupEl.hidden = el !== setupEl;
     playEl.hidden = el !== playEl;
     resultEl.hidden = el !== resultEl;
+    root.classList.toggle('is-busy', el !== setupEl);
+    if (againBtn) {
+      againBtn.hidden = el === setupEl;
+      againBtn.textContent = el === resultEl ? 'もう一度' : '選びなおす';
+    }
+  }
+
+  function resetToSetup(confirmIfPlaying) {
+    if (confirmIfPlaying && !playEl.hidden) {
+      if (!window.confirm('選択画面に戻ります。今までの解答は消えます。よろしいですか？')) {
+        return;
+      }
+    }
+    state.session = '';
+    state.waiting = false;
+    state.finishedCurrent = false;
+    hideStamp();
+    setNextReady(false);
+    setWait(false);
+    if (reviewEl) reviewEl.innerHTML = '';
+    show(setupEl);
+    syncStart();
+    window.scrollTo(0, 0);
   }
 
   function chip(label, value, selected, disabled) {
@@ -157,7 +209,7 @@
       });
       unitsEl.appendChild(btn);
     });
-    if (grade.units.length < 5) {
+    if (grade.units.length < 5 && cfg.unitSpacer !== false) {
       const spacer = document.createElement('span');
       spacer.className = 'sq-chip-spacer';
       spacer.setAttribute('aria-hidden', 'true');
@@ -246,6 +298,9 @@
 
   function paintReview(items, score, total) {
     scoreEl.textContent = score + ' / ' + total;
+    scoreEl.classList.remove('is-write');
+    void scoreEl.offsetWidth;
+    scoreEl.classList.add('is-write');
     reviewEl.innerHTML = '';
     (items || []).forEach(function (item, n) {
       const article = document.createElement('article');
@@ -257,7 +312,15 @@
 
       const q = document.createElement('p');
       q.className = 'sq-review-q';
-      q.textContent = (n + 1) + '. ' + item.question;
+      if (item.prompt) {
+        q.appendChild(document.createTextNode((n + 1) + '. ' + item.prompt));
+        const meaning = document.createElement('span');
+        meaning.className = 'sq-review-meaning';
+        meaning.textContent = item.question;
+        q.appendChild(meaning);
+      } else {
+        q.textContent = (n + 1) + '. ' + item.question;
+      }
 
       const list = document.createElement('ul');
       list.className = 'sq-review-choices';
@@ -282,8 +345,20 @@
   function paintQuestion(q) {
     state.finishedCurrent = false;
     progressEl.textContent = q.index + ' / ' + q.total;
-    contextEl.textContent = q.grade_label + '　' + q.unit_label;
-    questionEl.textContent = q.question;
+    contextEl.textContent = [q.grade_label, q.unit_label].filter(Boolean).join('　');
+    questionEl.textContent = '';
+    if (q.prompt) {
+      const prompt = document.createElement('span');
+      prompt.className = 'sq-question-prompt';
+      prompt.textContent = q.prompt;
+      const meaning = document.createElement('span');
+      meaning.className = 'sq-question-meaning';
+      meaning.textContent = q.question;
+      questionEl.appendChild(prompt);
+      questionEl.appendChild(meaning);
+    } else {
+      questionEl.textContent = q.question;
+    }
     feedbackEl.textContent = '';
     hideStamp();
     setNextReady(false, '次の問題へ');
@@ -315,11 +390,13 @@
   function submitAnswer(choice, clicked) {
     if (state.waiting || state.finishedCurrent) return;
     state.waiting = true;
+    setWait(true, '判定しています…');
     Array.prototype.forEach.call(choicesEl.querySelectorAll('button'), function (btn) {
       btn.disabled = true;
     });
     request('answer', { session: state.session, choice: choice })
       .then(function (data) {
+        setWait(false);
         state.finishedCurrent = true;
         Array.prototype.forEach.call(choicesEl.querySelectorAll('button'), function (btn, i) {
           if (i === data.correct_index) btn.classList.add('is-correct');
@@ -342,6 +419,7 @@
         }
       })
       .catch(function (err) {
+        setWait(false);
         feedbackEl.textContent = err.message;
         hintEl.textContent = err.message;
         Array.prototype.forEach.call(choicesEl.querySelectorAll('button'), function (btn) {
@@ -358,6 +436,7 @@
     state.waiting = true;
     startBtn.disabled = true;
     startBtn.textContent = '出題を用意しています…';
+    setWait(true, '出題を用意しています…');
     [soundOk, soundNg].forEach(function (audio) {
       if (audio) audio.load();
     });
@@ -369,10 +448,12 @@
       .then(function (data) {
         state.session = data.session;
         if (reviewEl) reviewEl.innerHTML = '';
+        setWait(false);
         show(playEl);
         paintQuestion(data.question);
       })
       .catch(function (err) {
+        setWait(false);
         hintEl.textContent = err.message;
       })
       .then(function () {
@@ -382,23 +463,36 @@
       });
   });
 
-  retryBtn.addEventListener('click', function () {
-    show(setupEl);
-    syncStart();
-  });
+  if (retryBtn) {
+    retryBtn.addEventListener('click', function () {
+      resetToSetup(false);
+    });
+  }
+  if (againBtn) {
+    againBtn.addEventListener('click', function () {
+      resetToSetup(!playEl.hidden);
+    });
+  }
 
-  hintEl.textContent = '問題を読み込んでいます…';
+  hintEl.textContent = '';
+  setWait(true, '問題を読み込んでいます…');
   request('catalog')
     .then(function (data) {
+      setWait(false);
       state.catalog = data;
       if (data.grades && data.grades[0]) {
         state.grade = data.grades[0].id;
+      }
+      var gradeField = root.querySelector('[data-sq-grade-field]');
+      if (gradeField && (data.grades || []).length <= 1) {
+        gradeField.hidden = true;
       }
       renderGrades();
       renderUnits();
       requestAd();
     })
     .catch(function () {
+      setWait(false);
       hintEl.textContent = '問題データを読み込めませんでした。';
     });
 

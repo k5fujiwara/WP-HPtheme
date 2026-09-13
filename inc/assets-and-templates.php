@@ -62,7 +62,7 @@ function mytheme_assets() {
     $theme_version = wp_get_theme()->get('Version');
     $theme_dir = get_template_directory();
 
-    if ( is_page('science-quiz') ) {
+    if ( function_exists('mytheme_is_quiz_page') && mytheme_is_quiz_page() ) {
         $sq_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/pages/science-quiz', '.css');
         $sq_css_path = $theme_dir . $sq_css_rel;
         if ( file_exists($sq_css_path) ) {
@@ -70,14 +70,26 @@ function mytheme_assets() {
             wp_enqueue_style('mytheme-science-quiz', get_template_directory_uri() . $sq_css_rel, [], $sq_css_ver);
         }
 
+        if ( is_page('japanese-quiz') ) {
+            $jq_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/pages/japanese-quiz', '.css');
+            $jq_css_path = $theme_dir . $jq_css_rel;
+            if ( file_exists($jq_css_path) ) {
+                $jq_css_ver = (string) filemtime($jq_css_path);
+                wp_enqueue_style('mytheme-japanese-quiz', get_template_directory_uri() . $jq_css_rel, ['mytheme-science-quiz'], $jq_css_ver);
+            }
+        }
+
         $sq_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/science-quiz', '.js');
         $sq_js_path = $theme_dir . $sq_js_rel;
         if ( file_exists($sq_js_path) ) {
             $sq_js_ver = (string) filemtime($sq_js_path);
             wp_enqueue_script('mytheme-science-quiz', get_template_directory_uri() . $sq_js_rel, [], $sq_js_ver, mytheme_script_loader_args());
-            wp_localize_script('mytheme-science-quiz', 'mythemeScienceQuiz', [
-                'rest'  => rest_url('mytheme/v1/science-quiz/'),
+            $quiz_object = is_page('japanese-quiz') ? 'mythemeQuiz' : 'mythemeScienceQuiz';
+            $quiz_rest = is_page('japanese-quiz') ? 'japanese-quiz/' : 'science-quiz/';
+            wp_localize_script('mytheme-science-quiz', $quiz_object, [
+                'rest'  => rest_url('mytheme/v1/' . $quiz_rest),
                 'nonce' => wp_create_nonce('wp_rest'),
+                'unitSpacer' => ! is_page('japanese-quiz'),
                 'sounds' => [
                     'ok' => get_template_directory_uri() . '/assets/audio/quiz-correct.mp3',
                     'ng' => get_template_directory_uri() . '/assets/audio/quiz-incorrect.mp3',
