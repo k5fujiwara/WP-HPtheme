@@ -277,6 +277,12 @@
     nextBtn.disabled = !ready;
   }
 
+  function scrollQuizTop() {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }
+
   function request(path, body) {
     const options = {
       method: body ? 'POST' : 'GET',
@@ -410,11 +416,13 @@
           nextBtn.onclick = function () {
             paintReview(data.review, data.score, data.total);
             show(resultEl);
+            scrollQuizTop();
           };
         } else {
           setNextReady(true, '次の問題へ');
           nextBtn.onclick = function () {
             paintQuestion(data.next);
+            scrollQuizTop();
           };
         }
       })
