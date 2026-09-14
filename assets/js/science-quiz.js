@@ -70,13 +70,8 @@
         ins.className = 'adsbygoogle';
         ins.style.display = 'block';
         ins.setAttribute('data-ad-client', 'ca-pub-6924336257757707');
-        if (box.classList.contains('sq-ad--rail')) {
-          ins.setAttribute('data-ad-format', 'vertical');
-          ins.setAttribute('data-full-width-responsive', 'false');
-        } else {
-          ins.setAttribute('data-ad-format', 'horizontal');
-          ins.setAttribute('data-full-width-responsive', 'true');
-        }
+        ins.setAttribute('data-ad-format', 'horizontal');
+        ins.setAttribute('data-full-width-responsive', 'true');
         box.appendChild(ins);
       }
       if (ins.getAttribute('data-adsbygoogle-status')) return;

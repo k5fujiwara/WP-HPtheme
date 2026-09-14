@@ -44,21 +44,6 @@ get_header();
         <button type="button" class="sq-start" data-sq-retry>もう一度</button>
     </section>
 
-    <aside class="sq-ad sq-ad--rail sq-ad--left" data-sq-ad>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-6924336257757707"
-             data-ad-format="vertical"
-             data-full-width-responsive="false"></ins>
-    </aside>
-    <aside class="sq-ad sq-ad--rail sq-ad--right" data-sq-ad>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-6924336257757707"
-             data-ad-format="vertical"
-             data-full-width-responsive="false"></ins>
-    </aside>
-
     <div class="sq-ad sq-ad--bottom" data-sq-ad>
         <ins class="adsbygoogle"
              style="display:block"
