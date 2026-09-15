@@ -11,7 +11,7 @@ function chooseTheme(theme) {
   applyTheme(theme);
 }
 
-(function initSettings() {
+(function initDesign() {
   const savedTheme = localStorage.getItem("quiz-theme");
   applyTheme(["simple", "cool", "pop"].includes(savedTheme) ? savedTheme : "simple");
 })();

@@ -29,6 +29,12 @@ function mytheme_it1_blocked_slugs(): array {
     return ['admin', 'sim-logic'];
 }
 
+function mytheme_it1_page_aliases(): array {
+    return [
+        'settings' => 'design',
+    ];
+}
+
 function mytheme_it1_legal_redirects(): array {
     return [
         'about'    => function_exists('mytheme_get_page_url_by_path') ? mytheme_get_page_url_by_path('about', home_url('/about/')) : home_url('/about/'),
@@ -125,12 +131,13 @@ function mytheme_it1_hp_bar_css(): string {
 body .themed-header{top:var(--it1-hp-h)!important}
 body .themed-header+main{padding-top:calc(var(--header-total-height) + var(--it1-hp-h) + 1rem)!important}
 body.is-quiz-screen .quiz-progress{top:calc(var(--header-total-height) + var(--it1-hp-h))!important}
-.it1-ad--bottom{margin:20px 0 0}
-.it1-ad--bottom:not(.is-filled){margin:0;min-height:0}
+.it1-ad--bottom{margin:20px auto 0;max-width:48rem;width:calc(100% - 2rem);display:flex;justify-content:center;text-align:center}
+.it1-ad--bottom .adsbygoogle{width:100%;max-width:100%}
+.it1-ad--bottom:not(.is-filled){margin:0;min-height:0;width:auto}
 .it1-ad--bottom:not(.is-filled) .adsbygoogle{min-height:0;display:none}
 @media(max-width:1099px){
 body.has-it1-bottom-ad{padding-bottom:128px}
-.it1-ad--bottom.is-filled{position:fixed;left:0;right:0;bottom:0;z-index:90;margin:0;padding:8px 12px 12px;background:var(--bg,#fff);box-shadow:0 -10px 16px var(--bg,#fff)}
+.it1-ad--bottom.is-filled{position:fixed;left:0;right:0;bottom:0;z-index:90;margin:0;max-width:none;width:auto;display:block;padding:8px 12px 12px;background:var(--bg,#fff);box-shadow:0 -10px 16px var(--bg,#fff)}
 }
 </style>';
 }
@@ -252,6 +259,11 @@ function mytheme_it1_transform_footer(string $html): string {
 
 function mytheme_it1_output(): void {
     $slug = mytheme_it1_current_slug();
+    $aliases = mytheme_it1_page_aliases();
+    if ( isset($aliases[$slug]) ) {
+        wp_safe_redirect(mytheme_it1_page_url($aliases[$slug]), 301);
+        exit;
+    }
     $legal = mytheme_it1_legal_redirects();
     if ( isset($legal[$slug]) ) {
         wp_safe_redirect($legal[$slug], 301);
