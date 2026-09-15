@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/sim-queue.html">
+  <title>待ち行列シミュレーター｜開始・終了・待ち時間を1人ずつ求める | IT1-CODE-POCKET</title>
+  <meta name="description" content="待ち行列シミュレーションを1ステップずつ確認できるシミュレーター。「開始時刻 = 最大値(到着時刻, 前の人の終了時刻)」の式で待ち時間が積み上がる様子を、帯グラフと表で確認できます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="待ち行列シミュレーター｜開始・終了・待ち時間を1人ずつ求める">
+  <meta property="og:description" content="開始時刻 = 最大値(到着時刻, 前の人の終了時刻) の式で待ち時間が決まる様子を、帯グラフと表で1ステップずつ確認できます。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/sim-queue.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="待ち行列シミュレーター｜開始・終了・待ち時間を1人ずつ求める">
+  <meta name="twitter:description" content="開始時刻 = 最大値(到着時刻, 前の人の終了時刻) の式で待ち時間が決まる様子を確認できます。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/sim-queue.html#article",
+        "headline": "待ち行列シミュレーター｜開始・終了・待ち時間を1人ずつ求める",
+        "description": "待ち行列シミュレーションの動きを1ステップずつ確認できるシミュレーターと、擬似コード・Python・JavaScript のコード例、共通テスト情報Ⅰでの出題ポイントの解説。",
+        "url": "https://it1-code-pocket.com/sim-queue.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-04",
+        "dateModified": "2026-08-04",
+        "inLanguage": "ja",
+        "about": "待ち行列シミュレーション",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/sim-queue.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "重要アルゴリズム解説",
+            "item": "https://it1-code-pocket.com/algorithms.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "待ち行列シミュレーター",
+            "item": "https://it1-code-pocket.com/sim-queue.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://it1-code-pocket.com/sim-queue.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "開始時刻はなぜ最大値で求めるのですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "対応を始めるには「自分が到着していること」と「前の人が終わっていること」の両方が必要だからです。2つの条件がそろう時刻は、到着時刻と前の人の終了時刻のうち遅いほう、つまり最大値になります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "待ち時間はどう計算しますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "開始時刻から到着時刻を引きます。待ち時間 = Start[i] - Arrive[i] です。前の人の終了を待たずに始められた場合は 0 になります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "最初の人だけ別に計算するのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "最初の人には「前の人」が存在しないためです。Finish[-1] は存在しないので比べる相手がなく、到着した時刻にそのまま開始できます。そのため繰り返しは i = 1 から始めます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "待ち時間が積み上がるのはどんなときですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "到着の間隔が対応時間より短いときです。1人あたり4分かかるのに1分おきに人が来ると、行列が伸び続けて後ろの人ほど待ち時間が長くなります。逆に到着間隔が対応時間より長ければ、待ちは発生しません。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="algorithms.html" class="header-back-btn" aria-label="重要アルゴリズム解説へ戻る" title="重要アルゴリズム解説へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="algorithms.html">重要アルゴリズム解説</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">待ち行列シミュレーター</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-2">待ち行列シミュレーター</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        レジや窓口の行列を、<strong>到着・開始・終了・待ち時間の4つの数字</strong>で表すシミュレーションです。
+        「開始時刻 = 最大値(到着時刻, 前の人の終了時刻)」の式で待ちが決まる様子を確認できます。
+      </p>
+    </section>
+
+    <!-- ============ シミュレーター ============ -->
+    <section class="themed-card sim-panel mb-4" aria-labelledby="sim-heading">
+      <h2 id="sim-heading" class="sim-panel-title">動きを1ステップずつ確認する</h2>
+
+      <div class="sim-setup">
+        <div class="sim-setup-row">
+          <span class="sim-setup-label" id="sim-people-label">人数</span>
+          <div class="sim-chips sim-chips-scene sim-chips-scene-6" role="group" aria-labelledby="sim-people-label">
+            <button type="button" class="sim-chip sim-chip-num" data-sim-people="3" aria-pressed="false" aria-label="3人">3</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-people="4" aria-pressed="true" aria-label="4人">4</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-people="5" aria-pressed="false" aria-label="5人">5</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-people="6" aria-pressed="false" aria-label="6人">6</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-people="7" aria-pressed="false" aria-label="7人">7</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-people="8" aria-pressed="false" aria-label="8人">8</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <span class="sim-setup-label" id="sim-scenario-label">混み具合</span>
+          <div class="sim-chips sim-chips-scene" role="group" aria-labelledby="sim-scenario-label">
+            <button type="button" class="sim-chip" data-sim-scenario="easy" aria-pressed="false" aria-label="すいている（待ちなし）">すいてる</button>
+            <button type="button" class="sim-chip" data-sim-scenario="normal" aria-pressed="true" aria-label="ふつうの混み具合">ふつう</button>
+            <button type="button" class="sim-chip" data-sim-scenario="busy" aria-pressed="false" aria-label="混んでいる（1分おきに到着）">混んでる</button>
+            <button type="button" class="sim-chip" data-sim-scenario="same" aria-pressed="false" aria-label="全員が同時に到着">同時到着</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <label class="sim-setup-label" for="sim-input-service">対応時間</label>
+          <select class="sim-select" id="sim-input-service">
+            <option value="2">1人あたり 2分</option>
+            <option value="3">1人あたり 3分</option>
+            <option value="4" selected>1人あたり 4分</option>
+            <option value="5">1人あたり 5分</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sim-view-tabs" data-sim-view-tabs role="tablist" aria-label="表示を切り替え">
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-chart"
+                aria-controls="view-chart" aria-selected="true">時間の流れ</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-table"
+                aria-controls="view-table" aria-selected="false">表</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-code"
+                aria-controls="view-code" aria-selected="false">コード</button>
+      </div>
+
+      <div class="sim-view sim-view-3">
+        <div class="sim-view-panel" id="view-chart" role="tabpanel" aria-labelledby="viewtab-chart">
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">時間の流れ（分）</span>
+            </div>
+            <div class="sim-timeline" id="sim-timeline"></div>
+            <div class="sim-timeline-axis" id="sim-timeline-axis"></div>
+            <ul class="sim-plot-legend">
+              <li><span class="sim-plot-swatch" data-hit="wait"></span>待ち時間</li>
+              <li><span class="sim-plot-swatch" data-hit="service"></span>対応中</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-table" role="tabpanel" aria-labelledby="viewtab-table" hidden>
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">求めた時刻（分）</span>
+            </div>
+            <div class="sim-table-wrap">
+              <table class="sim-table sim-table-compact">
+                <thead>
+                  <tr>
+                    <th scope="col">客</th>
+                    <th scope="col">到着</th>
+                    <th scope="col">開始</th>
+                    <th scope="col">終了</th>
+                    <th scope="col">待ち</th>
+                  </tr>
+                </thead>
+                <tbody id="sim-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-code" role="tabpanel" aria-labelledby="viewtab-code" hidden>
+          <pre class="sim-code" id="sim-code" aria-label="実行中の擬似コード"></pre>
+        </div>
+      </div>
+
+      <div class="sim-estimate">
+        <span class="sim-estimate-label">ここまでの最大待ち時間</span>
+        <span class="sim-estimate-value" id="sim-estimate-value">–</span>
+        <span class="sim-estimate-sub" id="sim-estimate-sub">まだ決まっていません</span>
+      </div>
+
+      <div class="sim-vars sim-vars-5">
+        <div class="sim-var">
+          <span class="sim-var-name">i</span>
+          <span class="sim-var-value" id="sim-var-current">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">到着</span>
+          <span class="sim-var-value" id="sim-var-arrive">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">開始</span>
+          <span class="sim-var-value" id="sim-var-start">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">終了</span>
+          <span class="sim-var-value" id="sim-var-finish">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">待ち</span>
+          <span class="sim-var-value" id="sim-var-wait">–</span>
+        </div>
+      </div>
+
+      <div class="progress-bar" role="presentation">
+        <div class="progress-fill" id="sim-progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="sim-controls">
+        <button type="button" class="sim-btn sim-btn-prev" data-sim-action="prev">‹ 前へ</button>
+        <button type="button" class="sim-btn sim-btn-main sim-btn-next" data-sim-action="next">次へ ›</button>
+        <button type="button" class="sim-btn sim-btn-play" data-sim-action="play">▶ 自動再生</button>
+        <button type="button" class="sim-btn sim-btn-reset" data-sim-action="reset">⟲ 最初から</button>
+        <button type="button" class="sim-btn sim-btn-speed" data-sim-speed-cycle="normal">速さ ふつう</button>
+      </div>
+
+      <div class="sim-message" role="status" aria-live="polite">
+        <span class="sim-message-step" id="sim-message-step">STEP 1 / 1</span>
+        <span id="sim-message-text">読み込み中です。</span>
+      </div>
+
+      <div class="sim-result" id="sim-result" hidden></div>
+
+      <p class="sim-hint sim-hint-keyboard">
+        パソコンではキーボードでも操作できます：<code>→</code> 次へ ／ <code>←</code> 前へ ／ <code>スペース</code> 再生・一時停止
+      </p>
+
+      <details class="sim-log-details">
+        <summary>実行ログを見る（ここまでの処理）</summary>
+        <ol class="sim-log" id="sim-log"></ol>
+      </details>
+    </section>
+
+    <!-- ============ 解説 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">ALGORITHM</p>
+      <h2>待ち行列シミュレーションとは何をしているか</h2>
+      <p>
+        レジや窓口に人が並ぶ様子を、<strong>4つの数字の列</strong>で表して1人ずつ計算していくシミュレーションです。
+      </p>
+      <ul>
+        <li><strong>到着時刻 Arrive[i]</strong> … その人が列に並んだ時刻（問題文で与えられる）</li>
+        <li><strong>開始時刻 Start[i]</strong> … 対応してもらい始めた時刻（求めるもの）</li>
+        <li><strong>終了時刻 Finish[i]</strong> … 対応が終わった時刻（求めるもの）</li>
+        <li><strong>待ち時間</strong> … Start[i] - Arrive[i]（求めるもの）</li>
+      </ul>
+
+      <h3>中心にあるのは「最大値」の式</h3>
+      <p>
+        このアルゴリズムで覚えることは、実質この1行だけです。
+      </p>
+      <pre class="code-block">Start[i] = 最大値(Arrive[i], Finish[i - 1])</pre>
+      <p>
+        対応を始めるには<strong>2つの条件がそろう必要</strong>があります。
+        ひとつは「自分が到着していること」、もうひとつは「前の人が終わっていること」です。
+        2つがそろう時刻は、<strong>2つのうち遅いほう</strong>、つまり最大値になります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">状況</th>
+              <th scope="col">どちらが遅いか</th>
+              <th scope="col">結果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">到着したとき、窓口が空いていた</th>
+              <td data-label="どちらが遅いか">到着時刻のほうが遅い</td>
+              <td data-label="結果">すぐ開始（待ち 0 分）</td>
+            </tr>
+            <tr>
+              <th scope="row">到着したとき、まだ前の人が対応中</th>
+              <td data-label="どちらが遅いか">前の人の終了時刻のほうが遅い</td>
+              <td data-label="結果">前の人が終わるまで待つ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>最初の人だけ別に計算する</h3>
+      <p>
+        最初の人には「前の人」がいません。<code>Finish[-1]</code> は存在しないので比べる相手がなく、
+        <strong>到着した時刻にそのまま開始</strong>できます。そのため <code>Start[0] = Arrive[0]</code> と先に書き、
+        繰り返しは <strong>i = 1 から</strong>始めます。これは配列を扱うアルゴリズム全般でよくある形です。
+      </p>
+
+      <h3>待ちが積み上がる条件</h3>
+      <p>
+        シミュレーターで混み具合を切り替えると、待ち時間の出方がはっきり変わります。
+      </p>
+      <ul>
+        <li><strong>すいてる</strong>（到着間隔 &gt; 対応時間）… 誰も待ちません。窓口が空く時間があります。</li>
+        <li><strong>混んでる</strong>（到着間隔 &lt; 対応時間）… 待ち時間が<strong>後ろの人ほど長く</strong>なります。行列が伸び続けます。</li>
+        <li><strong>同時到着</strong>（全員が0分に到着）… 2人目以降は前の人の終了をそのまま待ちます。待ち時間は対応時間の倍数になります。</li>
+      </ul>
+      <div class="sim-note">
+        <strong>ポイント：</strong>「到着の間隔」と「1人あたりの対応時間」のどちらが長いかで、行列が伸びるか解消するかが決まります。
+        対応時間を変えると同じ到着でも結果が変わるので、シミュレーターの「対応時間」を切り替えて確認してください。
+      </div>
+    </section>
+
+    <!-- ============ コード ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの書き方で見る待ち行列</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Arrive = [0, 3, 6, 7]
+service = 4
+Start = [0, 0, 0, 0]
+Finish = [0, 0, 0, 0]
+
+Start[0] = Arrive[0]
+Finish[0] = Start[0] + service
+
+i を 1 から 要素数(Arrive) - 1 まで 1 ずつ増やしながら繰り返す:
+｜Start[i] = 最大値(Arrive[i], Finish[i - 1])
+⎿ Finish[i] = Start[i] + service
+
+表示する(Start, Finish)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">arrive = [0, 3, 6, 7]
+service = 4
+start = [0] * len(arrive)
+finish = [0] * len(arrive)
+
+start[0] = arrive[0]
+finish[0] = start[0] + service
+
+for i in range(1, len(arrive)):
+    start[i] = max(arrive[i], finish[i - 1])
+    finish[i] = start[i] + service
+
+print(start, finish)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const arrive = [0, 3, 6, 7];
+const service = 4;
+const start = new Array(arrive.length).fill(0);
+const finish = new Array(arrive.length).fill(0);
+
+start[0] = arrive[0];
+finish[0] = start[0] + service;
+
+for (let i = 1; i &lt; arrive.length; i++) {
+  start[i] = Math.max(arrive[i], finish[i - 1]);
+  finish[i] = start[i] + service;
+}
+
+console.log(start, finish);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>最大値の書き方：</strong>擬似言語の <code>最大値(a, b)</code> は、Python では <code>max(a, b)</code>、
+        JavaScript では <code>Math.max(a, b)</code> です。
+        <code>もし a &gt; b ならば … そうでなければ …</code> と条件分岐で書いても同じ結果になります。
+        <strong>穴埋めで「最大値」が空欄になったら、条件分岐に置き換えられるか</strong>も確認しておきましょう。
+      </div>
+    </section>
+
+    <!-- ============ 出題ポイント ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXAM POINT</p>
+      <h2>共通テスト「情報Ⅰ」での出題ポイント</h2>
+      <ol>
+        <li><strong>最大値の式：</strong><code>Start[i] = 最大値(Arrive[i], Finish[i - 1])</code> の空欄。<strong>なぜ最大値なのか</strong>を説明できることが要点です。</li>
+        <li><strong>表の穴埋め：</strong>到着時刻だけが与えられ、開始・終了・待ち時間の表を完成させる形。<strong>上から順に1行ずつ</strong>埋めていきます。</li>
+        <li><strong>待ち時間の式：</strong><code>待ち時間 = Start[i] - Arrive[i]</code>。引く順番を逆にしないよう注意します。</li>
+        <li><strong>繰り返しの開始値：</strong><code>i = 1</code> から始まる理由。最初の人には前の人がいないためです。</li>
+        <li><strong>条件を変えたときの変化：</strong>「対応時間を短くすると待ち時間はどうなるか」「窓口を2つにしたら」といった応用。</li>
+      </ol>
+      <div class="sim-note sim-note-warn">
+        <strong>表を埋めるコツ：</strong>1行ずつ「到着 → 前の人の終了と比べる → 遅いほうが開始 → 開始 + 対応時間が終了」の順に埋めます。
+        シミュレーターの「表」タブは、まさにこの手順で1マスずつ埋まっていきます。
+        自分で表を書いてから、答え合わせに使ってください。
+      </div>
+    </section>
+
+    <!-- ============ よくある間違い ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">MISTAKES</p>
+      <h2>よくある間違い</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">間違い</th>
+              <th scope="col">何が起きるか</th>
+              <th scope="col">正しくは</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">最小値で計算する</th>
+              <td data-label="何が起きるか">前の人が終わる前に開始してしまう</td>
+              <td data-label="正しくは">最大値（遅いほう）を使う</td>
+            </tr>
+            <tr>
+              <th scope="row">開始時刻をいつも到着時刻にする</th>
+              <td data-label="何が起きるか">待ち時間が常に0になる</td>
+              <td data-label="正しくは">前の人の終了と比べる</td>
+            </tr>
+            <tr>
+              <th scope="row">前の人の「開始」と比べる</th>
+              <td data-label="何が起きるか">対応時間ぶんだけ早く始まってしまう</td>
+              <td data-label="正しくは">前の人の「終了」Finish[i - 1] と比べる</td>
+            </tr>
+            <tr>
+              <th scope="row">繰り返しを i = 0 から始める</th>
+              <td data-label="何が起きるか">Finish[-1] という存在しない要素を参照する</td>
+              <td data-label="正しくは">最初の人は別に計算し、i = 1 から回す</td>
+            </tr>
+            <tr>
+              <th scope="row">待ち時間を到着 - 開始で計算する</th>
+              <td data-label="何が起きるか">符号が逆になり負の数になる</td>
+              <td data-label="正しくは">開始 - 到着</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 理解度チェック ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>理解度チェック</h2>
+      <div class="sim-quiz">
+        <details class="sim-quiz-item">
+          <summary>Q1. Arrive = [0, 3, 6, 7]、対応時間4分のとき、Start はどうなりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>Start = [0, 4, 8, 12]。</strong>
+            1人目は 0 に開始し 4 に終了。2人目は到着 3 より終了 4 が遅いので 4 に開始（待ち1分）。
+            3人目は到着 6 より終了 8 が遅いので 8 に開始（待ち2分）。4人目は 12 に開始（待ち5分）です。
+            <strong>後ろの人ほど待ち時間が長くなっています。</strong>
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q2. 同じ到着時刻で、対応時間を2分に短くすると待ち時間はどうなりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>すべて0分になります。</strong>
+            Start = [0, 3, 6, 7] となり、全員が到着と同時に開始できます。
+            <strong>到着の間隔が対応時間より長ければ、待ちは発生しません</strong>。
+            シミュレーターで対応時間を2分に変えて確認してください。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q3. 4人が全員0分に到着し、対応時間が4分のとき、4人目の待ち時間は何分ですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>12分。</strong>
+            開始時刻は 0, 4, 8, 12 となり、4人目は到着 0 に対して開始が 12 なので待ちは 12 分です。
+            全員同時に到着した場合、<strong>待ち時間は対応時間の倍数</strong>で増えていきます。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q4. 「最大値」を使わずに同じ処理を書くには、どう書けばよいですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>条件分岐で書けます。</strong>
+            <code>もし Arrive[i] &gt; Finish[i-1] ならば Start[i] = Arrive[i]、そうでなければ Start[i] = Finish[i-1]</code> です。
+            最大値の関数は「大きいほうを選ぶ条件分岐」を短く書いたものだと理解しておくと、どちらの形で出題されても対応できます。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 関連ページ ============ -->
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に確認したいアルゴリズム</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="sim-monte-carlo.html" class="sim-next-card">
+          <span class="sim-next-title">モンテカルロ法</span>
+          <span class="sim-next-desc">乱数で試行を繰り返して答えを近似する。もうひとつのシミュレーション</span>
+        </a>
+        <a href="sim-motion.html" class="sim-next-card">
+          <span class="sim-next-title">運動シミュレーション</span>
+          <span class="sim-next-desc">位置と速度を順番に更新する。更新の順序が結果を変える</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説の一覧</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">問題を解いて確認する</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script src="js/sim-queue.js"></script>
+</body>
+</html>

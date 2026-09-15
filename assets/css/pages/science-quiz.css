@@ -116,6 +116,12 @@
   border-color: #9a3b32;
 }
 
+.sq-tools a.sq-tools__btn--info {
+  color: #fff;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
 .sq-tools__again[hidden] {
   display: none !important;
 }

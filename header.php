@@ -130,6 +130,7 @@
         .sq-tools a,.sq-tools button{flex:1 1 7.5rem;min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:8px 10px;border:1px solid rgba(31,26,20,.16);border-radius:8px;background:#fff;color:<?php echo $quiz_accent; ?>;font-size:.82rem;font-weight:700;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
         .sq-tools a.sq-tools__btn--science,.sq-tools button.sq-tools__btn--science{color:#fff;background:#1f6b4a;border-color:#1f6b4a}
         .sq-tools a.sq-tools__btn--japanese,.sq-tools button.sq-tools__btn--japanese{color:#fff;background:#9a3b32;border-color:#9a3b32}
+        .sq-tools a.sq-tools__btn--info{color:#fff;background:#2563eb;border-color:#2563eb}
         <?php endif; ?>
     </style>
     

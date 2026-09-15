@@ -406,12 +406,25 @@ function mytheme_quiz_tools_nav(string $current): void {
     $japanese_url = function_exists('mytheme_get_page_url_by_path')
         ? mytheme_get_page_url_by_path('japanese-quiz', home_url('/japanese-quiz/'))
         : home_url('/japanese-quiz/');
-    $other = $current === 'japanese-quiz'
-        ? ['url' => $science_url, 'label' => '理科クイズへ', 'mod' => 'science']
-        : ['url' => $japanese_url, 'label' => '国語クイズへ', 'mod' => 'japanese'];
+    $other_items = [];
+    if ( $current !== 'science-quiz' ) {
+        $other_items[] = ['url' => $science_url, 'label' => '理科クイズへ', 'mod' => 'science'];
+    }
+    if ( $current !== 'japanese-quiz' ) {
+        $other_items[] = ['url' => $japanese_url, 'label' => '国語クイズへ', 'mod' => 'japanese'];
+    }
+    if ( $current !== 'it1-code-pocket' ) {
+        $other_items[] = [
+            'url'   => function_exists('mytheme_it1_home_url') ? mytheme_it1_home_url() : home_url('/it1-code-pocket/'),
+            'label' => '情報Ⅰへ',
+            'mod'   => 'info',
+        ];
+    }
     echo '<nav class="sq-tools" aria-label="クイズの移動">';
     echo '<button type="button" class="sq-tools__btn sq-tools__again" data-sq-again hidden>選びなおす</button>';
-    echo '<a class="sq-tools__btn sq-tools__btn--' . esc_attr($other['mod']) . '" href="' . esc_url($other['url']) . '">' . esc_html($other['label']) . '</a>';
+    foreach ( $other_items as $item ) {
+        echo '<a class="sq-tools__btn sq-tools__btn--' . esc_attr($item['mod']) . '" href="' . esc_url($item['url']) . '">' . esc_html($item['label']) . '</a>';
+    }
     echo '<a class="sq-tools__btn" href="' . esc_url($home_url) . '">トップに戻る</a>';
     echo '</nav>';
 }

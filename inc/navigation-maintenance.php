@@ -47,6 +47,10 @@ function mytheme_get_primary_menu_items() {
                     'label' => '中学国語クイズ',
                     'url'   => $japanese_quiz_url,
                 ],
+                [
+                    'label' => '情報Ⅰ 第3問対策',
+                    'url'   => home_url('/it1-code-pocket/'),
+                ],
             ],
         ],
         [
@@ -107,7 +111,8 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
     }
 
     if ( $label === '学習ツール' ) {
-        return is_page(['science-quiz', 'japanese-quiz']);
+        return is_page(['science-quiz', 'japanese-quiz', 'it1-code-pocket'])
+            || ( function_exists('mytheme_is_it1_page') && mytheme_is_it1_page() );
     }
 
     if ( $label === '中学理科クイズ' ) {
@@ -116,6 +121,10 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
 
     if ( $label === '中学国語クイズ' ) {
         return is_page('japanese-quiz');
+    }
+
+    if ( $label === '情報Ⅰ 第3問対策' ) {
+        return function_exists('mytheme_is_it1_page') && mytheme_is_it1_page();
     }
 
     if ( $label === '開発作品' ) {

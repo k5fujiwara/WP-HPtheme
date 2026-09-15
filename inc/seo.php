@@ -119,6 +119,7 @@ function mytheme_seo_get_description(): string {
             'ebooks' => '情報Ⅰ、プログラミング、AI活用、学習法などをテーマにした電子書籍をまとめています。',
             'science-quiz' => '中学理科の4択クイズ。学年と分野からランダムに出題します。',
             'japanese-quiz' => '中学国語の4択クイズ。ことわざ・慣用句・四字熟語からランダムに出題します。',
+            'it1-code-pocket' => '共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策クイズ。Python、JavaScript、DNCLで演習できます。',
         ];
         if ( isset($custom_descriptions[$post_slug]) ) {
             return mytheme_seo_clean_text($custom_descriptions[$post_slug]);

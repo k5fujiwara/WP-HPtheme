@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/notation.html">
+  <title>共通テスト用プログラム表記 | 情報Ⅰ 第3問 対策クイズ</title>
+  <meta name="description" content="共通テスト「情報Ⅰ」で使われるプログラム表記を、変数、配列、条件分岐、繰返し、演算などのコード例と実行結果で確認できます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="共通テスト用プログラム表記 | IT1-CODE-POCKET">
+  <meta property="og:description" content="情報Ⅰで使われるプログラム表記を、コード例と実行結果で確認できます。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/notation.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="共通テスト用プログラム表記 | IT1-CODE-POCKET">
+  <meta name="twitter:description" content="情報Ⅰで使われるプログラム表記を、コード例と実行結果で確認できます。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-1">共通テスト用プログラム表記の解説</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        共通テスト「情報Ⅰ」で使われるプログラム表記を、コード例と実行結果で確認できます。
+      </p>
+    </section>
+
+    <nav class="notation-nav themed-card p-3 mb-4">
+      <a href="#vars">1 変数</a>
+      <a href="#strings">2 文字列</a>
+      <a href="#assign">3 代入文</a>
+      <a href="#arithmetic">4 算術演算</a>
+      <a href="#compare">5 比較演算</a>
+      <a href="#logic">6 論理演算</a>
+      <a href="#functions">7 関数</a>
+      <a href="#branch">8 条件分岐</a>
+      <a href="#loop">9 繰返し</a>
+      <a href="#comment">10 コメント</a>
+    </nav>
+
+    <section class="notation-grid">
+      <article class="notation-card themed-card" id="vars">
+        <h2>1 変数</h2>
+        <p>変数は「値を入れておく箱」です。配列名は先頭を大文字にし、添字は特に説明がなければ0から数えます。</p>
+        <pre class="code-block">ninzu = 4
+total_score = 320
+Scores = [72, 81, 95, 88]
+表示する(Scores[2])</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('vars')">実行して確認</button>
+        <pre class="notation-output" id="output-vars"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="strings">
+        <h2>2 文字列</h2>
+        <p>文字列はダブルクォーテーションで囲みます。+ を使うと、文字列をつなげて1つの文にできます。</p>
+        <pre class="code-block">unit = "第3問"
+topic = "アルゴリズム"
+message = unit + "は" + topic
+表示する(message)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('strings')">実行して確認</button>
+        <pre class="notation-output" id="output-strings"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="assign">
+        <h2>3 代入文</h2>
+        <p>= は「等しい」ではなく、右側の計算結果を左側に入れるという意味で使われます。</p>
+        <pre class="code-block">price = 120
+count = 5
+total = price * count
+表示する(total)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('assign')">実行して確認</button>
+        <pre class="notation-output" id="output-assign"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="arithmetic">
+        <h2>4 算術演算</h2>
+        <p>整数の割り算では、商だけを取り出す ÷ と、余りを取り出す ％ を区別します。</p>
+        <pre class="code-block">cards = 23
+表示する(cards ÷ 4)
+表示する(cards ％ 4)
+表示する(3 ** 2)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('arithmetic')">実行して確認</button>
+        <pre class="notation-output" id="output-arithmetic"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="compare">
+        <h2>5 比較演算</h2>
+        <p>比較演算の結果は True または False になります。条件分岐の判断材料になります。</p>
+        <pre class="code-block">score = 68
+表示する(score >= 60)
+表示する(score == 100)
+表示する(score != 0)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('compare')">実行して確認</button>
+        <pre class="notation-output" id="output-compare"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="logic">
+        <h2>6 論理演算</h2>
+        <p>複数の条件を組み合わせたいときに使います。範囲判定や例外判定でよく登場します。</p>
+        <pre class="code-block">age = 16
+point = 42
+表示する(age >= 15 and point >= 40)
+表示する(age < 15 or point >= 50)
+表示する(not point < 40)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('logic')">実行して確認</button>
+        <pre class="notation-output" id="output-logic"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="functions">
+        <h2>7 関数</h2>
+        <p>関数は決まった処理をまとめたものです。要素数(...) は配列の中身が何個あるかを返します。</p>
+        <pre class="code-block">Temps = [24, 27, 25, 29, 26]
+days = 要素数(Temps)
+表示する("記録日数", days)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('functions')">実行して確認</button>
+        <pre class="notation-output" id="output-functions"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="branch">
+        <h2>8 制御文（条件分岐）</h2>
+        <p>条件が成り立つかどうかで、実行する処理を切り替えます。｜ と ⎿ は処理のまとまりを示します。</p>
+        <pre class="code-block">stock = 2
+もし stock > 0 ならば:
+｜表示する("購入できます")
+そうでなければ:
+⎿ 表示する("売り切れです")</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('branch')">実行して確認</button>
+        <pre class="notation-output" id="output-branch"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="loop">
+        <h2>9 制御文（繰返し）</h2>
+        <p>同じ処理を何度も行うときに使います。配列を先頭から順番に調べる処理でよく使われます。</p>
+        <pre class="code-block">Points = [6, 4, 9, 5]
+sum_point = 0
+i を 0 から 3 まで 1 ずつ増やしながら繰り返す:
+⎿ sum_point = sum_point + Points[i]
+表示する(sum_point)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('loop')">実行して確認</button>
+        <pre class="notation-output" id="output-loop"></pre>
+      </article>
+
+      <article class="notation-card themed-card" id="comment">
+        <h2>10 コメント</h2>
+        <p>コメントは、プログラムを読む人へのメモです。# 以降は処理されません。</p>
+        <pre class="code-block">rate = 0.08  # 消費税率
+price = 500
+tax = price * rate
+表示する(tax)</pre>
+        <button class="notation-run-btn themed-btn-primary" onclick="runExample('comment')">実行して確認</button>
+        <pre class="notation-output" id="output-comment"></pre>
+      </article>
+    </section>
+
+    <section class="themed-card p-4 mt-4 sim-doc">
+      <p class="sim-kicker">SUMMARY</p>
+      <h2>間違えやすいところのまとめ</h2>
+      <p>
+        上の10項目のうち、実際の問題で失点につながりやすいのは次の5つです。
+        表記そのものより、<strong>「1つずれる」ことが失点の原因</strong>になります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">正しい理解</th>
+              <th scope="col">よくある誤り</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">配列の添字</th>
+              <td data-label="正しい理解">0から数える。3番目は Data[2]</td>
+              <td data-label="よくある誤り">3番目を Data[3] と読む</td>
+            </tr>
+            <tr>
+              <th scope="row">繰り返しの範囲</th>
+              <td data-label="正しい理解">「0 から 3 まで」は両端を含み4回</td>
+              <td data-label="よくある誤り">3回と数える</td>
+            </tr>
+            <tr>
+              <th scope="row">÷ と ％</th>
+              <td data-label="正しい理解">÷ は商、％ は余り</td>
+              <td data-label="よくある誤り">÷ で小数が出ると思い込む</td>
+            </tr>
+            <tr>
+              <th scope="row">= と ==</th>
+              <td data-label="正しい理解">= は代入、== は比較</td>
+              <td data-label="よくある誤り">条件式に = を使う</td>
+            </tr>
+            <tr>
+              <th scope="row">｜ と ⎿</th>
+              <td data-label="正しい理解">処理のまとまりを表す（字下げと同じ）</td>
+              <td data-label="よくある誤り">どこまでが繰り返しの中か見誤る</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        なかでも <strong>｜ と ⎿ の範囲</strong>は、慣れないうちは見落としがちです。
+        <code>⎿</code> はそのまとまりの<strong>最後の行</strong>を示します。
+        繰り返しの中に何行入っているかを、まず目で確認する習慣をつけてください。
+      </p>
+      <div class="sim-note">
+        <strong>この表記は「読むため」のものです。</strong>
+        共通テストでは、この表記でプログラムを書かせる問題はほとんど出ません。
+        書けるようになる必要はなく、<strong>読んで値を追えれば十分</strong>です。
+        実際に値を追う練習は<a href="reading.html" class="font-bold" style="color: var(--accent);">プログラムの読み方</a>、
+        アルゴリズムの動きは<a href="algorithms.html" class="font-bold" style="color: var(--accent);">シミュレーター</a>で確認できます。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mt-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+
+  <script src="js/footer.js"></script>
+  <script src="js/notation.js"></script>
+</body>
+</html>

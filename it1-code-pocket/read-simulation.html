@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/read-simulation.html">
+  <title>シミュレーション型の問題の読み方｜情報Ⅰ 第3問 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問の発展問題で出るシミュレーション型の読み方を例題つきで解説します。待ち行列の開始時刻、担当者への割り当て、累積が上限を超える時点、連続区間の最大長を、表の作り方から整理します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="シミュレーション型の問題の読み方｜情報Ⅰ 第3問">
+  <meta property="og:description" content="待ち行列、割り当て、累積、連続区間。長い問題文を表に落とし込む読み方を例題つきで解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/read-simulation.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="シミュレーション型の問題の読み方｜情報Ⅰ 第3問">
+  <meta name="twitter:description" content="待ち行列、割り当て、累積、連続区間の読み方を例題つきで解説します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/read-simulation.html#article",
+        "headline": "シミュレーション型の問題の読み方｜情報Ⅰ 第3問",
+        "description": "待ち行列、割り当て、累積、連続区間といったシミュレーション型の問題の読み方を例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/read-simulation.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-26",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/read-simulation.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" },
+          { "@type": "ListItem", "position": 3, "name": "シミュレーション型の問題", "item": "https://it1-code-pocket.com/read-simulation.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="reading.html" class="header-back-btn" aria-label="プログラムの読み方へ戻る" title="プログラムの読み方へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="reading.html">プログラムの読み方</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">シミュレーション型</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">シミュレーション型の問題の読み方</h1>
+      <p>
+        レジの行列、担当者への仕事の割り当て、来場者数の累計——
+        第3問の後半に出てくる<strong>長い問題文の問題</strong>です。
+        一見むずかしそうですが、<strong>やっていることはここまでの型の組み合わせ</strong>にすぎません。
+        怖がらずに表を書き始められるかどうかが勝負です。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">APPROACH</p>
+      <h2>長い問題文にどう向き合うか</h2>
+      <p>
+        シミュレーション型は、問題文が長く、身近な題材（お店、学校行事、当番表）で書かれています。
+        そのため「読解問題」に見えますが、<strong>実際に使う情報はごく一部</strong>です。
+        次の3ステップで機械的に処理します。
+      </p>
+      <ol>
+        <li><strong>登場する配列と変数を書き出す</strong> … Arrive、service、Start のように、何を表すかを1行でメモする</li>
+        <li><strong>1周でやることを1文にする</strong> … 「開始時刻を決めて、終了時刻を出す」のように短くまとめる</li>
+        <li><strong>表を作って1行ずつ埋める</strong> … あとは<a href="reading.html">トレース</a>と同じ作業</li>
+      </ol>
+      <div class="sim-note">
+        <strong>物語を理解しようとしないでください。</strong>
+        「なぜ4分かかるのか」を考える必要はありません。
+        <strong>数字がどう変わるか</strong>だけを追えば答えは出ます。
+      </div>
+
+      <h3>出てくるパターンは4つだけ</h3>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">パターン</th>
+              <th scope="col">中心になる式</th>
+              <th scope="col">題材の例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">順番待ち</th>
+              <td data-label="中心になる式">最大値(到着, 前の終了)</td>
+              <td data-label="題材の例">レジ、窓口、順番待ち</td>
+            </tr>
+            <tr>
+              <th scope="row">割り当て</th>
+              <td data-label="中心になる式">いちばん小さい担当者を探して足す</td>
+              <td data-label="題材の例">当番、作業分担、係決め</td>
+            </tr>
+            <tr>
+              <th scope="row">累積で判定</th>
+              <td data-label="中心になる式">total を足しながら上限と比べる</td>
+              <td data-label="題材の例">来場者数、定員、予算</td>
+            </tr>
+            <tr>
+              <th scope="row">連続の長さ</th>
+              <td data-label="中心になる式">続けばカウント、切れたら0に戻す</td>
+              <td data-label="題材の例">連勤、連続記録、空き状況</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 1</p>
+      <h2>例題1：順番待ちの開始時刻</h2>
+      <p>1つの窓口で順番に処理します。i番目の人の開始時刻 Start[i] を正しく求めるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Arrive = [0, 2, 4, 9, 11]
+service = 5
+Start = [0, 0, 0, 0, 0]
+Finish = [0, 0, 0, 0, 0]
+
+Start[0] = Arrive[0]
+Finish[0] = Start[0] + service
+
+i を 1 から 要素数(Arrive) - 1 まで 1 ずつ増やしながら繰り返す:
+｜Start[i] = ［ ア ］
+⎿ Finish[i] = Start[i] + service
+
+表示する(Start)</pre>
+      <p>
+        <strong>選択肢：</strong>① 最大値(Arrive[i], Finish[i - 1])　② 最小値(Arrive[i], Finish[i - 1])
+        ③ Arrive[i] + service　④ Finish[i - 1] - service
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① 最大値(Arrive[i], Finish[i - 1])</strong></p>
+          <p>
+            対応を始めるには<strong>2つの条件が同時にそろう</strong>必要があります。
+          </p>
+          <ul>
+            <li>その人が<strong>到着している</strong>こと … Arrive[i] 以降</li>
+            <li>前の人が<strong>終わっている</strong>こと … Finish[i-1] 以降</li>
+          </ul>
+          <p>
+            両方がそろう時刻は、<strong>2つのうち遅いほう</strong>です。だから最大値を使います。
+            「待ち行列なのに最大値？」と違和感を持つ人が多いところですが、
+            <strong>「遅いほうに合わせる＝最大値」</strong>と覚えてください。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">到着</th><th scope="col">前の終了</th><th scope="col">開始</th><th scope="col">終了</th><th scope="col">待ち</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>0</td><td>—</td><td>0</td><td>5</td><td>0</td></tr>
+                <tr><th scope="row">1</th><td>2</td><td>5</td><td>5</td><td>10</td><td>3</td></tr>
+                <tr><th scope="row">2</th><td>4</td><td>10</td><td>10</td><td>15</td><td>6</td></tr>
+                <tr><th scope="row">3</th><td>9</td><td>15</td><td>15</td><td>20</td><td>6</td></tr>
+                <tr><th scope="row">4</th><td>11</td><td>20</td><td>20</td><td>25</td><td>9</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            ② の最小値を選ぶと、<strong>前の人が終わる前に始めてしまう</strong>ことになり、現実に合いません。
+            ③ は到着してすぐ終わることになり、④ は時間が巻き戻ります。
+          </p>
+          <p>
+            <strong>待ち時間 = 開始 − 到着</strong>です。引く順番を逆にすると負の数になります。
+            この処理の動きは<a href="sim-queue.html">待ち行列シミュレーター</a>で1人ずつ確認できます。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 2</p>
+      <h2>例題2：累積が上限を超える時点</h2>
+      <p>次のプログラムを実行したとき、表示される day の値として正しいものを選びなさい。</p>
+      <pre class="code-block">Visitors = [18, 22, 15, 30, 12, 20]
+limit = 70
+total = 0
+day = -1
+
+i を 0 から 要素数(Visitors) - 1 まで 1 ずつ増やしながら繰り返す:
+｜total = total + Visitors[i]
+｜もし total &gt;= limit かつ day == -1 ならば:
+⎿⎿ day = i
+
+表示する(day)</pre>
+      <p><strong>選択肢：</strong>① 2　② 3　③ 4　④ 5</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 3</strong></p>
+          <p>
+            これは<a href="read-total.html">累積和</a>と、<a href="read-max.html">-1 を見張り番に使う</a>
+            テクニックの組み合わせです。新しい考え方は何も出てきません。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">人数</th><th scope="col">累計</th><th scope="col">70以上?</th><th scope="col">day</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>18</td><td>18</td><td>×</td><td>-1</td></tr>
+                <tr><th scope="row">1</th><td>22</td><td>40</td><td>×</td><td>-1</td></tr>
+                <tr><th scope="row">2</th><td>15</td><td>55</td><td>×</td><td>-1</td></tr>
+                <tr><th scope="row">3</th><td>30</td><td><strong>85</strong></td><td>○</td><td><strong>3</strong></td></tr>
+                <tr><th scope="row">4</th><td>12</td><td>97</td><td>○</td><td>3 のまま</td></tr>
+                <tr><th scope="row">5</th><td>20</td><td>117</td><td>○</td><td>3 のまま</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            初めて70以上になるのは i = 3 のときです。
+            <code>day == -1</code> の条件があるおかげで、それ以降は上書きされません。
+          </p>
+          <p>
+            <strong>もし <code>day == -1</code> がなければ</strong>、最後の i = 5 で上書きされて
+            <strong>答えは 5</strong> になります。④ はその間違いを選ばせる選択肢です。
+            <strong>条件式に「かつ」でつながれた部分があったら、必ず役割を確認</strong>してください。
+          </p>
+          <p>
+            また、答えは「4日目」ではなく<strong>添字の 3</strong> です。
+            問題文が「何日目か」と聞いていれば 4 と答える必要があります。
+            <strong>添字を答えるのか、順番を答えるのか</strong>を必ず確認してください。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 3</p>
+      <h2>例題3：連続している区間の長さ</h2>
+      <p>次のプログラムを実行したとき、表示される longest の値として正しいものを選びなさい。</p>
+      <pre class="code-block">Busy = [1, 1, 0, 1, 1, 1, 0, 1]
+now = 0
+longest = 0
+
+i を 0 から 要素数(Busy) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Busy[i] == 1 ならば:
+｜｜now = now + 1
+｜｜もし now &gt; longest ならば:
+｜⎿⎿ longest = now
+｜そうでなければ:
+⎿⎿ now = 0
+
+表示する(longest)</pre>
+      <p><strong>選択肢：</strong>① 2　② 3　③ 5　④ 6</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 3</strong></p>
+          <p>
+            この形は<strong>2つの箱を使い分ける</strong>のが要点です。
+          </p>
+          <ul>
+            <li><code>now</code> … <strong>いま続いている長さ</strong>。途切れたら 0 に戻す</li>
+            <li><code>longest</code> … <strong>これまでの最長</strong>。0 に戻さない</li>
+          </ul>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Busy[i]</th><th scope="col">now</th><th scope="col">longest</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>1</td><td>1</td><td>1</td></tr>
+                <tr><th scope="row">1</th><td>1</td><td>2</td><td>2</td></tr>
+                <tr><th scope="row">2</th><td>0</td><td><strong>0</strong></td><td>2</td></tr>
+                <tr><th scope="row">3</th><td>1</td><td>1</td><td>2</td></tr>
+                <tr><th scope="row">4</th><td>1</td><td>2</td><td>2</td></tr>
+                <tr><th scope="row">5</th><td>1</td><td>3</td><td><strong>3</strong></td></tr>
+                <tr><th scope="row">6</th><td>0</td><td><strong>0</strong></td><td>3</td></tr>
+                <tr><th scope="row">7</th><td>1</td><td>1</td><td>3</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            1が続く区間は「2個」「3個」「1個」の3か所で、最長は <strong>3</strong> です。
+          </p>
+          <p>
+            <strong>③ の5</strong>は、1の総数（2+3+1 = 6ではなく、途中まで数えた場合）を答えた間違い、
+            <strong>④ の6</strong>は<strong>1の個数を全部数えた</strong>間違いです。
+            聞かれているのは「連続している長さ」であって「個数」ではありません。
+          </p>
+          <p>
+            <strong>「そうでなければ now = 0」を見落とすと、ただの個数になってしまいます。</strong>
+            この1行があるかどうかで意味がまったく変わるため、
+            <strong>リセットの行を探す</strong>のがこの形を見抜くコツです。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">ASSIGN</p>
+      <h2>割り当て問題は「最小値を探して足す」</h2>
+      <p>
+        当番や作業の割り当ては、<strong>いちばん空いている人を探して、その人に仕事を足す</strong>という繰り返しです。
+        <a href="read-max.html">最小値の探索</a>と集計を組み合わせた形になります。
+      </p>
+      <pre class="code-block">Days = [4, 1, 3, 1, 3, 4]
+Available = [1, 1, 1]
+
+work を 0 から 要素数(Days) - 1 まで 1 ずつ増やしながら繰り返す:
+｜member = 0
+｜i を 1 から 要素数(Available) - 1 まで 1 ずつ増やしながら繰り返す:
+｜｜もし Available[i] &lt; Available[member] ならば:
+｜⎿⎿ member = i
+⎿ Available[member] = Available[member] + Days[work]
+
+表示する(Available)</pre>
+      <p>
+        内側のループが<strong>「いちばん小さい人を探す」</strong>部分、
+        最後の1行が<strong>「その人に足す」</strong>部分です。
+        <code>member = 0</code> が外側ループの中にあることに注目してください。
+        <strong>仕事ごとに探し直す</strong>ため、ここでリセットする必要があります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr><th scope="col">仕事</th><th scope="col">日数</th><th scope="col">選ばれる人</th><th scope="col">Available</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">開始</th><td>—</td><td>—</td><td>[1, 1, 1]</td></tr>
+            <tr><th scope="row">0</th><td>4</td><td>0</td><td>[5, 1, 1]</td></tr>
+            <tr><th scope="row">1</th><td>1</td><td>1</td><td>[5, 2, 1]</td></tr>
+            <tr><th scope="row">2</th><td>3</td><td>2</td><td>[5, 2, 4]</td></tr>
+            <tr><th scope="row">3</th><td>1</td><td>1</td><td>[5, 3, 4]</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>同じ値が並んだときは、先に見つけたほうが選ばれます。</strong>
+        条件が <code>&lt;</code> なので、同じ値では更新されないためです。
+        <code>&lt;=</code> にすると後のほうが選ばれ、答えが変わります。ここも問われやすい点です。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 4</p>
+      <h2>例題4：全部そろったら打ち切る条件</h2>
+      <p>
+        座席を前から順にグループへ割り当てます。
+        すべてのグループが必要数を満たしたら繰り返しを抜けるには、［ ア ］に何を入れればよいですか。
+      </p>
+      <pre class="code-block">Seats = [2, 4, 1, 3, 2]
+Need = [3, 5, 2]
+Filled = [0, 0, 0]
+group = 0
+
+i を 0 から 要素数(Seats) - 1 まで 1 ずつ増やしながら繰り返す:
+｜Filled[group] = Filled[group] + Seats[i]
+｜もし Filled[group] &gt;= Need[group] ならば:
+｜⎿ group = group + 1
+｜もし ［ ア ］ ならば:
+⎿⎿ 繰り返しを抜ける
+
+表示する(group)</pre>
+      <p>
+        <strong>選択肢：</strong>① group == 要素数(Need)　② group == 要素数(Seats)
+        ③ Filled[group] == 0　④ i == group
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① group == 要素数(Need)</strong></p>
+          <p>
+            まず、<strong>変数が何を表しているか</strong>を1行ずつメモします。ここを飛ばすと必ず迷います。
+          </p>
+          <ul>
+            <li><code>Seats</code> … 前から順に来る座席のかたまり</li>
+            <li><code>Need</code> … 各グループが必要とする座席数（3人分・5人分・2人分）</li>
+            <li><code>Filled</code> … 各グループに今まで入った数</li>
+            <li><code>group</code> … <strong>今どのグループに入れているか。同時に「完了した数」でもある</strong></li>
+          </ul>
+          <p>
+            鍵は <code>group</code> です。
+            必要数に届くと <code>group = group + 1</code> で次へ進むので、
+            <strong>この値は「終わったグループの数」と同じ</strong>になります。
+            グループは全部で <code>要素数(Need)</code> 個なので、
+            <strong>group がその値になった＝全部終わった</strong>ということです。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Seats[i]</th><th scope="col">入れる先</th><th scope="col">Filled</th><th scope="col">group</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">開始前</th><td>—</td><td>—</td><td>[0, 0, 0]</td><td>0</td></tr>
+                <tr><th scope="row">0</th><td>2</td><td>group 0</td><td>[2, 0, 0]</td><td>0</td></tr>
+                <tr><th scope="row">1</th><td>4</td><td>group 0</td><td>[6, 0, 0]</td><td><strong>1</strong>（3以上で完了）</td></tr>
+                <tr><th scope="row">2</th><td>1</td><td>group 1</td><td>[6, 1, 0]</td><td>1</td></tr>
+                <tr><th scope="row">3</th><td>3</td><td>group 1</td><td>[6, 4, 0]</td><td>1</td></tr>
+                <tr><th scope="row">4</th><td>2</td><td>group 1</td><td>[6, 6, 0]</td><td><strong>2</strong>（5以上で完了）</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            この例では Seats を使い切っても group は 2 までで、
+            <strong>3つ目のグループは完了しません</strong>。表示されるのは <strong>2</strong> です。
+            つまり<strong>「抜ける」条件は一度も成立しない</strong>——それでもプログラムとしては正しい、という点も確認しておいてください。
+          </p>
+          <ul>
+            <li>
+              <strong>② group == 要素数(Seats)</strong> … 比べる相手が違います。
+              Seats は<strong>座席のかたまりの個数（5）</strong>で、グループ数ではありません。
+              <strong>2つの配列が出てきたとき、どちらの個数と比べるのか</strong>が最大の分かれ目です
+            </li>
+            <li><strong>③ Filled[group] == 0</strong> … 開始直後に成り立ってしまい、1回目で抜けてしまいます</li>
+            <li><strong>④ i == group</strong> … i は座席の番号、group はグループ番号で、比べる意味がありません</li>
+          </ul>
+          <div class="sim-note sim-note-warn">
+            <strong>「打ち切り条件」は、ゴールを言葉にしてから式にしてください。</strong>
+            ここでのゴールは「全グループが完了した」。
+            それを式にすると<strong>「完了数 == グループ数」</strong>になります。
+            日本語を先に固めれば、②のように<strong>もっともらしい別の配列</strong>を選ぶ間違いを防げます。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 5</p>
+      <h2>例題5：前の日と比べる</h2>
+      <p>前の値より大きくなった回数を数えるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Temps = [18, 20, 19, 22, 22, 25]
+count = 0
+
+i を 1 から 要素数(Temps) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし ［ ア ］ ならば:
+⎿⎿ count = count + 1
+
+表示する(count)</pre>
+      <p>
+        <strong>選択肢：</strong>① Temps[i] &gt; Temps[i - 1]　② Temps[i] &lt; Temps[i - 1]
+        ③ Temps[i] == Temps[i - 1]　④ Temps[i] &gt;= Temps[i - 1]
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① Temps[i] &gt; Temps[i - 1]</strong></p>
+          <p>
+            日ごとのデータを扱う問題では、<strong>「前の日」と比べる</strong>形が非常によく出ます。
+            まず注目したいのは、繰り返しが <strong>0 ではなく 1 から</strong>始まっている点です。
+          </p>
+          <p>
+            <strong>1日目には「前の日」が存在しない</strong>からです。
+            もし 0 から始めると <code>Temps[-1]</code> という存在しない場所を見ることになります。
+            <strong>「− 1 を使うなら 1 から始める」</strong>——
+            <a href="read-loop.html">繰り返しの回数</a>で扱った「+ 1 を使うなら1つ手前まで」とちょうど対になる形です。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">前日</th><th scope="col">当日</th><th scope="col">増えた?</th><th scope="col">count</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">1</th><td>18</td><td>20</td><td>○</td><td>1</td></tr>
+                <tr><th scope="row">2</th><td>20</td><td>19</td><td>×</td><td>1</td></tr>
+                <tr><th scope="row">3</th><td>19</td><td>22</td><td>○</td><td>2</td></tr>
+                <tr><th scope="row">4</th><td>22</td><td>22</td><td><strong>×（同じ）</strong></td><td>2</td></tr>
+                <tr><th scope="row">5</th><td>22</td><td>25</td><td>○</td><td><strong>3</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            答えは <strong>3</strong> です。
+            i = 4 で <strong>22 と 22 が並ぶ</strong>ように、データがわざわざ作られている点に注目してください。
+            <strong>同じ値のときにどうするか</strong>を試すための仕掛けです。
+          </p>
+          <ul>
+            <li><strong>④ &gt;= を選ぶと 4</strong> になります。「増えた」に<strong>「変わらなかった」を含めてしまう</strong>ためです</li>
+            <li><strong>② &lt;</strong> … 下がった回数（1回）になります</li>
+            <li><strong>③ ==</strong> … 同じだった回数（1回）になります</li>
+          </ul>
+          <div class="sim-note">
+            <strong>データに同じ値が並んでいたら、出題者が等号を試しています。</strong>
+            「増えた」なのか「減らなかった」なのか、<strong>問題文の日本語をもう一度読み直して</strong>から不等号を決めてください。
+            トレースは合っているのに1だけずれる失点は、ほぼこれが原因です。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">SUMMARY</p>
+      <h2>型の組み合わせで読む</h2>
+      <p>
+        ここまで見たとおり、シミュレーション型に<strong>新しい文法は出てきません</strong>。
+        使われているのは、これまでの5テーマの型だけです。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">問題の種類</th>
+              <th scope="col">使われている型</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">順番待ち</th>
+              <td data-label="使われている型">配列の読み方 ＋ 前の要素の参照（i - 1）</td>
+            </tr>
+            <tr>
+              <th scope="row">累積で判定</th>
+              <td data-label="使われている型">集計（累積和）＋ -1 を見張り番に使う</td>
+            </tr>
+            <tr>
+              <th scope="row">連続の長さ</th>
+              <td data-label="使われている型">集計（カウント）＋ 最大値の更新 ＋ リセット</td>
+            </tr>
+            <tr>
+              <th scope="row">割り当て</th>
+              <td data-label="使われている型">最小値の探索 ＋ 集計 ＋ 二重ループ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        問題文が長くても、<strong>コードの中で使われている型を1つずつ見分けていけば</strong>読み解けます。
+        逆にいえば、ここまでの5テーマが身についていれば、発展問題も特別な準備は要りません。
+      </p>
+      <div class="sim-note sim-note-warn">
+        <strong>最後に必ず確認すること：</strong>
+        聞かれているのが<strong>添字か、順番か、値か</strong>。
+        「何日目」「何人目」と聞かれたら添字に1を足す必要があります。
+        正しくトレースできたのに、ここで1つずれて失点するのが一番もったいないパターンです。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>このテーマのチェックリスト</h2>
+      <ul>
+        <li>長い問題文でも、<strong>まず配列と変数を書き出す</strong>手順が身についている</li>
+        <li>順番待ちの開始時刻が<strong>最大値</strong>で求まる理由を説明できる</li>
+        <li>待ち時間が<strong>開始 − 到着</strong>だと分かる</li>
+        <li>累積の判定で <code>day == -1</code> が<strong>上書きを防いでいる</strong>と分かる</li>
+        <li>連続の長さで <code>now = 0</code> の<strong>リセットを探す</strong>べきだと分かる</li>
+        <li>答えるのが<strong>添字か順番か</strong>を最後に確認する習慣がある</li>
+        <li>打ち切り条件を<strong>ゴールの日本語から式に直せる</strong></li>
+        <li>前日と比べる処理は <strong>i を 1 から</strong>始めると分かる</li>
+      </ul>
+      <p>
+        6テーマすべてを読み終えたら、あとは演習です。
+        <a href="index.html">クイズの「発展」</a>で210問のうちの発展30問に挑戦してみてください。
+      </p>
+    </section>
+
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="sim-queue.html" class="sim-next-card">
+          <span class="sim-next-title">待ち行列シミュレーター</span>
+          <span class="sim-next-desc">開始・終了・待ち時間が決まる様子を1人ずつ確認</span>
+        </a>
+        <a href="reading.html" class="sim-next-card">
+          <span class="sim-next-title">プログラムの読み方 一覧</span>
+          <span class="sim-next-desc">6テーマの最初から確認し直す</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.SimUI) window.SimUI.bindTabs(document);
+    });
+  </script>
+</body>
+</html>

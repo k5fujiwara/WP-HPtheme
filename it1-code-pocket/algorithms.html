@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/algorithms.html">
+  <title>重要アルゴリズム解説 | IT1-CODE-POCKET</title>
+  <meta name="description" content="線形探索、二分探索、交換法、選択法、モンテカルロ法、待ち行列シミュレーションなど、情報Ⅰの学習に役立つ重要アルゴリズム7つの要約一覧です。各アルゴリズムの詳細ページでは、動きを1ステップずつ確認できるシミュレーターとコード例を用意しています。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="重要アルゴリズム解説 | IT1-CODE-POCKET">
+  <meta property="og:description" content="情報Ⅰの学習に役立つ重要アルゴリズム7つの要約一覧。詳細ページではシミュレーターで動きを確認できます。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/algorithms.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="重要アルゴリズム解説 | IT1-CODE-POCKET">
+  <meta name="twitter:description" content="情報Ⅰの学習に役立つ重要アルゴリズム7つの要約一覧。詳細ページではシミュレーターで動きを確認できます。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/algorithms.html#article",
+        "headline": "重要アルゴリズム解説",
+        "description": "線形探索、二分探索、交換法、選択法、モンテカルロ法、待ち行列シミュレーションなど、情報Ⅰの学習に役立つ重要アルゴリズム7つの要約一覧です。各アルゴリズムの詳細ページでは、動きを1ステップずつ確認できるシミュレーターとコード例を用意しています。",
+        "url": "https://it1-code-pocket.com/algorithms.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-06-07",
+        "dateModified": "2026-08-04",
+        "inLanguage": "ja",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/algorithms.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "重要アルゴリズム解説",
+            "item": "https://it1-code-pocket.com/algorithms.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-1">重要アルゴリズム解説</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        共通テスト「情報Ⅰ」第3問の学習に向けて、押さえておきたい7つのアルゴリズムを一覧にまとめました。
+        それぞれの要約を読んで、気になるものは詳細ページへ進んでください。詳細ページでは、値を自分で変えながら1ステップずつ動きを確認できるシミュレーターと、擬似言語・Python・JavaScript のコード、出題ポイントまで解説しています。
+      </p>
+    </section>
+
+    <section class="notation-grid algorithm-grid">
+      <article class="notation-card algorithm-index-card themed-card" id="linear">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">1</span>
+          <h2 class="algorithm-index-title">線形探索</h2>
+          <span class="pattern-badge">探索</span>
+        </div>
+        <p class="algorithm-index-summary">配列の先頭から順に1つずつ target と比べていく、もっとも基本的な探索です。整列されていない配列でも使えるのが強みで、見つからなかったときは pos が -1 のまま残ります。最悪の比較回数は要素数と同じ n 回です。</p>
+        <a href="sim-linear-search.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="binary">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">2</span>
+          <h2 class="algorithm-index-title">二分探索</h2>
+          <span class="pattern-badge">探索</span>
+        </div>
+        <p class="algorithm-index-summary">整列済みの配列の中央を調べ、大小の判定で探索範囲を毎回半分に絞ります。low・high・mid の更新と「左右どちらを捨てるか」が要点です。整列済みでないと使えない代わりに、1000個でも約10回で見つかります。</p>
+        <a href="sim-binary-search.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="bubble">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">3</span>
+          <h2 class="algorithm-index-title">交換法（バブルソート）</h2>
+          <span class="pattern-badge">整列</span>
+        </div>
+        <p class="algorithm-index-summary">隣り合う2つの値を比べ、順序が逆なら交換していく整列です。1回のパスごとに大きい値が右端へ確定していきます。交換が起きた回数を数えさせる問題が出やすいところです。</p>
+        <a href="sim-bubble-sort.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="selection">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">4</span>
+          <h2 class="algorithm-index-title">選択法（選択ソート）</h2>
+          <span class="pattern-badge">整列</span>
+        </div>
+        <p class="algorithm-index-summary">未整列部分から最小値の位置を探し、その位置と先頭側を1回だけ交換する整列です。最小値の位置 min_pos を覚えておく流れが要点で、1パスで1個ずつ確定します。</p>
+        <a href="sim-selection-sort.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="montecarlo">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">5</span>
+          <h2 class="algorithm-index-title">モンテカルロ法</h2>
+          <span class="pattern-badge">シミュレーション</span>
+        </div>
+        <p class="algorithm-index-summary">乱数で試行を大量に繰り返し、条件を満たした割合から答えを近似します。正方形と円を使って円周率を求める例が定番です。厳密な解ではなく近似で、試行回数を増やすほど値が安定します。</p>
+        <a href="sim-monte-carlo.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="queue">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">6</span>
+          <h2 class="algorithm-index-title">待ち行列シミュレーション</h2>
+          <span class="pattern-badge">シミュレーション</span>
+        </div>
+        <p class="algorithm-index-summary">到着時刻・開始時刻・終了時刻・待ち時間を、1人ずつ順番に更新していきます。「開始時刻 = 最大値(到着時刻, 前の客の終了時刻)」が中心の式で、ここを押さえれば表を埋められます。</p>
+        <a href="sim-queue.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="motion">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">7</span>
+          <h2 class="algorithm-index-title">運動シミュレーション</h2>
+          <span class="pattern-badge">シミュレーション</span>
+        </div>
+        <p class="algorithm-index-summary">位置と速度を、決められた順番で繰り返し更新していきます。更新の順番を入れ替えると結果が変わる点が最大の注意点で、終了条件と表示のタイミングもよく問われます。</p>
+        <a href="sim-motion.html" class="algorithm-sim-link">解説とシミュレーターを見る</a>
+      </article>
+    </section>
+
+    <section class="themed-card p-4 mt-4 sim-doc">
+      <p class="sim-kicker">COMPARE</p>
+      <h2>どれを使うか：見分け方のまとめ</h2>
+      <p>
+        7つのアルゴリズムは、はたらきで3つのグループに分かれます。
+        問題文から「どのアルゴリズムの話か」を見抜けると、聞かれていることが一気に見えるようになります。
+      </p>
+
+      <h3>探索：目的の値を見つける</h3>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">線形探索</th>
+              <th scope="col">二分探索</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">前提</th>
+              <td data-label="線形探索">なし（並びは自由）</td>
+              <td data-label="二分探索"><strong>整列済み</strong>でないと使えない</td>
+            </tr>
+            <tr>
+              <th scope="row">進め方</th>
+              <td data-label="線形探索">先頭から1つずつ比べる</td>
+              <td data-label="二分探索">中央と比べて半分を捨てる</td>
+            </tr>
+            <tr>
+              <th scope="row">最悪の比較回数</th>
+              <td data-label="線形探索">n 回</td>
+              <td data-label="二分探索">約 log2(n) + 1 回</td>
+            </tr>
+            <tr>
+              <th scope="row">1000個のとき</th>
+              <td data-label="線形探索">最悪1000回</td>
+              <td data-label="二分探索">約10回</td>
+            </tr>
+            <tr>
+              <th scope="row">覚える変数</th>
+              <td data-label="線形探索">i、pos</td>
+              <td data-label="二分探索">low、high、mid、pos</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>選び方：</strong>1回だけ探すなら整列の手間がいらない線形探索、同じデータを何度も探すなら整列してから二分探索が有利です。
+        「整列にかかる手間」と「探索を何回行うか」を比べる、という考え方が問われます。
+      </p>
+
+      <h3>整列：小さい順に並べ替える</h3>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">交換法</th>
+              <th scope="col">選択法</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">やること</th>
+              <td data-label="交換法">隣どうしを比べて逆なら交換</td>
+              <td data-label="選択法">最小値を探して1回だけ交換</td>
+            </tr>
+            <tr>
+              <th scope="row">確定する向き</th>
+              <td data-label="交換法"><strong>右端</strong>（最大値）から</td>
+              <td data-label="選択法"><strong>左端</strong>（最小値）から</td>
+            </tr>
+            <tr>
+              <th scope="row">比較回数</th>
+              <td data-label="交換法">n(n-1)/2 回</td>
+              <td data-label="選択法">n(n-1)/2 回（同じ）</td>
+            </tr>
+            <tr>
+              <th scope="row">交換回数（最大）</th>
+              <td data-label="交換法">n(n-1)/2 回</td>
+              <td data-label="選択法">n - 1 回</td>
+            </tr>
+            <tr>
+              <th scope="row">覚える変数</th>
+              <td data-label="交換法">なし（その場で交換）</td>
+              <td data-label="選択法">min_pos（最小値の位置）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>見分け方：</strong>コードに <code>min_pos</code> のような「位置を覚える変数」があれば選択法、
+        隣どうし（<code>Nums[j]</code> と <code>Nums[j + 1]</code>）を比べていれば交換法です。
+        どちらも計算量は O(n²) で、<strong>交換が少ないほうが必ず速いとは言えません</strong>。
+      </p>
+
+      <h3>シミュレーション：現実の動きを数で追う</h3>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">種類</th>
+              <th scope="col">中心になる考え方</th>
+              <th scope="col">答えの性質</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">モンテカルロ法</th>
+              <td data-label="中心になる考え方">乱数で試行し、条件を満たす割合を数える</td>
+              <td data-label="答えの性質"><strong>近似</strong>（毎回変わる）</td>
+            </tr>
+            <tr>
+              <th scope="row">待ち行列</th>
+              <td data-label="中心になる考え方">開始 = 最大値(到着, 前の人の終了)</td>
+              <td data-label="答えの性質">計算どおりの値</td>
+            </tr>
+            <tr>
+              <th scope="row">運動</th>
+              <td data-label="中心になる考え方">位置と速度を決めた順に更新する</td>
+              <td data-label="答えの性質">更新順で変わる</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        シミュレーションは<strong>「1回の繰り返しで何をするか」を1行ずつ追えるか</strong>が勝負です。
+        乱数が出てきたらモンテカルロ法、時刻の列が出てきたら待ち行列、位置と速度が出てきたら運動、と見当をつけて表を書き始めましょう。
+      </p>
+      <div class="sim-note">
+        <strong>共通する学習法：</strong>どのアルゴリズムでも、紙に<strong>変数の欄を作って1行ずつ埋める</strong>のがいちばん確実です。
+        各詳細ページのシミュレーターは、その作業を画面上で再現したものです。
+        まず自分で予測し、そのあと答え合わせに使ってください。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mt-4">
+      <h2 class="text-lg font-bold mb-3">関連する学習ページ</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="python-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">Pythonで押さえる基礎文法</a>
+        <a href="javascript-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">JavaScriptの配列・条件分岐・繰り返し</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/read-table.html">
+  <title>二重ループと2次元配列の読み方｜情報Ⅰ 第3問 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問の発展問題で出る二重ループと2次元配列の読み方を例題つきで解説します。内側と外側が動く順番、Table[r][c] の r と c が何を指すか、行ごと・列ごとの集計の書き分けを整理します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="二重ループと2次元配列の読み方｜情報Ⅰ 第3問">
+  <meta property="og:description" content="内側と外側が動く順番、Table[r][c] の読み方、行ごと・列ごとの集計を例題つきで解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/read-table.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="二重ループと2次元配列の読み方｜情報Ⅰ 第3問">
+  <meta name="twitter:description" content="内側と外側が動く順番、Table[r][c] の読み方を例題つきで解説します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/read-table.html#article",
+        "headline": "二重ループと2次元配列の読み方｜情報Ⅰ 第3問",
+        "description": "二重ループの動く順番と2次元配列の添字の読み方、行ごと・列ごとの集計を例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/read-table.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-26",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/read-table.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" },
+          { "@type": "ListItem", "position": 3, "name": "二重ループと2次元配列", "item": "https://it1-code-pocket.com/read-table.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="reading.html" class="header-back-btn" aria-label="プログラムの読み方へ戻る" title="プログラムの読み方へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="reading.html">プログラムの読み方</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">二重ループと2次元配列</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">二重ループと2次元配列の読み方</h1>
+      <p>
+        第3問の後半、発展レベルで必ず出てくるのが<strong>表の形をしたデータ</strong>です。
+        成績表、席の配置、曜日ごとの記録など、題材はさまざまですが、
+        読み方の型は1つしかありません。ここでその型を固めます。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">BASIC</p>
+      <h2>内側が先に最後まで回る</h2>
+      <p>
+        二重ループでは、<strong>内側の繰り返しが最後まで回りきってから、外側が1つ進みます</strong>。
+        外側と内側が交互に動くわけではありません。ここを取り違えると、順番を問う問題で必ず外します。
+      </p>
+      <pre class="code-block">i を 1 から 3 まで 1 ずつ増やしながら繰り返す:
+｜j を 1 から 2 まで 1 ずつ増やしながら繰り返す:
+⎿⎿ 表示する(i, j)</pre>
+      <p>表示される順番は次のとおりです。</p>
+      <pre class="code-block">(1,1) (1,2)   ← i=1 のまま j だけが動く
+(2,1) (2,2)   ← i が2になり、また j が1から
+(3,1) (3,2)</pre>
+      <p>
+        <strong>外側の変数はゆっくり、内側の変数は速く動く</strong>と覚えてください。
+        時計の針でいえば、外側が時針、内側が分針です。
+      </p>
+
+      <h3>2次元配列は「行」と「列」</h3>
+      <p>
+        2次元配列は、配列の中に配列が入った形です。<code>Table[r][c]</code> の
+        <strong>r が行（縦の位置）、c が列（横の位置）</strong>を表します。行が先です。
+      </p>
+      <pre class="code-block">Table = [
+  [3, 1, 4],
+  [2, 5, 0],
+  [1, 2, 6]
+]</pre>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr><th scope="col"></th><th scope="col">c=0</th><th scope="col">c=1</th><th scope="col">c=2</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">r=0</th><td>3</td><td>1</td><td>4</td></tr>
+            <tr><th scope="row">r=1</th><td>2</td><td>5</td><td>0</td></tr>
+            <tr><th scope="row">r=2</th><td>1</td><td>2</td><td>6</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        行も列も<strong>0から数えます</strong>。<code>Table[1][2]</code> は
+        「2行目の3列目」つまり <strong>0</strong> です。
+        <code>要素数(Table)</code> は行の数（3）、<code>要素数(Table[r])</code> は
+        その行の列の数（3）を表します。
+      </p>
+      <div class="sim-note sim-note-warn">
+        <strong>表記のゆれに注意：</strong>問題によっては <code>Table[1, 2]</code> のように
+        カンマ区切りで書かれることがあります。意味は同じで<strong>［行, 列］</strong>の順です。
+        どちらの書き方でも、先に来るのが行だと覚えてください。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 1</p>
+      <h2>例題1：値の位置を選ぶ</h2>
+      <p>値 6 を取り出して x に代入するには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Table = [
+    [1, 2, 3],
+    [4, 5, 6]
+]
+x = Table［ ア ］
+表示する(x)</pre>
+      <p><strong>選択肢：</strong>① [0, 2]　② [1, 2]　③ [2, 1]　④ [1, 3]</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② [1, 2]</strong></p>
+          <p>6 の位置を表で確かめます。</p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col"></th><th scope="col">c=0</th><th scope="col">c=1</th><th scope="col">c=2</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">r=0</th><td>1</td><td>2</td><td>3</td></tr>
+                <tr><th scope="row">r=1</th><td>4</td><td>5</td><td><strong>6</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            6 は<strong>2行目・3列目</strong>にあります。添字は0から始まるので、
+            行は 1、列は 2 となり <code>Table[1, 2]</code> です。
+          </p>
+          <ul>
+            <li><strong>① [0, 2]</strong> … 1行目3列目なので 3</li>
+            <li><strong>③ [2, 1]</strong> … 行と列を逆にした間違い。3行目は存在しないためエラー</li>
+            <li><strong>④ [1, 3]</strong> … 列を「3番目だから3」と数えた間違い。4列目は存在しない</li>
+          </ul>
+          <p>
+            ③ と ④ が、<strong>もっとも多い2大ミス</strong>です。
+            「行が先」と「0から数える」の2つを同時に意識してください。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 2</p>
+      <h2>例題2：二重ループの合計</h2>
+      <p>次のプログラムを実行したとき、表示される値を選びなさい。</p>
+      <pre class="code-block">total = 0
+
+i を 1 から 3 まで 1 ずつ増やしながら繰り返す:
+｜j を 1 から 2 まで 1 ずつ増やしながら繰り返す:
+⎿⎿ total = total + i × j
+
+表示する(total)</pre>
+      <p><strong>選択肢：</strong>① 6　② 12　③ 18　④ 24</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：③ 18</strong></p>
+          <p>
+            6回の繰り返しそれぞれで <code>i × j</code> を足します。
+            <strong>内側の j が先に動く</strong>ことを意識して、順番どおりに表を作ります。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">回</th><th scope="col">i</th><th scope="col">j</th><th scope="col">i × j</th><th scope="col">total</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">1</th><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><th scope="row">2</th><td>1</td><td>2</td><td>2</td><td>3</td></tr>
+                <tr><th scope="row">3</th><td>2</td><td>1</td><td>2</td><td>5</td></tr>
+                <tr><th scope="row">4</th><td>2</td><td>2</td><td>4</td><td>9</td></tr>
+                <tr><th scope="row">5</th><td>3</td><td>1</td><td>3</td><td>12</td></tr>
+                <tr><th scope="row">6</th><td>3</td><td>2</td><td>6</td><td>18</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            合計は 1+2+2+4+3+6 = <strong>18</strong> です。
+            ① の6は「回数」を答えてしまった場合、② の12は5回目までで止めた場合に選びます。
+          </p>
+          <p>
+            <strong>表を6行きちんと書けば必ず合います。</strong>
+            暗算しようとすると、i と j のどちらが動いているか分からなくなります。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 3</p>
+      <h2>例題3：列ごとに合計する</h2>
+      <p>各列の合計を ColSum に入れます。空欄 ［ ア ］ に入る式として正しいものを選びなさい。</p>
+      <pre class="code-block">Table = [
+  [3, 1, 4],
+  [2, 5, 0],
+  [1, 2, 6]
+]
+ColSum = [0, 0, 0]
+
+r を 0 から 要素数(Table) - 1 まで 1 ずつ増やしながら繰り返す:
+｜c を 0 から 要素数(Table[r]) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿⎿ ColSum[c] = ColSum[c] + ［ ア ］
+
+表示する(ColSum)</pre>
+      <p><strong>選択肢：</strong>① Table[r][c]　② Table[c][r]　③ Table[r]　④ ColSum[c]</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① Table[r][c]</strong></p>
+          <p>
+            <code>ColSum[c]</code> は「c列目の合計」を入れる場所です。
+            そこに足すべきなのは、<strong>いま見ている r 行 c 列の値</strong>、つまり <code>Table[r][c]</code> です。
+          </p>
+          <p>
+            <strong>足す先が [c] だから、足す値も [c] を含む</strong>——この対応で確認できます。
+            r が変わるたびに同じ <code>ColSum[c]</code> に積み上がっていくため、列ごとの合計になります。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">r</th><th scope="col">ColSum[0]</th><th scope="col">ColSum[1]</th><th scope="col">ColSum[2]</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">開始</th><td>0</td><td>0</td><td>0</td></tr>
+                <tr><th scope="row">0行目後</th><td>3</td><td>1</td><td>4</td></tr>
+                <tr><th scope="row">1行目後</th><td>5</td><td>6</td><td>4</td></tr>
+                <tr><th scope="row">2行目後</th><td>6</td><td>8</td><td>10</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            <strong>② Table[c][r]</strong> は行と列を逆にした間違いで、
+            表が正方形（3×3）だと<strong>エラーにならず、違う答えが出てしまう</strong>のがやっかいなところです。
+            この場合 ColSum は [6, 8, 10] ではなく [8, 8, 8] になります。
+          </p>
+          <p>
+            <strong>行と列の対応を確かめる方法：</strong>外側の変数（r）が<code>要素数(Table)</code>で回っていれば r は行、
+            内側（c）が <code>要素数(Table[r])</code> で回っていれば c は列です。
+            <strong>繰り返しの範囲を見れば、どちらが行か分かります。</strong>
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">PATTERN</p>
+      <h2>行ごと集計と列ごと集計の書き分け</h2>
+      <p>
+        表の問題は、結局この2つのどちらかです。<strong>合計を入れる変数をどこで初期化するか</strong>が違います。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">行ごとの合計</th>
+              <th scope="col">列ごとの合計</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">合計を入れる変数</th>
+              <td data-label="行ごとの合計">total（1つ）</td>
+              <td data-label="列ごとの合計">ColSum（列の数だけの配列）</td>
+            </tr>
+            <tr>
+              <th scope="row">初期化の位置</th>
+              <td data-label="行ごとの合計"><strong>外側ループの中</strong>（行が変わるたび0に戻す）</td>
+              <td data-label="列ごとの合計"><strong>ループの前</strong>（1回だけ）</td>
+            </tr>
+            <tr>
+              <th scope="row">足す先</th>
+              <td data-label="行ごとの合計">total</td>
+              <td data-label="列ごとの合計">ColSum[c]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>「total = 0」がループの中にあるか外にあるか</strong>——これが読み分けの決め手です。
+        中にあれば行ごとにリセットされるので行単位の集計、
+        外にあれば最後まで積み上がるので全体または列単位の集計です。
+        穴埋めで初期化の位置が問われることもあります。
+      </p>
+      <pre class="code-block">best = 0
+r を 0 から 要素数(Table) - 1 まで 1 ずつ増やしながら繰り返す:
+｜total = 0                          ← 行が変わるたびに0へ
+｜c を 0 から 要素数(Table[r]) - 1 まで 1 ずつ増やしながら繰り返す:
+｜⎿ total = total + Table[r][c]
+｜もし total > best ならば:
+⎿⎿ best = total
+
+表示する(best)</pre>
+      <p>
+        これは「行ごとの合計を求め、その最大を探す」という頻出パターンです。
+        <code>total = 0</code> が内側ループの<strong>直前</strong>にあることを確認してください。
+        ここが外に出ていると、全部の行が足し合わさってしまいます。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 4</p>
+      <h2>例題4：条件に合うマスを数える</h2>
+      <p>次のプログラムで、<code>count = count + 1</code> は何回実行されますか。</p>
+      <pre class="code-block">Score = [
+  [2, 0, 1],
+  [0, 3, 2],
+  [4, 1, 0]
+]
+count = 0
+
+r を 0 から 要素数(Score) - 1 まで 1 ずつ増やしながら繰り返す:
+｜c を 0 から 要素数(Score[r]) - 1 まで 1 ずつ増やしながら繰り返す:
+｜｜もし Score[r][c] &gt;= 2 ならば:
+⎿⎿⎿ count = count + 1
+
+表示する(count)</pre>
+      <p>
+        <strong>選択肢：</strong>① 3回　② 4回　③ 5回　④ 9回
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 4回</strong></p>
+          <p>
+            二重ループに<strong>条件分岐が加わった形</strong>です。
+            ここで問われているのは「二重ループが何回まわるか」ではなく、
+            <strong>「その中で条件が成り立つのが何回か」</strong>という点に注意してください。
+          </p>
+          <p>
+            二重ループ自体は 3 × 3 = <strong>9回</strong>まわります。
+            そのうち <code>&gt;= 2</code> を満たすマスだけを数えます。
+            表に○をつけていくのが最も確実です。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col"></th><th scope="col">c=0</th><th scope="col">c=1</th><th scope="col">c=2</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">r=0</th><td><strong>2 ○</strong></td><td>0 ×</td><td>1 ×</td></tr>
+                <tr><th scope="row">r=1</th><td>0 ×</td><td><strong>3 ○</strong></td><td><strong>2 ○</strong></td></tr>
+                <tr><th scope="row">r=2</th><td><strong>4 ○</strong></td><td>1 ×</td><td>0 ×</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            ○は 2・3・2・4 の<strong>4個</strong>です。
+            <code>&gt;= 2</code> なので<strong>2ちょうども含む</strong>点を見落とさないでください。
+          </p>
+          <ul>
+            <li>
+              <strong>① 3回</strong> … <code>&gt; 2</code> と読み違えた場合です。
+              3 と 4 だけになり、2 が2つ抜け落ちます。<strong>等号を含むかどうか</strong>は毎回確認してください
+            </li>
+            <li><strong>④ 9回</strong> … 条件分岐を無視して、二重ループの回数をそのまま答えた場合です</li>
+          </ul>
+          <div class="sim-note">
+            <strong>この問題は3つの読み取りを同時に要求しています。</strong>
+            ①二重ループの回数（9回）、②条件の向きと等号（<code>&gt;=</code>）、
+            ③数えているのが<strong>マスの個数であって合計ではない</strong>こと。
+            表に○×を書き込む1手間を惜しまなければ、確実に取れる問題です。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 5</p>
+      <h2>例題5：集計してから、その最大値を求める</h2>
+      <p>次のプログラムを実行したとき、表示される best の値として正しいものを選びなさい。</p>
+      <pre class="code-block">Table = [
+  [3, 1, 4],
+  [2, 5, 0],
+  [1, 2, 6]
+]
+ColSum = [0, 0, 0]
+
+r を 0 から 要素数(Table) - 1 まで 1 ずつ増やしながら繰り返す:
+｜c を 0 から 要素数(Table[r]) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿⎿ ColSum[c] = ColSum[c] + Table[r][c]
+
+best = 0
+i を 0 から 要素数(ColSum) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし ColSum[i] &gt; best ならば:
+⎿⎿ best = ColSum[i]
+
+表示する(best)</pre>
+      <p>
+        <strong>選択肢：</strong>① 6　② 8　③ 10　④ 21
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：③ 10</strong></p>
+          <p>
+            <strong>繰り返しが2つに分かれている</strong>のがポイントです。
+            長く見えますが、<strong>前半と後半をまったく別のプログラムとして順に処理</strong>すれば難しくありません。
+          </p>
+          <ol>
+            <li><strong>前半（二重ループ）</strong> … 列ごとの合計を ColSum に作る</li>
+            <li><strong>後半（1重ループ）</strong> … できあがった ColSum の中から最大値を探す</li>
+          </ol>
+          <p>
+            まず前半です。<code>ColSum[c]</code> と<strong>添字が c だけ</strong>なので、
+            <strong>同じ列の値が1か所に集まっていきます</strong>。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col"></th><th scope="col">c=0</th><th scope="col">c=1</th><th scope="col">c=2</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">r=0</th><td>3</td><td>1</td><td>4</td></tr>
+                <tr><th scope="row">r=1</th><td>2</td><td>5</td><td>0</td></tr>
+                <tr><th scope="row">r=2</th><td>1</td><td>2</td><td>6</td></tr>
+                <tr><th scope="row">ColSum</th><td><strong>6</strong></td><td><strong>8</strong></td><td><strong>10</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            ColSum は <strong>[6, 8, 10]</strong> になります。
+            後半はこの3つから最大値を探すだけなので、<strong>10</strong> が答えです。
+          </p>
+          <ul>
+            <li><strong>① 6</strong> … ColSum[0] です。<strong>最大値を探す後半を読まずに</strong>止まった場合です</li>
+            <li><strong>② 8</strong> … 真ん中の列の合計です</li>
+            <li><strong>④ 21</strong> … 表の全部を足した値です。<code>ColSum[c]</code> を <code>total</code> と読み違えると、この値になります</li>
+          </ul>
+          <div class="sim-note sim-note-warn">
+            <strong>「集計してから、その結果をさらに処理する」二段構えは第3問の定番です。</strong>
+            長いプログラムを見たら、まず<strong>繰り返しの区切りで前半・後半に分ける</strong>こと。
+            そして<strong>前半が終わった時点での配列の中身を必ず書き出す</strong>こと。
+            この2つを守れば、後半は<a href="read-max.html">最大値を探す処理</a>の基本形に戻ります。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの表記での書き方の違い</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Table = [[3, 1, 4], [2, 5, 0], [1, 2, 6]]
+ColSum = [0, 0, 0]
+
+r を 0 から 要素数(Table) - 1 まで 1 ずつ増やしながら繰り返す:
+｜c を 0 から 要素数(Table[r]) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿⎿ ColSum[c] = ColSum[c] + Table[r][c]
+
+表示する(ColSum)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">table = [[3, 1, 4], [2, 5, 0], [1, 2, 6]]
+col_sum = [0, 0, 0]
+
+for r in range(len(table)):
+    for c in range(len(table[r])):
+        col_sum[c] = col_sum[c] + table[r][c]
+
+print(col_sum)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const table = [[3, 1, 4], [2, 5, 0], [1, 2, 6]];
+const colSum = [0, 0, 0];
+
+for (let r = 0; r &lt; table.length; r++) {
+  for (let c = 0; c &lt; table[r].length; c++) {
+    colSum[c] = colSum[c] + table[r][c];
+  }
+}
+
+console.log(colSum);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>行の数と列の数の求め方：</strong>
+        擬似言語の <code>要素数(Table)</code> は Python の <code>len(table)</code>、
+        JavaScript の <code>table.length</code> にあたり、いずれも<strong>行の数</strong>です。
+        <code>要素数(Table[r])</code> は <code>len(table[r])</code>、<code>table[r].length</code> で、
+        <strong>r 行目の列の数</strong>です。
+        列の数を <code>要素数(Table)</code> で書いてしまう間違いに注意してください。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>このテーマのチェックリスト</h2>
+      <ul>
+        <li>二重ループで<strong>内側が先に最後まで回る</strong>と分かる</li>
+        <li><code>Table[1][2]</code> が<strong>2行目3列目</strong>だと即答できる</li>
+        <li><code>要素数(Table)</code> が行数、<code>要素数(Table[r])</code> が列数だと分かる</li>
+        <li>行と列を逆にすると<strong>エラーにならず違う答えが出る</strong>ことがあると知っている</li>
+        <li><code>total = 0</code> の位置で<strong>行ごと集計か全体集計かが変わる</strong>と分かる</li>
+        <li><code>&gt;=</code> と <code>&gt;</code> の違いで<strong>数える個数が変わる</strong>と分かる</li>
+        <li>繰り返しが2つ並んでいたら<strong>前半・後半に分けて</strong>読める</li>
+      </ul>
+      <p>
+        表の問題が読めるようになれば、発展レベルの多くが解けるようになります。
+        実際の問題は<a href="index.html">クイズの「発展」</a>に入っています。
+      </p>
+    </section>
+
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="read-loop.html" class="sim-next-card">
+          <span class="sim-next-title">繰り返しの回数を数える</span>
+          <span class="sim-next-desc">二重ループの回数が掛け算になる理由から</span>
+        </a>
+        <a href="sim-bubble-sort.html" class="sim-next-card">
+          <span class="sim-next-title">交換法シミュレーター</span>
+          <span class="sim-next-desc">二重ループが実際に動く様子を1ステップずつ確認</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方 一覧</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.SimUI) window.SimUI.bindTabs(document);
+    });
+  </script>
+</body>
+</html>

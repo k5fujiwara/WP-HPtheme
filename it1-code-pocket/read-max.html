@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/read-max.html">
+  <title>最大値を探す・値を探す処理の読み方｜情報Ⅰ 第3問 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問で出る最大値の求め方と探索処理の読み方を例題つきで解説します。更新条件の不等号、位置を覚える min_pos や pos、-1 の意味、見つけたら抜ける打ち切りまで整理します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="最大値を探す・値を探す処理の読み方｜情報Ⅰ 第3問">
+  <meta property="og:description" content="最大値の更新条件、位置を覚える変数、打ち切りの書き方を例題つきで解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/read-max.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="最大値を探す・値を探す処理の読み方｜情報Ⅰ 第3問">
+  <meta name="twitter:description" content="最大値の更新条件と探索処理の読み方を例題つきで解説します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/read-max.html#article",
+        "headline": "最大値を探す・値を探す処理の読み方｜情報Ⅰ 第3問",
+        "description": "最大値の更新条件、位置を覚える変数、打ち切りの書き方を例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/read-max.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-26",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/read-max.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" },
+          { "@type": "ListItem", "position": 3, "name": "最大値を探す・値を探す", "item": "https://it1-code-pocket.com/read-max.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="reading.html" class="header-back-btn" aria-label="プログラムの読み方へ戻る" title="プログラムの読み方へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="reading.html">プログラムの読み方</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">最大値と探索</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">最大値を探す・値を探す処理の読み方</h1>
+      <p>
+        「いちばん大きい値は」「その値は何番目にあるか」——探す処理も出題の定番です。
+        集計と同じく<strong>箱を用意して更新していく</strong>形ですが、
+        更新の条件と<strong>「位置を覚える」</strong>という考え方が加わります。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">BASIC</p>
+      <h2>最大値は「今までの一番」と比べ続ける</h2>
+      <p>
+        最大値を求めるプログラムは、<strong>「今までの最大」を覚えておく箱</strong>を1つ用意し、
+        それより大きい値が出てきたときだけ入れ替える、という形です。
+      </p>
+      <pre class="code-block">Nums = [4, 9, 2, 7]
+mx = Nums[0]                 ← 最初の値を仮の最大とする
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] &gt; mx ならば:
+⎿⎿ mx = Nums[i]
+
+表示する(mx)</pre>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">mx より大きい?</th><th scope="col">mx</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">開始前</th><td>—</td><td>—</td><td>4</td></tr>
+            <tr><th scope="row">0</th><td>4</td><td>×（同じ）</td><td>4</td></tr>
+            <tr><th scope="row">1</th><td>9</td><td>○</td><td><strong>9</strong></td></tr>
+            <tr><th scope="row">2</th><td>2</td><td>×</td><td>9</td></tr>
+            <tr><th scope="row">3</th><td>7</td><td>×</td><td>9</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>初期値の置き方に2通りある</h3>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">書き方</th>
+              <th scope="col">利点</th>
+              <th scope="col">注意点</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">mx = Nums[0]</th>
+              <td data-label="利点">どんな値でも必ず正しく動く</td>
+              <td data-label="注意点">—</td>
+            </tr>
+            <tr>
+              <th scope="row">mx = 0</th>
+              <td data-label="利点">式が短い</td>
+              <td data-label="注意点"><strong>すべて負の数だと 0 が答えになってしまう</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <code>mx = 0</code> と書いてよいのは、<strong>データに0以上しか出てこないと分かっている場合だけ</strong>です。
+        「この初期値でよいか」を問う出題があるので、根拠を言えるようにしておいてください。
+      </p>
+
+      <h3>最小値なら不等号を逆にするだけ</h3>
+      <p>
+        最小値を求めるときは <code>Nums[i] &lt; mn</code> と向きを変えます。
+        <strong>不等号の向きだけで最大と最小が入れ替わる</strong>ため、穴埋めで狙われます。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 1</p>
+      <h2>例題1：更新条件を選ぶ</h2>
+      <p>配列の最大値を mx に求めるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Nums = [4, 9, 2, 7]
+mx = Nums[0]
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし ［ ア ］ ならば:
+⎿⎿ mx = Nums[i]
+
+表示する(mx)</pre>
+      <p>
+        <strong>選択肢：</strong>① Nums[i] &gt; mx　② Nums[i] &lt; mx
+        ③ Nums[i] == mx　④ mx &gt; Nums[i]
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① Nums[i] &gt; mx</strong></p>
+          <p>
+            更新したいのは「<strong>今までの最大 mx より、いま見ている値のほうが大きい</strong>」ときです。
+            そのまま日本語を式にすると <code>Nums[i] &gt; mx</code> になります。
+          </p>
+          <ul>
+            <li><strong>② Nums[i] &lt; mx</strong> … 小さいときに更新するので、結果は最小値の 2 になります</li>
+            <li><strong>③ Nums[i] == mx</strong> … 同じ値のときだけ更新するので、mx は 4 のまま変わりません</li>
+            <li>
+              <strong>④ mx &gt; Nums[i]</strong> …
+              ② と同じ意味です。<strong>左右を入れ替えると不等号の向きも逆になる</strong>ため、
+              「&gt; が使われているから最大値だ」と形だけで判断すると引っかかります
+            </li>
+          </ul>
+          <p>
+            ④ は特に間違えやすい選択肢です。<strong>「新しい値」が左辺にあるかどうか</strong>を必ず確認してください。
+            迷ったら、<code>Nums[1] = 9</code> と <code>mx = 4</code> を実際に当てはめて、
+            更新されるべき場面で条件が成り立つかを確かめるのが確実です。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 2</p>
+      <h2>例題2：更新される回数を数える</h2>
+      <p>次のプログラムにおいて、<code>best = Nums[i]</code> は何回実行されますか。</p>
+      <pre class="code-block">Nums = [6, 2, 8, 8, 3, 9]
+best = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] &gt; best ならば:
+⎿⎿ best = Nums[i]
+
+表示する(best)</pre>
+      <p><strong>選択肢：</strong>① 2回　② 3回　③ 4回　④ 6回</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 3回</strong></p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">&gt; best ?</th><th scope="col">best</th><th scope="col">更新</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>6</td><td>6 &gt; 0 ○</td><td>6</td><td>1回目</td></tr>
+                <tr><th scope="row">1</th><td>2</td><td>2 &gt; 6 ×</td><td>6</td><td></td></tr>
+                <tr><th scope="row">2</th><td>8</td><td>8 &gt; 6 ○</td><td>8</td><td>2回目</td></tr>
+                <tr><th scope="row">3</th><td>8</td><td>8 &gt; 8 ×</td><td>8</td><td></td></tr>
+                <tr><th scope="row">4</th><td>3</td><td>3 &gt; 8 ×</td><td>8</td><td></td></tr>
+                <tr><th scope="row">5</th><td>9</td><td>9 &gt; 8 ○</td><td>9</td><td>3回目</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            ポイントは <strong>i = 3 の「同じ8」</strong>です。
+            <code>8 &gt; 8</code> は成り立たないため、<strong>更新されません</strong>。
+            ここを数えてしまうと ③ の4回になります。
+          </p>
+          <p>
+            もし条件が <code>Nums[i] &gt;= best</code> だったら、同じ値でも更新されるので<strong>4回</strong>になります。
+            最終的な best はどちらも 9 で変わりませんが、<strong>「回数」を聞かれると答えが変わります</strong>。
+            <code>&gt;</code> と <code>&gt;=</code> の違いは、この形での定番の問われ方です。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">POSITION</p>
+      <h2>値ではなく「位置」を覚える</h2>
+      <p>
+        「最大値はいくつか」ではなく「<strong>それは何番目か</strong>」を聞かれることがあります。
+        その場合は、値ではなく<strong>添字</strong>を覚えます。
+      </p>
+      <pre class="code-block">mx_pos = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] &gt; Nums[mx_pos] ならば:
+⎿⎿ mx_pos = i</pre>
+      <p>
+        比べる相手が <code>mx</code> ではなく <code>Nums[mx_pos]</code> になる点に注目してください。
+        「覚えているのは位置なので、値を見るにはもう一度配列を引く」——この形が
+        <a href="sim-selection-sort.html">選択法（選択ソート）</a>でもそのまま使われます。
+      </p>
+
+      <h3>見つからなかったことを表す -1</h3>
+      <p>
+        探索では、<strong>見つからなかった場合</strong>をどう表すかが問われます。
+        添字は 0 から始まるため、<code>pos = 0</code> を初期値にすると
+        「先頭で見つかった」と区別がつきません。そこで<strong>添字としてあり得ない -1</strong> を使います。
+      </p>
+      <div class="sim-note">
+        <strong>-1 はもうひとつの使い道があります。</strong>
+        「まだ記録していない」という印としても使えるため、
+        <code>もし 条件 かつ pos == -1 ならば</code> と書けば
+        <strong>最初に条件を満たした1回だけ</strong>記録できます。次の例題で確認します。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 3</p>
+      <h2>例題3：最初の1回だけ記録する</h2>
+      <p>合計が target 以上になった<strong>最初の</strong>添字だけを pos に入れるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Point = [12, 8, 15, 6, 20]
+target = 30
+total = 0
+pos = -1
+
+i を 0 から 要素数(Point) - 1 まで 1 ずつ増やしながら繰り返す:
+｜total = total + Point[i]
+｜もし total &gt;= target かつ ［ ア ］ ならば:
+⎿⎿ pos = i
+
+表示する(pos)</pre>
+      <p>
+        <strong>選択肢：</strong>① pos == -1　② pos == i　③ pos &gt;= 0　④ i == 0
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① pos == -1</strong></p>
+          <p>
+            <code>total &gt;= target</code> だけだと、条件を満たすたびに <code>pos = i</code> が実行され、
+            <strong>最後に満たした位置で上書き</strong>されてしまいます。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Point[i]</th><th scope="col">total</th><th scope="col">30以上?</th><th scope="col">pos</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>12</td><td>12</td><td>×</td><td>-1</td></tr>
+                <tr><th scope="row">1</th><td>8</td><td>20</td><td>×</td><td>-1</td></tr>
+                <tr><th scope="row">2</th><td>15</td><td>35</td><td>○</td><td><strong>2</strong></td></tr>
+                <tr><th scope="row">3</th><td>6</td><td>41</td><td>○</td><td>2 のまま</td></tr>
+                <tr><th scope="row">4</th><td>20</td><td>61</td><td>○</td><td>2 のまま</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            i = 2 で <code>pos = 2</code> が入ると、それ以降は <code>pos == -1</code> が成り立たなくなるため、
+            <strong>上書きされずに残ります</strong>。これが「最初の1回だけ記録する」仕組みです。
+          </p>
+          <ul>
+            <li><strong>③ pos &gt;= 0</strong> … 逆の条件です。最初は -1 なので一度も記録されず、pos は -1 のままになります</li>
+            <li><strong>④ i == 0</strong> … i が0のときだけなので、この例では一度も記録されません</li>
+          </ul>
+          <p>
+            この「<strong>-1 を見張り番に使う</strong>」テクニックは、
+            <a href="sim-linear-search.html">線形探索</a>や
+            <a href="read-simulation.html">シミュレーション型の問題</a>でも繰り返し出てきます。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">BREAK</p>
+      <h2>見つけたら止める（打ち切り）</h2>
+      <p>
+        探し物が見つかった時点で、それ以降を調べる必要はありません。
+        <code>繰り返しを抜ける</code> を使うと、そこで繰り返しが終わります。
+      </p>
+      <pre class="code-block">Items = [4, 7, 3, 6, 5]
+target = 18
+total = 0
+used = 0
+
+i を 0 から 要素数(Items) - 1 まで 1 ずつ増やしながら繰り返す:
+｜total = total + Items[i]
+｜used = used + 1
+｜もし total &gt;= target ならば:
+⎿⎿ 繰り返しを抜ける
+
+表示する(used)</pre>
+      <p>
+        合計が 4 → 11 → 14 → 20 と増え、<strong>i = 3 で18以上に達して抜けます</strong>。
+        used は 4 です。最後の 5 は一度も足されません。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">書き方</th>
+              <th scope="col">結果</th>
+              <th scope="col">調べる回数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">繰り返しを抜ける</th>
+              <td data-label="結果">最初に見つかった位置</td>
+              <td data-label="調べる回数">見つかるまで（データ次第）</td>
+            </tr>
+            <tr>
+              <th scope="row">pos == -1 を条件に足す</th>
+              <td data-label="結果">最初に見つかった位置</td>
+              <td data-label="調べる回数">最後まで（一定）</td>
+            </tr>
+            <tr>
+              <th scope="row">条件を足さない</th>
+              <td data-label="結果">最後に見つかった位置</td>
+              <td data-label="調べる回数">最後まで（一定）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>上の2つは答えが同じでも、調べる回数が違います。</strong>
+        「何回比較したか」を問われる問題では、この違いが直接得点に関わります。
+        動きを確かめたい場合は<a href="sim-linear-search.html">線形探索シミュレーター</a>で
+        条件の書き方を切り替えて比べてみてください。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 4</p>
+      <h2>例題4：見つかったかどうかを記録する</h2>
+      <p>配列 Nums に target が含まれているかを found に入れるプログラム表記として、正しいものを選びなさい。</p>
+      <pre class="code-block">Nums = [3, 8, 1, 5]
+target = 1
+
+# found に True または False を入れる</pre>
+      <p><strong>選択肢：</strong></p>
+      <pre class="code-block">① found = False
+   i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+   ｜もし Nums[i] == target ならば:
+   ⎿⎿ found = True
+
+② found = True
+   i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+   ｜もし Nums[i] == target ならば:
+   ⎿⎿ found = False
+
+③ found = target
+
+④ found = Nums[0]</pre>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：①</strong></p>
+          <p>
+            例題3では「位置」を記録しました。今回は<strong>「あったか、なかったか」だけを記録</strong>します。
+            この <code>True</code>／<code>False</code> を入れる変数を<strong>フラグ</strong>（旗）と呼びます。
+          </p>
+          <p>
+            フラグの作り方は決まっています。<strong>「起きていない側」から始めて、起きたら1回だけ倒す</strong>——それだけです。
+          </p>
+          <ol>
+            <li><strong>調べる前は False</strong> … まだ1つも見ていないので「見つかっていない」が正しい状態</li>
+            <li><strong>見つかったら True</strong> … 1つでも一致すれば True にする</li>
+            <li><strong>最後まで False なら「なかった」</strong> … 一度も True にならなかったことが答えになる</li>
+          </ol>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">target と同じ?</th><th scope="col">found</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">開始前</th><td>—</td><td>—</td><td>False</td></tr>
+                <tr><th scope="row">0</th><td>3</td><td>×</td><td>False</td></tr>
+                <tr><th scope="row">1</th><td>8</td><td>×</td><td>False</td></tr>
+                <tr><th scope="row">2</th><td>1</td><td>○</td><td><strong>True</strong></td></tr>
+                <tr><th scope="row">3</th><td>5</td><td>×</td><td>True</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            i = 3 で条件が成り立たなくても、<strong>found は True のまま</strong>である点に注目してください。
+            <code>found = False</code> に戻す処理はどこにもないので、
+            <strong>一度 True になったら最後まで True</strong>です。これがフラグの大事な性質です。
+          </p>
+          <ul>
+            <li>
+              <strong>②</strong> … True から始めて、見つかったら False にしています。<strong>意味が完全に逆</strong>で、
+              「見つからなかったら True」というおかしな結果になります
+            </li>
+            <li><strong>③ found = target</strong> … found に 1 という数値が入るだけで、探していません</li>
+            <li><strong>④ found = Nums[0]</strong> … 先頭の 3 が入るだけです</li>
+          </ul>
+          <div class="sim-note">
+            <strong>これが線形探索そのものです。</strong>
+            <a href="sim-linear-search.html">線形探索シミュレーター</a>で、
+            フラグが False から True に変わる瞬間を目で確かめられます。
+            なお実際の問題では、見つかった時点で <code>繰り返しを抜ける</code> を足した形もよく出ます。
+            <strong>答えは同じで、調べる回数だけが減ります。</strong>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 5</p>
+      <h2>例題5：用意された関数を使う</h2>
+      <p>配列 Nums の中から最大値を表示するプログラム表記として、正しいものを選びなさい。</p>
+      <pre class="code-block">Nums = [3, 9, 1, 6]
+
+# 最大値を表示する</pre>
+      <p>
+        <strong>選択肢：</strong>① 表示する(最大値(Nums))　② 表示する(最小値(Nums))
+        ③ 表示する(要素数(Nums))　④ 表示する(Nums[0])
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① 表示する(最大値(Nums))</strong></p>
+          <p>
+            答えそのものは簡単ですが、<strong>ここで確認したいのは別のこと</strong>です。
+            このページの冒頭で書いた「4行の繰り返し」と、この1行が<strong>まったく同じ処理</strong>だと分かるかどうかです。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th scope="col">自分で書く場合</th>
+                  <th scope="col">関数を使う場合</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="自分で書く場合"><code>mx = Nums[0]</code><br>繰り返し<br><code>もし Nums[i] &gt; mx ならば</code><br><code>mx = Nums[i]</code></td>
+                  <td data-label="関数を使う場合"><code>最大値(Nums)</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            共通テストでは<strong>両方の書き方が出ます</strong>。
+            <code>最大値()</code>・<code>最小値()</code>・<code>要素数()</code>・<code>合計()</code> のような関数が使われているときは、
+            <strong>その1行を「繰り返し1つ分」に頭の中で展開して読む</strong>のがコツです。
+          </p>
+          <ul>
+            <li><strong>② 最小値(Nums)</strong> … 1 が表示されます。<strong>関数名の1文字違い</strong>なので、急いでいると読み飛ばします</li>
+            <li><strong>③ 要素数(Nums)</strong> … 4 が表示されます。<strong>「個数」であって「値」ではありません</strong></li>
+            <li>
+              <strong>④ Nums[0]</strong> … 3 が表示されます。
+              これは<strong>「最大値を求める処理の1行目」だけ</strong>を書いた状態です。
+              仮の最大を置いただけで、まだ比べていません
+            </li>
+          </ul>
+          <div class="sim-note">
+            <strong>④ を選んでしまう人は、実は理解が進んでいます。</strong>
+            <code>mx = Nums[0]</code> という<strong>初期値の置き方を覚えているからこそ</strong>選んでしまう選択肢だからです。
+            足りないのは「そのあと全部と比べる」部分です。
+            <strong>「仮に置く」と「比べて更新する」はセットで1つの処理</strong>——ここまで言えれば、このテーマは十分に身についています。
+          </div>
+        </div>
+      </details>
+    </section>
+
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの表記での書き方の違い</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Nums = [4, 9, 2, 7]
+mx = Nums[0]
+mx_pos = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] &gt; mx ならば:
+｜｜mx = Nums[i]
+⎿⎿ mx_pos = i
+
+表示する(mx, mx_pos)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">nums = [4, 9, 2, 7]
+mx = nums[0]
+mx_pos = 0
+
+for i in range(len(nums)):
+    if nums[i] &gt; mx:
+        mx = nums[i]
+        mx_pos = i
+
+print(mx, mx_pos)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const nums = [4, 9, 2, 7];
+let mx = nums[0];
+let mxPos = 0;
+
+for (let i = 0; i &lt; nums.length; i++) {
+  if (nums[i] &gt; mx) {
+    mx = nums[i];
+    mxPos = i;
+  }
+}
+
+console.log(mx, mxPos);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>まとめて処理する書き方もあります。</strong>
+        擬似言語には <code>最大値(Nums)</code>、Python には <code>max(nums)</code>、
+        JavaScript には <code>Math.max(...nums)</code> という書き方があり、1行で最大値が求まります。
+        ただし<strong>「何番目か」は分かりません</strong>。位置が必要なときは、上のように自分で追う必要があります。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>このテーマのチェックリスト</h2>
+      <ul>
+        <li>最大値の更新条件が <code>Nums[i] &gt; mx</code>（新しい値が左）だと分かる</li>
+        <li><code>mx = 0</code> が<strong>負の数を含むデータで危険</strong>だと説明できる</li>
+        <li><code>&gt;</code> と <code>&gt;=</code> で<strong>更新回数が変わる</strong>と分かる</li>
+        <li>位置を覚えるときは <code>Nums[mx_pos]</code> と比べると分かる</li>
+        <li><code>pos = -1</code> が「未発見」と「まだ記録していない」の両方を表せると分かる</li>
+        <li>打ち切りの有無で<strong>調べる回数だけが変わる</strong>と分かる</li>
+        <li>フラグは<strong>False から始めて、見つかったら True</strong> にすると分かる</li>
+        <li><code>最大値(Nums)</code> が<strong>繰り返し1つ分に相当する</strong>と読み替えられる</li>
+      </ul>
+      <p>
+        探索が読めるようになったら、最後は<a href="read-simulation.html">シミュレーション型の問題</a>です。
+        ここまでの型を組み合わせた、発展レベルの読み方を扱います。
+      </p>
+    </section>
+
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="read-simulation.html" class="sim-next-card">
+          <span class="sim-next-title">シミュレーション型の問題</span>
+          <span class="sim-next-desc">待ち行列、割り当て、連続区間。型の組み合わせで解く</span>
+        </a>
+        <a href="sim-selection-sort.html" class="sim-next-card">
+          <span class="sim-next-title">選択法シミュレーター</span>
+          <span class="sim-next-desc">min_pos が最小値の位置を追いかける様子を確認</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方 一覧</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+        <a href="sim-linear-search.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">線形探索シミュレーター</a>
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.SimUI) window.SimUI.bindTabs(document);
+    });
+  </script>
+</body>
+</html>

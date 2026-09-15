@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/question-examples.html">
+  <title>情報Ⅰ プログラム問題例と解き方｜3言語で比較 | IT1-CODE-POCKET</title>
+  <meta name="description" content="情報Ⅰのプログラム問題をDNCL・Python・JavaScriptで比較。配列、繰り返し、条件分岐を使う代表3問を、トレース表と詳しい解説つきで学べます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="情報Ⅰ プログラム問題例と解き方｜3言語で比較">
+  <meta property="og:description" content="同じ処理をDNCL・Python・JavaScriptで比較し、プログラムを読む共通の考え方を身につけます。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/question-examples.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="情報Ⅰ プログラム問題例と解き方｜3言語で比較">
+  <meta name="twitter:description" content="配列、繰り返し、条件分岐の代表問題を3言語で比較できます。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/question-examples.html#article",
+        "headline": "情報Ⅰ プログラム問題例と解き方｜3言語で比較",
+        "description": "情報Ⅰの代表的なプログラム問題をDNCL・Python・JavaScriptで比較し、トレース表を使った解き方を解説します。",
+        "url": "https://it1-code-pocket.com/question-examples.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-09-04",
+        "dateModified": "2026-09-04",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/question-examples.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "問題例と解き方", "item": "https://it1-code-pocket.com/question-examples.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pb-8 pt-4">
+    <article class="themed-card p-5 leading-relaxed sim-doc">
+      <h1 class="text-2xl font-bold mb-3">プログラム問題例と詳しい解き方</h1>
+      <p class="themed-text-muted text-sm mb-4">
+        情報Ⅰで頻出の処理を、DNCL・Python・JavaScriptの3言語で比べます。
+        文法が変わっても、値を追う手順は同じです。
+      </p>
+      <p>
+        ここでは答えだけでなく、どの変数をどの順番で確認すればよいかを示します。
+        まず問題文とコードから自分の答えを出し、その後に「解き方」を開いて確認してください。
+      </p>
+
+      <nav class="themed-card p-4 mt-5" aria-label="ページ内目次">
+        <h2 class="text-lg font-bold mb-2">このページの問題</h2>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li><a href="#example-array">配列の添字（基礎）</a></li>
+          <li><a href="#example-count">条件に合う値の個数（標準）</a></li>
+          <li><a href="#example-max">最大値の更新（標準）</a></li>
+        </ol>
+      </nav>
+
+      <section id="example-array">
+        <p class="sim-kicker mt-6">EXAMPLE 1・基礎</p>
+        <h2>配列の添字を読み取る</h2>
+        <p><strong>問題：</strong>実行後に表示される値を答えてください。</p>
+
+        <h3>DNCL</h3>
+        <pre class="code-block">Data = [5, 10, 15, 20]
+x = Data[1]
+表示する(x)</pre>
+        <h3>Python</h3>
+        <pre class="code-block">data = [5, 10, 15, 20]
+x = data[1]
+print(x)</pre>
+        <h3>JavaScript</h3>
+        <pre class="code-block">const data = [5, 10, 15, 20];
+const x = data[1];
+console.log(x);</pre>
+
+        <details class="themed-card p-4 mt-3">
+          <summary class="font-bold">答えと解き方を見る</summary>
+          <p class="mt-3"><strong>答えは 10 です。</strong></p>
+          <p>
+            3言語とも、配列の先頭は添字0です。したがって、添字と値の対応は
+            0→5、1→10、2→15、3→20となります。<code>[1]</code>は「1番目」ではなく、
+            先頭から数えて2個目を表す点に注意します。
+          </p>
+          <p>
+            この種類の問題では、配列の上に0、1、2、3と添字を書くだけで取り違えを防げます。
+            DNCLでは変数名の先頭を大文字にする例もありますが、添字の考え方はPython・JavaScriptと共通です。
+          </p>
+        </details>
+      </section>
+
+      <section id="example-count">
+        <p class="sim-kicker mt-8">EXAMPLE 2・標準</p>
+        <h2>条件に合う値の個数を数える</h2>
+        <p><strong>問題：</strong>実行後に表示されるcountの値を答えてください。</p>
+
+        <h3>DNCL</h3>
+        <pre class="code-block">Nums = [3, 8, 5, 2]
+count = 0
+i を 0 から 3 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] &gt;= 5 ならば:
+⎿⎿ count = count + 1
+表示する(count)</pre>
+        <h3>Python</h3>
+        <pre class="code-block">nums = [3, 8, 5, 2]
+count = 0
+for n in nums:
+    if n &gt;= 5:
+        count = count + 1
+print(count)</pre>
+        <h3>JavaScript</h3>
+        <pre class="code-block">const nums = [3, 8, 5, 2];
+let count = 0;
+for (const n of nums) {
+  if (n &gt;= 5) {
+    count = count + 1;
+  }
+}
+console.log(count);</pre>
+
+        <details class="themed-card p-4 mt-3">
+          <summary class="font-bold">答えとトレース表を見る</summary>
+          <p class="mt-3"><strong>答えは 2 です。</strong></p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">調べる値</th><th scope="col">5以上か</th><th scope="col">count</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>3</td><td>×</td><td>0</td></tr>
+                <tr><td>8</td><td>○</td><td>1</td></tr>
+                <tr><td>5</td><td>○</td><td>2</td></tr>
+                <tr><td>2</td><td>×</td><td>2</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            countは条件を満たした回数を保存する変数です。8と5の2個が「5以上」に当てはまるため、
+            0から2回増えて最終的に2になります。「5より大きい」ではなく「5以上」なので、
+            5自身も数えることが重要です。
+          </p>
+          <p>
+            DNCLは添字iで配列を参照し、PythonとJavaScriptは値nを順に取り出しています。
+            書き方は違いますが、「各要素を1回ずつ調べる」という処理は同じです。
+          </p>
+        </details>
+      </section>
+
+      <section id="example-max">
+        <p class="sim-kicker mt-8">EXAMPLE 3・標準</p>
+        <h2>最大値を順番に更新する</h2>
+        <p><strong>問題：</strong>実行後に表示されるmaxValueの値を答えてください。</p>
+
+        <h3>DNCL</h3>
+        <pre class="code-block">Scores = [68, 91, 74, 86]
+maxValue = Scores[0]
+i を 1 から 3 まで 1 ずつ増やしながら繰り返す:
+｜もし Scores[i] &gt; maxValue ならば:
+⎿⎿ maxValue = Scores[i]
+表示する(maxValue)</pre>
+        <h3>Python</h3>
+        <pre class="code-block">scores = [68, 91, 74, 86]
+max_value = scores[0]
+for score in scores[1:]:
+    if score &gt; max_value:
+        max_value = score
+print(max_value)</pre>
+        <h3>JavaScript</h3>
+        <pre class="code-block">const scores = [68, 91, 74, 86];
+let maxValue = scores[0];
+for (let i = 1; i &lt; scores.length; i++) {
+  if (scores[i] &gt; maxValue) {
+    maxValue = scores[i];
+  }
+}
+console.log(maxValue);</pre>
+
+        <details class="themed-card p-4 mt-3">
+          <summary class="font-bold">答えとトレース表を見る</summary>
+          <p class="mt-3"><strong>答えは 91 です。</strong></p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">比較する値</th><th scope="col">比較前の最大値</th><th scope="col">比較後の最大値</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>開始時</td><td>—</td><td>68</td></tr>
+                <tr><td>91</td><td>68</td><td>91</td></tr>
+                <tr><td>74</td><td>91</td><td>91</td></tr>
+                <tr><td>86</td><td>91</td><td>91</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            最初の68を暫定の最大値にします。次の91は68より大きいため更新します。
+            その後の74と86は91より小さいため更新しません。最大値を求める処理では、
+            「今までに見た値の中で最大」というmaxValueの意味を保ちながら1個ずつ比較します。
+          </p>
+          <p>
+            初期値を0にすると、負の数だけを含む配列で誤答になることがあります。
+            先頭要素を初期値にする方法なら、配列に少なくとも1個の値がある限り正しく処理できます。
+          </p>
+        </details>
+      </section>
+
+      <section class="themed-card p-4 mt-8">
+        <h2>3言語を比べるときの要点</h2>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>配列の添字は、いずれも0から始まります。</li>
+          <li>DNCLは日本語に近い表記、Pythonは字下げ、JavaScriptは波かっことセミコロンが特徴です。</li>
+          <li>文法ではなく「初期値・条件・更新・繰り返す範囲」に印を付けると、どの言語でも同じ手順で読めます。</li>
+          <li>実行結果を暗算せず、繰り返し1回につき表を1行書くと、添字や更新のミスを減らせます。</li>
+        </ul>
+      </section>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-6">
+        <a href="index.html?lang=dncl" class="themed-btn-primary block py-3 px-3 text-center text-sm font-bold">DNCLで練習</a>
+        <a href="index.html?lang=python" class="themed-btn-primary block py-3 px-3 text-center text-sm font-bold">Pythonで練習</a>
+        <a href="index.html?lang=javascript" class="themed-btn-primary block py-3 px-3 text-center text-sm font-bold">JavaScriptで練習</a>
+      </div>
+
+      <section class="themed-card p-4 mt-5">
+        <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方を6テーマで学ぶ</a>
+          <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+          <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズムを動きで確認する</a>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="question-examples.html">問題例と解き方</a>
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>

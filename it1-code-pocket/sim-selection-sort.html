@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- マスが小さくなる場面があるため、このページでは拡大操作を禁止しない。 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/sim-selection-sort.html">
+  <title>選択法（選択ソート）シミュレーター｜最小値を探して交換 | IT1-CODE-POCKET</title>
+  <meta name="description" content="選択法（選択ソート）の動きを1ステップずつ確認できるシミュレーター。min_pos が最小値の位置を追いかける様子と、1パスで1回だけ交換する流れ、交換法との違いを確認できます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="選択法（選択ソート）シミュレーター｜最小値を探して交換">
+  <meta property="og:description" content="min_pos が最小値の位置を追いかける様子と、1パスで1回だけ交換する流れを1ステップずつ確認できるシミュレーター。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/sim-selection-sort.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="選択法（選択ソート）シミュレーター｜最小値を探して交換">
+  <meta name="twitter:description" content="min_pos が最小値の位置を追いかける様子と、1パスで1回だけ交換する流れを1ステップずつ確認できるシミュレーター。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/sim-selection-sort.html#article",
+        "headline": "選択法（選択ソート）シミュレーター｜最小値を探して交換",
+        "description": "選択法（選択ソート）の動きを1ステップずつ確認できるシミュレーターと、擬似コード・Python・JavaScript のコード例、計算量、共通テスト情報Ⅰでの出題ポイントの解説。",
+        "url": "https://it1-code-pocket.com/sim-selection-sort.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-04",
+        "dateModified": "2026-08-04",
+        "inLanguage": "ja",
+        "about": "選択法（選択ソート）",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/sim-selection-sort.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "重要アルゴリズム解説",
+            "item": "https://it1-code-pocket.com/algorithms.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "選択法シミュレーター",
+            "item": "https://it1-code-pocket.com/sim-selection-sort.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://it1-code-pocket.com/sim-selection-sort.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "min_pos は値ではなく位置を覚えるのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "最後に交換するとき、その値がどこにあるかが分からなければ交換できないためです。値だけを覚えていても、配列のどの添字にあるのかが分からず、Nums[i] と入れ替えることができません。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "選択法と交換法（バブルソート）は何が違いますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "比較回数はどちらも n(n-1)/2 回で同じですが、交換の回数が違います。交換法は条件が成り立つたびに入れ替えるため多くなりがちで、選択法は1回のパスにつき最大1回しか交換しないため、交換回数は最大でも n-1 回です。計算量はどちらも O(n^2) です。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "内側の繰り返しが i + 1 から始まるのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "添字 i 自身はすでに最小値の候補として min_pos に設定されているため、もう一度自分と比べる必要がないからです。i より前は確定済みなので、比べるのは i + 1 以降だけになります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "最後の1個は比べなくてよいのですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい。最後の1個より小さい値はすべて前に確定しているため、残った1個は自動的にいちばん大きい値になります。そのため外側の繰り返しは「要素数 - 2」までで終わります。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="algorithms.html" class="header-back-btn" aria-label="重要アルゴリズム解説へ戻る" title="重要アルゴリズム解説へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="algorithms.html">重要アルゴリズム解説</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">選択法シミュレーター</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-2">選択法（選択ソート）シミュレーター</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        選択法は、<strong>未整列の部分から最小値を探し、その位置と先頭を1回だけ交換する</strong>整列です。
+        min_pos が最小値の位置を追いかける様子を1ステップずつ止めて確認できます。
+      </p>
+    </section>
+
+    <!-- ============ シミュレーター ============ -->
+    <section class="themed-card sim-panel mb-4" aria-labelledby="sim-heading">
+      <h2 id="sim-heading" class="sim-panel-title">動きを1ステップずつ確認する</h2>
+
+      <!-- どちらのタブでも共通で使う設定 -->
+      <div class="sim-setup">
+        <div class="sim-setup-row sim-setup-row-stack">
+          <span class="sim-setup-label" id="sim-length-label">要素数（個）</span>
+          <div class="sim-chips sim-chips-count" role="group" aria-labelledby="sim-length-label">
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="4" aria-pressed="false" aria-label="4個">4</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="5" aria-pressed="true" aria-label="5個">5</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="6" aria-pressed="false" aria-label="6個">6</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="7" aria-pressed="false" aria-label="7個">7</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="8" aria-pressed="false" aria-label="8個">8</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="9" aria-pressed="false" aria-label="9個">9</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="10" aria-pressed="false" aria-label="10個">10</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <span class="sim-setup-label" id="sim-scenario-label">並び</span>
+          <div class="sim-chips sim-chips-scene" role="group" aria-labelledby="sim-scenario-label">
+            <button type="button" class="sim-chip" data-sim-scenario="shuffled" aria-pressed="true" aria-label="ばらばらの並び">ばらばら</button>
+            <button type="button" class="sim-chip" data-sim-scenario="reversed" aria-pressed="false" aria-label="逆順">逆順</button>
+            <button type="button" class="sim-chip" data-sim-scenario="nearly" aria-pressed="false" aria-label="ほぼ整列済み">ほぼ整列</button>
+            <button type="button" class="sim-chip" data-sim-scenario="sorted" aria-pressed="false" aria-label="すでに整列済み">整列済み</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <label class="sim-setup-label" for="sim-input-mode">条件</label>
+          <select class="sim-select" id="sim-input-mode">
+            <option value="always" selected>基本の書き方（毎回交換する）</option>
+            <option value="skipSame">min_pos が i と同じなら交換しない</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 表示の切り替え（画面が広いときは両方並ぶのでタブは出ない） -->
+      <div class="sim-view-tabs" data-sim-view-tabs role="tablist" aria-label="表示を切り替え">
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-array"
+                aria-controls="view-array" aria-selected="true">配列の動き</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-code"
+                aria-controls="view-code" aria-selected="false">実行中のコード</button>
+      </div>
+
+      <div class="sim-view">
+        <div class="sim-view-panel" id="view-array" role="tabpanel" aria-labelledby="viewtab-array">
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">配列 Nums</span>
+              <button type="button" class="sim-mini-btn" data-sim-skip="passEnd">1つ確定まで ››</button>
+              <button type="button" class="sim-mini-btn" data-sim-random>作り直す</button>
+            </div>
+            <div class="sim-array-wrap">
+              <ul class="sim-array" id="sim-array" aria-live="off"></ul>
+            </div>
+            <ul class="sim-legend">
+              <li><span class="sim-legend-swatch" data-state="active"></span>比較(j)</li>
+              <li><span class="sim-legend-swatch" data-state="dup"></span>最小の候補</li>
+              <li><span class="sim-legend-swatch" data-state="swap"></span>交換</li>
+              <li><span class="sim-legend-swatch" data-state="fixed"></span>確定</li>
+            </ul>
+            <p class="sim-hint">i＝確定させる位置／m＝min_pos／j＝調べている位置</p>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-code" role="tabpanel" aria-labelledby="viewtab-code" hidden>
+          <pre class="sim-code" id="sim-code" aria-label="実行中の擬似コード"></pre>
+        </div>
+      </div>
+
+      <!-- 変数の状態 -->
+      <div class="sim-vars sim-vars-5">
+        <div class="sim-var">
+          <span class="sim-var-name">i</span>
+          <span class="sim-var-value" id="sim-var-current">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">min_pos</span>
+          <span class="sim-var-value" id="sim-var-minpos">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">j</span>
+          <span class="sim-var-value" id="sim-var-scanning">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">比較</span>
+          <span class="sim-var-value" id="sim-var-compares">0</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">交換</span>
+          <span class="sim-var-value" id="sim-var-swaps">0</span>
+        </div>
+      </div>
+
+      <div class="progress-bar" role="presentation">
+        <div class="progress-fill" id="sim-progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="sim-controls">
+        <button type="button" class="sim-btn sim-btn-prev" data-sim-action="prev">‹ 前へ</button>
+        <button type="button" class="sim-btn sim-btn-main sim-btn-next" data-sim-action="next">次へ ›</button>
+        <button type="button" class="sim-btn sim-btn-play" data-sim-action="play">▶ 自動再生</button>
+        <button type="button" class="sim-btn sim-btn-reset" data-sim-action="reset">⟲ 最初から</button>
+        <button type="button" class="sim-btn sim-btn-speed" data-sim-speed-cycle="normal">速さ ふつう</button>
+      </div>
+
+      <!-- 説明はボタンより後ろ。長さが変わってもボタンの位置が動かない。 -->
+      <div class="sim-message" role="status" aria-live="polite">
+        <span class="sim-message-step" id="sim-message-step">STEP 1 / 1</span>
+        <span id="sim-message-text">読み込み中です。</span>
+      </div>
+
+      <div class="sim-result" id="sim-result" hidden></div>
+
+      <p class="sim-hint sim-hint-keyboard">
+        パソコンではキーボードでも操作できます：<code>→</code> 次へ ／ <code>←</code> 前へ ／ <code>スペース</code> 再生・一時停止
+      </p>
+
+      <details class="sim-manual">
+        <summary>数値を自分で入力する</summary>
+        <div class="sim-manual-body">
+          <div class="sim-field">
+            <label class="sim-field-label" for="sim-input-nums">配列 Nums（4〜10個）</label>
+            <input type="text" class="sim-input" id="sim-input-nums" value="5, 2, 4, 1, 3"
+                   inputmode="numeric" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="sim-error" id="sim-error" role="alert" hidden></div>
+          <p class="sim-hint">カンマ区切りで 0〜99 の整数を入力します。</p>
+        </div>
+      </details>
+
+      <details class="sim-log-details">
+        <summary>実行ログを見る（ここまでの処理）</summary>
+        <ol class="sim-log" id="sim-log"></ol>
+      </details>
+    </section>
+
+    <!-- ============ 解説 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">ALGORITHM</p>
+      <h2>選択法とは何をしているか</h2>
+      <p>
+        選択法（選択ソート）は、<strong>まだ整列していない部分の中からいちばん小さい値を選び、その部分の先頭と交換する</strong>という操作を繰り返す整列です。
+        1回のパスで<strong>先頭から1個ずつ確定</strong>していくため、交換法（右端から確定）とは確定していく向きが逆になります。
+      </p>
+      <p>
+        トランプを並べ替えるとき、「残りの中でいちばん小さいカードを探して、左端に置く」という作業を繰り返すのと同じです。
+        シミュレーターでは、探している範囲を <code>j</code>（青）が動き、現在の最小値の候補が黄色で示されます。
+      </p>
+
+      <h3>min_pos は「値」ではなく「位置」を覚える</h3>
+      <p>
+        このアルゴリズムの中心にあるのが <code>min_pos</code> です。名前のとおり<strong>最小値の位置（添字）</strong>を覚えます。
+        なぜ値ではなく位置なのかというと、最後に交換するときに<strong>「どこにあるか」が分からなければ入れ替えられない</strong>からです。
+        「いちばん小さいのは 1 だ」と分かっても、それが配列のどこにあるか分からなければ <code>Nums[i]</code> と交換できません。
+      </p>
+      <div class="sim-note">
+        <strong>確認方法：</strong>シミュレーターで、より小さい値が見つかったときに <code>min_pos</code> の値が
+        「その位置の添字」に変わることを確認してください。黄色いマスも一緒に移動します。
+      </div>
+
+      <h3>内側の繰り返しは i + 1 から</h3>
+      <p>
+        内側の <code>j</code> は <code>i + 1</code> から始まります。<code>i</code> 自身はすでに <code>min_pos = i</code> として候補になっているので、
+        <strong>自分と自分を比べる必要がない</strong>からです。また <code>i</code> より前は確定済みなので、調べる範囲は自然と後ろへ狭まっていきます。
+      </p>
+
+      <h3>1パスで交換は1回だけ</h3>
+      <p>
+        交換法との最大の違いがここです。交換法は条件が成り立つたびに入れ替えるので交換が何度も起きますが、
+        選択法は<strong>探し終わってから1回だけ交換</strong>します。そのため交換回数は多くても <strong>n - 1 回</strong>で済みます。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">項目</th>
+              <th scope="col">交換法（バブルソート）</th>
+              <th scope="col">選択法（選択ソート）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">比較回数</th>
+              <td data-label="交換法（バブルソート）">n(n-1)/2 回</td>
+              <td data-label="選択法（選択ソート）">n(n-1)/2 回（同じ）</td>
+            </tr>
+            <tr>
+              <th scope="row">交換回数（最大）</th>
+              <td data-label="交換法（バブルソート）">n(n-1)/2 回</td>
+              <td data-label="選択法（選択ソート）">n - 1 回</td>
+            </tr>
+            <tr>
+              <th scope="row">確定する向き</th>
+              <td data-label="交換法（バブルソート）">右端（最大値）から</td>
+              <td data-label="選択法（選択ソート）">左端（最小値）から</td>
+            </tr>
+            <tr>
+              <th scope="row">覚える変数</th>
+              <td data-label="交換法（バブルソート）">なし（その場で交換）</td>
+              <td data-label="選択法（選択ソート）">min_pos（最小値の位置）</td>
+            </tr>
+            <tr>
+              <th scope="row">計算量</th>
+              <td data-label="交換法（バブルソート）">O(n²)</td>
+              <td data-label="選択法（選択ソート）">O(n²)（同じ）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        要素数5の逆順で比べると、交換法は10回交換しますが、選択法は2回で済みます。
+        <a href="sim-bubble-sort.html">交換法のシミュレーター</a>と見比べてみてください。
+      </p>
+
+      <h3>すでに整列済みでも交換は起きる</h3>
+      <p>
+        基本の書き方では、<code>min_pos</code> が <code>i</code> と同じでも交換の3行を実行します。これは<strong>同じ位置どうしの交換</strong>なので値は変わりませんが、
+        交換回数としては数えられます。無駄を省きたい場合は <code>もし min_pos != i ならば</code> という条件を足します。
+        条件の切り替えで、整列済みの配列の交換回数が <strong>4回 → 0回</strong>（要素数5のとき）に変わることを確認できます。
+      </p>
+    </section>
+
+    <!-- ============ コード ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの書き方で見る選択法</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Nums = [5, 2, 4, 1]
+
+i を 0 から 要素数(Nums) - 2 まで 1 ずつ増やしながら繰り返す:
+｜min_pos = i
+｜j を i + 1 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜｜もし Nums[j] &lt; Nums[min_pos] ならば:
+｜⎿⎿ min_pos = j
+｜temp = Nums[i]
+｜Nums[i] = Nums[min_pos]
+⎿ Nums[min_pos] = temp
+
+表示する(Nums)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">nums = [5, 2, 4, 1]
+
+for i in range(len(nums) - 1):
+    min_pos = i
+    for j in range(i + 1, len(nums)):
+        if nums[j] &lt; nums[min_pos]:
+            min_pos = j
+    temp = nums[i]
+    nums[i] = nums[min_pos]
+    nums[min_pos] = temp
+
+print(nums)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const nums = [5, 2, 4, 1];
+
+for (let i = 0; i &lt; nums.length - 1; i++) {
+  let minPos = i;
+  for (let j = i + 1; j &lt; nums.length; j++) {
+    if (nums[j] &lt; nums[minPos]) {
+      minPos = j;
+    }
+  }
+  const temp = nums[i];
+  nums[i] = nums[minPos];
+  nums[minPos] = temp;
+}
+
+console.log(nums);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>交換の3行は交換法と同じ：</strong><code>temp</code> に退避してから入れ替える手順は、
+        <a href="sim-bubble-sort.html">交換法</a>とまったく同じです。違うのは<strong>交換する相手</strong>で、
+        交換法は「隣（j と j+1）」、選択法は「先頭と最小値の位置（i と min_pos）」です。
+      </div>
+    </section>
+
+    <!-- ============ 計算量 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">COST</p>
+      <h2>比較回数と計算量</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">要素数</th>
+              <th scope="col">比較回数</th>
+              <th scope="col">交換回数（最大）</th>
+              <th scope="col">計算量</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">4 個</th>
+              <td class="sim-td-num" data-label="比較回数">6 回</td>
+              <td class="sim-td-num" data-label="交換回数（最大）">3 回</td>
+              <td class="sim-td-num" data-label="計算量">O(n²)</td>
+            </tr>
+            <tr>
+              <th scope="row">5 個</th>
+              <td class="sim-td-num" data-label="比較回数">10 回</td>
+              <td class="sim-td-num" data-label="交換回数（最大）">4 回</td>
+              <td class="sim-td-num" data-label="計算量">O(n²)</td>
+            </tr>
+            <tr>
+              <th scope="row">10 個</th>
+              <td class="sim-td-num" data-label="比較回数">45 回</td>
+              <td class="sim-td-num" data-label="交換回数（最大）">9 回</td>
+              <td class="sim-td-num" data-label="計算量">O(n²)</td>
+            </tr>
+            <tr>
+              <th scope="row">n 個</th>
+              <td class="sim-td-num" data-label="比較回数">n(n-1)/2 回</td>
+              <td class="sim-td-num" data-label="交換回数（最大）">n - 1 回</td>
+              <td class="sim-td-num" data-label="計算量">O(n²)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>比較回数は交換法とまったく同じ</strong>で、並び方に関係なく一定です。
+        違うのは交換回数だけで、こちらは要素数に比例する程度（n - 1 回）に抑えられます。
+        ただし処理全体の重さは比較回数が決めるため、<strong>計算量はどちらも O(n²)</strong> です。
+        「交換が少ない＝速い」と単純に言えない点に注意してください。
+      </p>
+    </section>
+
+    <!-- ============ 出題ポイント ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXAM POINT</p>
+      <h2>共通テスト「情報Ⅰ」での出題ポイント</h2>
+      <ol>
+        <li><strong>min_pos の更新：</strong><code>min_pos = j</code> の行が空欄になる形。<strong>値ではなく位置</strong>を代入する点が要点です。</li>
+        <li><strong>内側の開始値：</strong><code>j を i + 1 から</code> の <code>i + 1</code> の部分。なぜ i からではないのかを問われます。</li>
+        <li><strong>比較の向き：</strong><code>Nums[j] &lt; Nums[min_pos]</code> の不等号。<code>&gt;</code> にすると最大値を探すことになり、大きい順に並びます。</li>
+        <li><strong>1パス後の配列：</strong>「1回目のパスが終わった時点の配列」を答える問題。<strong>先頭が確定する</strong>点が交換法との違いです。</li>
+        <li><strong>交換回数の比較：</strong>「交換法と選択法で交換回数が少ないのはどちらか」という比較問題。選択法は最大 n - 1 回です。</li>
+      </ol>
+      <div class="sim-note sim-note-warn">
+        <strong>交換法と混同しないコツ：</strong>確定していく向きで見分けられます。
+        <strong>選択法は左から（最小値から）、交換法は右から（最大値から）</strong>確定します。
+        シミュレーターで緑のマスが増えていく向きを見比べてください。
+      </div>
+    </section>
+
+    <!-- ============ よくある間違い ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">MISTAKES</p>
+      <h2>よくある間違い</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">間違い</th>
+              <th scope="col">何が起きるか</th>
+              <th scope="col">正しくは</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">min_pos に値を入れる</th>
+              <td data-label="何が起きるか">交換するときにどこにあるか分からない</td>
+              <td data-label="正しくは">位置（添字）を入れる</td>
+            </tr>
+            <tr>
+              <th scope="row">見つけるたびに交換する</th>
+              <td data-label="何が起きるか">交換回数が増え、選択法ではなくなる</td>
+              <td data-label="正しくは">探し終わってから1回だけ交換する</td>
+            </tr>
+            <tr>
+              <th scope="row">内側を i から始める</th>
+              <td data-label="何が起きるか">自分と自分を比べる無駄が生じる</td>
+              <td data-label="正しくは">i + 1 から始める</td>
+            </tr>
+            <tr>
+              <th scope="row">min_pos の初期化を忘れる</th>
+              <td data-label="何が起きるか">前のパスの位置が残り、正しく並ばない</td>
+              <td data-label="正しくは">パスの最初に min_pos = i と設定する</td>
+            </tr>
+            <tr>
+              <th scope="row">外側を要素数 - 1 まで回す</th>
+              <td data-label="何が起きるか">最後の1個で無駄な処理をする</td>
+              <td data-label="正しくは">要素数 - 2 まで（最後の1個は自動的に決まる）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 理解度チェック ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>理解度チェック</h2>
+      <div class="sim-quiz">
+        <details class="sim-quiz-item">
+          <summary>Q1. Nums = [5, 2, 4, 1] で、1回目のパスが終わった時点の配列はどうなりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>[1, 2, 4, 5]。</strong>
+            最小値 1（添字 3）を見つけ、先頭の 5 と交換します。<strong>先頭が確定</strong>する点が、
+            交換法（1パス後は [2, 4, 1, 5] で右端が確定）との違いです。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q2. 要素数5の逆順 [5, 4, 3, 2, 1] のとき、交換回数は何回ですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>4回（基本の書き方）。</strong>
+            1パスにつき1回しか交換しないので、パスの数（要素数 - 1 = 4）と同じになります。
+            同じ配列を交換法で処理すると10回なので、<strong>交換回数には大きな差</strong>が出ます。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q3. すでに整列済みの [1, 2, 3, 4, 5] のとき、比較回数と交換回数はいくつですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>比較 10 回、交換 4 回（基本の書き方）。</strong>
+            すでに並んでいても、最小値を探すための比較は最後まで行われます。
+            交換は毎回「同じ位置どうし」なので値は変わりませんが、回数としては数えます。
+            「min_pos が i と同じなら交換しない」を選ぶと<strong>交換 0 回</strong>になります。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q4. 条件を <code>Nums[j] &gt; Nums[min_pos]</code> に変えると、どう並びますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>大きい順（降順）に並びます。</strong>
+            探すものが最小値から最大値に変わるため、先頭から大きい順に確定していきます。
+            変数名は min_pos のままでも動きますが、意味は「最大値の位置」になります。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 関連ページ ============ -->
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に確認したいアルゴリズム</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="sim-bubble-sort.html" class="sim-next-card">
+          <span class="sim-next-title">交換法（バブルソート）</span>
+          <span class="sim-next-desc">隣どうしを比べて交換する整列。確定する向きと交換回数を比べる</span>
+        </a>
+        <a href="sim-binary-search.html" class="sim-next-card">
+          <span class="sim-next-title">二分探索</span>
+          <span class="sim-next-desc">整列した配列でこそ使える探索。整列する目的が分かる</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説の一覧</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">問題を解いて確認する</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script src="js/sim-selection-sort.js"></script>
+</body>
+</html>

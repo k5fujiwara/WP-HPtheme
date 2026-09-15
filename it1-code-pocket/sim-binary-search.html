@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- マスが小さくなる場面があるため、このページでは拡大操作を禁止しない。 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/sim-binary-search.html">
+  <title>二分探索シミュレーター｜範囲が半分に絞られる様子を確認 | IT1-CODE-POCKET</title>
+  <meta name="description" content="二分探索の動きを1ステップずつ確認できるシミュレーター。low・mid・high の動きと候補が半分に減る様子、整列していないと失敗する理由、± 1 を忘れると終わらない理由まで確かめられます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="二分探索シミュレーター｜範囲が半分に絞られる様子を確認">
+  <meta property="og:description" content="low・mid・high の動きと、候補が半分ずつ減っていく様子を1ステップずつ確認できるシミュレーター。整列前提の理由も実演します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/sim-binary-search.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="二分探索シミュレーター｜範囲が半分に絞られる様子を確認">
+  <meta name="twitter:description" content="low・mid・high の動きと、候補が半分ずつ減っていく様子を1ステップずつ確認できるシミュレーター。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/sim-binary-search.html#article",
+        "headline": "二分探索シミュレーター｜範囲が半分に絞られる様子を確認",
+        "description": "二分探索の動きを1ステップずつ確認できるシミュレーターと、擬似コード・Python・JavaScript のコード例、計算量、共通テスト情報Ⅰでの出題ポイントの解説。",
+        "url": "https://it1-code-pocket.com/sim-binary-search.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-04",
+        "dateModified": "2026-08-04",
+        "inLanguage": "ja",
+        "about": "二分探索",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/sim-binary-search.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "重要アルゴリズム解説",
+            "item": "https://it1-code-pocket.com/algorithms.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "二分探索シミュレーター",
+            "item": "https://it1-code-pocket.com/sim-binary-search.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://it1-code-pocket.com/sim-binary-search.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "二分探索はなぜ整列済みの配列でないと使えないのですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "中央の値と比べた結果から「探す値は右半分にしかない」「左半分にしかない」と判断して片側を捨てるためです。小さい順に並んでいなければこの判断が成り立たず、捨てた側に目的の値が残っていても気づけません。並びが崩れていると、配列の中にある値でも見つけられないことがあります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "mid はどうやって求めますか。小数になったらどうしますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "mid = (low + high) ÷ 2 で求めます。添字は整数でなければならないため、小数点以下は切り捨てます。たとえば low = 0、high = 5 なら mid = 2 です。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "low = mid + 1、high = mid - 1 の +1 と -1 はなぜ必要ですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "調べ終わった mid を範囲から外して、必ず範囲を狭めるためです。low = mid や high = mid と書くと範囲が狭まらない場合があり、同じ mid を何度も調べ続けて処理が終わらなくなります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "二分探索の比較回数は何回くらいですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "1回の比較で候補が半分になるため、要素数 n に対して最大でおよそ log2(n) + 1 回です。1000個なら約10回、100万個でも約20回で終わります。計算量は O(log n) と表します。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="algorithms.html" class="header-back-btn" aria-label="重要アルゴリズム解説へ戻る" title="重要アルゴリズム解説へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="algorithms.html">重要アルゴリズム解説</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">二分探索シミュレーター</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-2">二分探索シミュレーター</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        二分探索は、整列済みの配列の真ん中を調べ、<strong>候補を毎回半分に減らしていく</strong>探索です。
+        low・mid・high の動きと、候補がどう減るかを1ステップずつ止めて確認できます。
+      </p>
+    </section>
+
+    <!-- ============ シミュレーター ============ -->
+    <section class="themed-card sim-panel mb-4" aria-labelledby="sim-heading">
+      <h2 id="sim-heading" class="sim-panel-title">動きを1ステップずつ確認する</h2>
+
+      <!-- どちらのタブでも共通で使う設定 -->
+      <div class="sim-setup">
+        <div class="sim-setup-row sim-setup-row-stack">
+          <span class="sim-setup-label" id="sim-length-label">要素数（個）</span>
+          <div class="sim-chips sim-chips-count" role="group" aria-labelledby="sim-length-label">
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="4" aria-pressed="false" aria-label="4個">4</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="5" aria-pressed="false" aria-label="5個">5</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="6" aria-pressed="true" aria-label="6個">6</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="7" aria-pressed="false" aria-label="7個">7</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="8" aria-pressed="false" aria-label="8個">8</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="9" aria-pressed="false" aria-label="9個">9</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-length="10" aria-pressed="false" aria-label="10個">10</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <span class="sim-setup-label" id="sim-scenario-label">場面</span>
+          <div class="sim-chips sim-chips-scene sim-chips-scene-5" role="group" aria-labelledby="sim-scenario-label">
+            <button type="button" class="sim-chip" data-sim-scenario="middle" aria-pressed="true" aria-label="中央にある（1回で見つかる）">中央</button>
+            <button type="button" class="sim-chip" data-sim-scenario="left" aria-pressed="false" aria-label="左端にある">左端</button>
+            <button type="button" class="sim-chip" data-sim-scenario="right" aria-pressed="false" aria-label="右端にある">右端</button>
+            <button type="button" class="sim-chip" data-sim-scenario="notFound" aria-pressed="false" aria-label="見つからない">なし</button>
+            <button type="button" class="sim-chip" data-sim-scenario="unsorted" aria-pressed="false" aria-label="並びを崩した配列（整列していない）">未整列</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <label class="sim-setup-label" for="sim-input-mode">条件</label>
+          <select class="sim-select" id="sim-input-mode">
+            <option value="adjust" selected>正しい書き方（mid ± 1 する）</option>
+            <option value="noAdjust">± 1 を忘れた書き方</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sim-warn-box" id="sim-warn" role="status" hidden></div>
+
+      <!-- 表示の切り替え（画面が広いときは両方並ぶのでタブは出ない） -->
+      <div class="sim-view-tabs" data-sim-view-tabs role="tablist" aria-label="表示を切り替え">
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-array"
+                aria-controls="view-array" aria-selected="true">配列の動き</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-code"
+                aria-controls="view-code" aria-selected="false">実行中のコード</button>
+      </div>
+
+      <div class="sim-view">
+        <div class="sim-view-panel" id="view-array" role="tabpanel" aria-labelledby="viewtab-array">
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">配列 Nums</span>
+              <button type="button" class="sim-mini-btn" data-sim-random>作り直す</button>
+              <span class="sim-target">target
+                <span class="sim-target-value" id="sim-target-view">8</span>
+              </span>
+            </div>
+            <div class="sim-array-wrap">
+              <ul class="sim-array" id="sim-array" aria-live="off"></ul>
+            </div>
+            <ul class="sim-legend">
+              <li><span class="sim-legend-swatch" data-state="active"></span>調べる(M)</li>
+              <li><span class="sim-legend-swatch" data-state="idle"></span>候補</li>
+              <li><span class="sim-legend-swatch" data-state="skip"></span>除外</li>
+              <li><span class="sim-legend-swatch" data-state="found"></span>発見</li>
+            </ul>
+            <p class="sim-hint">L＝low（下端）／M＝mid（中央）／H＝high（上端）</p>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-code" role="tabpanel" aria-labelledby="viewtab-code" hidden>
+          <pre class="sim-code" id="sim-code" aria-label="実行中の擬似コード"></pre>
+        </div>
+      </div>
+
+      <!-- 変数の状態 -->
+      <div class="sim-vars sim-vars-5">
+        <div class="sim-var">
+          <span class="sim-var-name">low</span>
+          <span class="sim-var-value" id="sim-var-low">0</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">mid</span>
+          <span class="sim-var-value" id="sim-var-mid">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">high</span>
+          <span class="sim-var-value" id="sim-var-high">5</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">pos</span>
+          <span class="sim-var-value" id="sim-var-pos">-1</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">比較</span>
+          <span class="sim-var-value" id="sim-var-compares">0</span>
+        </div>
+      </div>
+
+      <div class="progress-bar" role="presentation">
+        <div class="progress-fill" id="sim-progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="sim-controls">
+        <button type="button" class="sim-btn sim-btn-prev" data-sim-action="prev">‹ 前へ</button>
+        <button type="button" class="sim-btn sim-btn-main sim-btn-next" data-sim-action="next">次へ ›</button>
+        <button type="button" class="sim-btn sim-btn-play" data-sim-action="play">▶ 自動再生</button>
+        <button type="button" class="sim-btn sim-btn-reset" data-sim-action="reset">⟲ 最初から</button>
+        <button type="button" class="sim-btn sim-btn-speed" data-sim-speed-cycle="normal">速さ ふつう</button>
+      </div>
+
+      <!-- 説明はボタンより後ろ。長さが変わってもボタンの位置が動かない。 -->
+      <div class="sim-message" role="status" aria-live="polite">
+        <span class="sim-message-step" id="sim-message-step">STEP 1 / 1</span>
+        <span id="sim-message-text">読み込み中です。</span>
+      </div>
+
+      <div class="sim-result" id="sim-result" hidden></div>
+
+      <p class="sim-hint sim-hint-keyboard">
+        パソコンではキーボードでも操作できます：<code>→</code> 次へ ／ <code>←</code> 前へ ／ <code>スペース</code> 再生・一時停止
+      </p>
+
+      <details class="sim-manual">
+        <summary>数値を自分で入力する</summary>
+        <div class="sim-manual-body">
+          <div class="sim-field-row">
+            <div class="sim-field">
+              <label class="sim-field-label" for="sim-input-nums">配列 Nums（4〜10個・小さい順）</label>
+              <input type="text" class="sim-input" id="sim-input-nums" value="2, 5, 8, 11, 14, 20"
+                     inputmode="numeric" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="sim-field">
+              <label class="sim-field-label" for="sim-input-target">探す値 target</label>
+              <input type="number" class="sim-input" id="sim-input-target" value="8" min="0" max="99" step="1">
+            </div>
+          </div>
+          <div class="sim-error" id="sim-error" role="alert" hidden></div>
+          <p class="sim-hint">
+            わざと並びを崩した配列も入力できます。その場合は注意が表示され、二分探索が失敗する様子を確認できます。
+          </p>
+        </div>
+      </details>
+
+      <details class="sim-log-details">
+        <summary>実行ログを見る（ここまでの処理）</summary>
+        <ol class="sim-log" id="sim-log"></ol>
+      </details>
+    </section>
+
+    <!-- ============ 解説 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">ALGORITHM</p>
+      <h2>二分探索とは何をしているか</h2>
+      <p>
+        二分探索（バイナリサーチ）は、<strong>小さい順に並んだ配列</strong>に対して、真ん中の要素と探したい値 <code>target</code> を比べ、
+        大小の関係から<strong>目的の値が存在しない側を丸ごと捨てる</strong>探索です。
+        辞書で単語を引くとき、真ん中あたりを開いて「もっと後ろだ」と判断して前half を見なくなるのと同じ考え方です。
+      </p>
+      <p>
+        使う変数は3つです。<strong>範囲の下端 <code>low</code></strong>、<strong>範囲の上端 <code>high</code></strong>、そして<strong>その中央 <code>mid</code></strong>。
+        シミュレーターではこの3つがマスの上に L・M・H として表示され、候補から外れたマスは薄い破線になります。
+        「次へ」を押すたびに、薄いマスが一気に増えていく様子が確認できます。
+      </p>
+
+      <h3>1回の比較で候補が半分になる</h3>
+      <p>
+        線形探索は1回の比較で候補が1個しか減りませんが、二分探索は<strong>半分</strong>減ります。
+        この差は要素数が増えるほど大きくなります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">要素数</th>
+              <th scope="col">線形探索（最悪）</th>
+              <th scope="col">二分探索（最悪）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">8 個</th>
+              <td class="sim-td-num" data-label="線形探索（最悪）">8 回</td>
+              <td class="sim-td-num" data-label="二分探索（最悪）">4 回</td>
+            </tr>
+            <tr>
+              <th scope="row">1,000 個</th>
+              <td class="sim-td-num" data-label="線形探索（最悪）">1,000 回</td>
+              <td class="sim-td-num" data-label="二分探索（最悪）">約 10 回</td>
+            </tr>
+            <tr>
+              <th scope="row">100 万個</th>
+              <td class="sim-td-num" data-label="線形探索（最悪）">100 万回</td>
+              <td class="sim-td-num" data-label="二分探索（最悪）">約 20 回</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        100万個の中から探すのに<strong>たった20回</strong>で済みます。これが二分探索の強さで、
+        「整列してから探す」という手順に意味がある理由です。
+      </p>
+
+      <h3>mid の小数は切り捨てる</h3>
+      <p>
+        <code>mid = (low + high) ÷ 2</code> で計算しますが、添字は整数でなければ配列を指せません。
+        そのため<strong>小数点以下は切り捨て</strong>ます。たとえば <code>low = 0</code>、<code>high = 5</code> なら
+        <code>(0 + 5) ÷ 2 = 2.5</code> なので <code>mid = 2</code> です。
+        シミュレーターでは、割り切れないときに「÷ は小数を切り捨てます」と表示されるので、実際の値と合わせて確認してください。
+      </p>
+
+      <h3>整列されていないと失敗する</h3>
+      <p>
+        二分探索が成り立つのは、「中央より大きいなら、目的の値は右側にしかない」と<strong>言い切れる</strong>からです。
+        並びが崩れていると、この判断が成り立ちません。捨てた側に目的の値が残っていても、二度と調べられないため見つけられません。
+      </p>
+      <div class="sim-note sim-note-warn">
+        <strong>実際に試してください：</strong>場面で「未整列」を選ぶと、<strong>配列の中に target があるのに見つからない</strong>様子が確認できます。
+        これが「二分探索は整列済みの配列にしか使えない」という条件の意味です。選択肢問題でこの前提を問われたら、この場面を思い出してください。
+      </p>
+
+      <h3>+1 と -1 を忘れると終わらない</h3>
+      <p>
+        範囲を更新するときは <code>low = mid + 1</code>、<code>high = mid - 1</code> と書きます。
+        この <strong>+1 / -1 は、調べ終わった mid を範囲から必ず外すため</strong>にあります。
+        これを忘れて <code>low = mid</code> と書くと、範囲が狭まらないまま同じ mid を調べ続け、処理が終わらなくなります（無限ループ）。
+      </p>
+      <div class="sim-note">
+        条件で「± 1 を忘れた書き方」を選ぶと、範囲が狭まらなくなる様子を確認できます。
+        シミュレーターは同じ状態を繰り返したところで打ち切り、何が起きたかを表示します。
+      </div>
+    </section>
+
+    <!-- ============ コード ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの書き方で見る二分探索</h2>
+      <p>
+        擬似言語（DNCL風）・Python・JavaScript で並べました。変数名と処理の順番はすべて揃えてあります。
+      </p>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Nums = [2, 5, 8, 11, 14, 20]
+target = 14
+low = 0
+high = 要素数(Nums) - 1
+pos = -1
+
+low &lt;= high の間繰り返す:
+｜mid = (low + high) ÷ 2
+｜もし Nums[mid] == target ならば:
+｜｜pos = mid
+｜｜繰り返しを抜ける
+｜そうでなくもし Nums[mid] &lt; target ならば:
+｜｜low = mid + 1
+｜そうでなければ:
+⎿⎿ high = mid - 1
+
+表示する(pos)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">nums = [2, 5, 8, 11, 14, 20]
+target = 14
+low = 0
+high = len(nums) - 1
+pos = -1
+
+while low &lt;= high:
+    mid = (low + high) // 2
+    if nums[mid] == target:
+        pos = mid
+        break
+    elif nums[mid] &lt; target:
+        low = mid + 1
+    else:
+        high = mid - 1
+
+print(pos)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const nums = [2, 5, 8, 11, 14, 20];
+const target = 14;
+let low = 0;
+let high = nums.length - 1;
+let pos = -1;
+
+while (low &lt;= high) {
+  const mid = Math.floor((low + high) / 2);
+  if (nums[mid] === target) {
+    pos = mid;
+    break;
+  } else if (nums[mid] &lt; target) {
+    low = mid + 1;
+  } else {
+    high = mid - 1;
+  }
+}
+
+console.log(pos);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>切り捨ての書き方：</strong>擬似言語の <code>÷</code>、Python の <code>//</code>、JavaScript の <code>Math.floor()</code> は、
+        いずれも<strong>小数を切り捨てて整数の添字にする</strong>ための書き方です。
+        JavaScript の <code>/</code> は小数のまま残るため、<code>Math.floor()</code> が必要になります。
+      </div>
+    </section>
+
+    <!-- ============ 計算量 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">COST</p>
+      <h2>比較回数と計算量</h2>
+      <p>
+        要素数を n とすると、候補は n → n/2 → n/4 → … と減り、1個になるまでの回数は約 log2(n) 回です。
+        シミュレーターで「中央」と「左端」を切り替えると、同じ配列でも比較回数が変わることが確認できます。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">場合</th>
+              <th scope="col">どんなとき</th>
+              <th scope="col">比較回数</th>
+              <th scope="col">計算量</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">最良</th>
+              <td data-label="どんなとき">最初の mid が target だった</td>
+              <td class="sim-td-num" data-label="比較回数">1 回</td>
+              <td class="sim-td-num" data-label="計算量">O(1)</td>
+            </tr>
+            <tr>
+              <th scope="row">最悪</th>
+              <td data-label="どんなとき">端にある、または存在しない</td>
+              <td class="sim-td-num" data-label="比較回数">約 log2(n) + 1 回</td>
+              <td class="sim-td-num" data-label="計算量">O(log n)</td>
+            </tr>
+            <tr>
+              <th scope="row">前提</th>
+              <td data-label="どんなとき">整列していない配列</td>
+              <td class="sim-td-num" data-label="比較回数">—</td>
+              <td class="sim-td-num" data-label="計算量">使えない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        要素数が2倍になっても、比較回数は<strong>1回だけ</strong>増えます。線形探索が2倍になるのとは大きな違いです。
+        ただし、整列されていない配列を先に並べ替える場合は、その整列自体に手間（交換法や選択法なら n² に比例）がかかります。
+        <strong>1回だけ探すなら線形探索、何度も探すなら整列してから二分探索</strong>、という使い分けが問われることがあります。
+      </p>
+    </section>
+
+    <!-- ============ 出題ポイント ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXAM POINT</p>
+      <h2>共通テスト「情報Ⅰ」での出題ポイント</h2>
+      <p>二分探索は、穴埋めとトレース（値の追跡）の両方でよく出ます。狙われやすいのは次の5点です。</p>
+      <ol>
+        <li><strong>mid の式：</strong><code>mid = (low + high) ÷ 2</code> の空欄。切り捨てになることも合わせて確認されます。</li>
+        <li><strong>範囲の更新：</strong><code>low = mid + 1</code> と <code>high = mid - 1</code> のどちらを使うか。「大きければ低い側を捨てる」の向きを間違えないことが要点です。</li>
+        <li><strong>繰り返しの条件：</strong><code>low &lt;= high</code> の <code>&lt;=</code> 部分。<code>&lt;</code> にすると、候補が1個になった場面を調べ落とします。</li>
+        <li><strong>前提条件：</strong>「このアルゴリズムを使うために配列が満たすべき条件は何か」という問い。答えは「小さい順（または大きい順）に整列していること」です。</li>
+        <li><strong>比較回数：</strong>「最大で何回の比較が必要か」。要素数 8 なら 4 回、16 なら 5 回のように、半分にしていく回数を数えます。</li>
+      </ol>
+      <div class="sim-note sim-note-warn">
+        <strong>トレース問題のコツ：</strong>紙に low・high・mid の3列を作り、1回の繰り返しごとに1行書き足していきます。
+        シミュレーターの変数表示と実行ログは、この表を画面上で作っているのと同じです。
+        まず自分で表を書き、その後シミュレーターで答え合わせをしてください。
+      </div>
+    </section>
+
+    <!-- ============ よくある間違い ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">MISTAKES</p>
+      <h2>よくある間違い</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">間違い</th>
+              <th scope="col">何が起きるか</th>
+              <th scope="col">正しくは</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">整列していない配列に使う</th>
+              <td data-label="何が起きるか">配列の中にある値でも見つからない</td>
+              <td data-label="正しくは">先に整列する（または線形探索を使う）</td>
+            </tr>
+            <tr>
+              <th scope="row">low = mid、high = mid と書く</th>
+              <td data-label="何が起きるか">範囲が狭まらず、処理が終わらない</td>
+              <td data-label="正しくは">mid + 1 / mid - 1 にして mid を範囲から外す</td>
+            </tr>
+            <tr>
+              <th scope="row">繰り返し条件を low &lt; high にする</th>
+              <td data-label="何が起きるか">候補が1個になった場面を調べずに終わる</td>
+              <td data-label="正しくは">low &lt;= high にする</td>
+            </tr>
+            <tr>
+              <th scope="row">大小の判断を逆にする</th>
+              <td data-label="何が起きるか">目的の値がある側を捨ててしまう</td>
+              <td data-label="正しくは">中央より大きいなら後半、小さいなら前半に絞る</td>
+            </tr>
+            <tr>
+              <th scope="row">mid の小数を切り上げる</th>
+              <td data-label="何が起きるか">添字がずれて、範囲外を参照することがある</td>
+              <td data-label="正しくは">切り捨てて整数の添字にする</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 理解度チェック ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>理解度チェック</h2>
+      <p>まず自分で考え、答えを開く前に上のシミュレーターで確かめてみてください。</p>
+      <div class="sim-quiz">
+        <details class="sim-quiz-item">
+          <summary>Q1. Nums = [2, 5, 8, 11, 14, 20] で target = 8 のとき、最初の mid はいくつですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>mid = 2。</strong>
+            low = 0、high = 5 なので <code>(0 + 5) ÷ 2 = 2.5</code>、小数を切り捨てて 2 です。
+            Nums[2] は 8 なので、この場面では<strong>1回目の比較で見つかります</strong>（シミュレーターの「6個」＋「中央」の場面）。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q2. 同じ配列で target = 2（左端）のとき、比較回数は何回になりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>3回。</strong>
+            mid = 2（値 8）→ 大きいので前半へ、high = 1。mid = 0（値 2）… という順に絞られます。
+            <strong>同じ配列でも、探す値の位置によって比較回数が変わります</strong>。「左端」「右端」を切り替えて確認してください。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q3. 要素数 16 の配列では、最大で何回の比較が必要ですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>5回。</strong>
+            16 → 8 → 4 → 2 → 1 と半分にしていくと4回で候補が1個になり、その1個を確かめる比較を含めて5回です。
+            log2(16) = 4 なので <strong>log2(n) + 1</strong> と考えると計算できます。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q4. 並びが崩れた配列に二分探索を使うと、必ず「見つからない」になりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>いいえ、たまたま見つかることもあります。</strong>
+            崩れた並びでも、最初に調べた mid が偶然 target なら見つかります。
+            問題は<strong>「見つかることが保証されない」</strong>点です。正しく動くときと動かないときがあるアルゴリズムは使えません。
+            だからこそ「整列済み」という前提が必要になります。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 関連ページ ============ -->
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に確認したいアルゴリズム</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="sim-linear-search.html" class="sim-next-card">
+          <span class="sim-next-title">線形探索</span>
+          <span class="sim-next-desc">先頭から順に1つずつ比べる。整列が不要な代わりに最大 n 回かかる</span>
+        </a>
+        <a href="sim-bubble-sort.html" class="sim-next-card">
+          <span class="sim-next-title">交換法（バブルソート）</span>
+          <span class="sim-next-desc">二分探索の前提になる「整列」を作る方法</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説の一覧</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">問題を解いて確認する</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script src="js/sim-binary-search.js"></script>
+</body>
+</html>

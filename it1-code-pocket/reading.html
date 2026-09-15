@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/reading.html">
+  <title>プログラムの読み方｜情報Ⅰ 第3問のトレース練習 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問で必要な「プログラムを1行ずつ追う力（トレース）」を、6つのテーマに分けて練習できるページです。配列と添字、繰り返しの回数、集計、最大値と探索、二重ループ、シミュレーションの読み方を例題つきで解説します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="プログラムの読み方｜情報Ⅰ 第3問のトレース練習">
+  <meta property="og:description" content="プログラムを1行ずつ追う力を6つのテーマに分けて練習。例題と変数の追い方を丁寧に解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/reading.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="プログラムの読み方｜情報Ⅰ 第3問のトレース練習">
+  <meta name="twitter:description" content="プログラムを1行ずつ追う力を6つのテーマに分けて練習できます。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/reading.html#article",
+        "headline": "プログラムの読み方｜情報Ⅰ 第3問のトレース練習",
+        "description": "共通テスト情報Ⅰ第3問で必要なトレースの技術を、6つのテーマに分けて例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/reading.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-13",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/reading.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">プログラムの読み方</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">プログラムの読み方（トレースの練習）</h1>
+      <p>
+        共通テスト「情報Ⅰ」第3問で必要なのは、プログラムを書く力ではなく<strong>読む力</strong>です。
+        与えられたプログラムを上から1行ずつたどり、変数の値がどう変わるかを追いかける——
+        この作業を<strong>トレース</strong>といいます。ここでは、トレースの型を6つのテーマに分けて練習します。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">WHY</p>
+      <h2>なぜ「読む力」だけで差がつくのか</h2>
+      <p>
+        第3問は、知識問題ではありません。「配列とは何か」を知っていても、
+        <code>Data[2]</code> がどの値を指すかを毎回考え込んでいては、時間内に解き終わりません。
+        逆にいえば、<strong>覚える量は多くない代わりに、慣れが直接得点になる</strong>分野です。
+      </p>
+      <p>
+        つまずく人に共通するのは、プログラムを<strong>「全体の雰囲気」で読もうとしている</strong>ことです。
+        「これは合計を求めるプログラムだな」と当たりをつけて選択肢を選ぶと、
+        添字が1つずれていたり、繰り返しが1回多かったりする引っかけに必ず当たります。
+        出題者は、まさにそこを狙って選択肢を作っています。
+      </p>
+
+      <h3>トレースの基本手順</h3>
+      <p>
+        どんな問題でも、やることは同じです。紙の余白に次の表を書くところから始めます。
+      </p>
+      <ol>
+        <li><strong>変数の欄を作る</strong> — 出てくる変数を横に並べ、初期値を1行目に書く</li>
+        <li><strong>1行ずつ実行する</strong> — 上から順に、値が変わったら次の行に書き足す</li>
+        <li><strong>繰り返しは1周ごとに1行</strong> — ループの中を1周したら、そのときの値を記録する</li>
+        <li><strong>条件は声に出して確かめる</strong> — 「3 は 5 より小さい、だから成り立つ」と一つずつ判定する</li>
+      </ol>
+      <div class="sim-note">
+        <strong>面倒に見えますが、これが最短です。</strong>
+        慣れると頭の中でできるようになりますが、最初から暗算しようとすると必ずずれます。
+        まずは書く。書いた回数だけ速くなります。
+      </div>
+
+      <h3>間違いの9割はこの3つ</h3>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">つまずき</th>
+              <th scope="col">具体例</th>
+              <th scope="col">対策</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">添字のずれ</th>
+              <td data-label="具体例">「3番目」を Data[3] と読む（正しくは Data[2]）</td>
+              <td data-label="対策">添字は0から。必ず [0] から数え直す</td>
+            </tr>
+            <tr>
+              <th scope="row">回数のずれ</th>
+              <td data-label="具体例">「0 から 3 まで」を3回と数える（正しくは4回）</td>
+              <td data-label="対策">両端を含めて数える。0,1,2,3 と書き出す</td>
+            </tr>
+            <tr>
+              <th scope="row">更新順の見落とし</th>
+              <td data-label="具体例">合計に足す前に値を書き換えてしまう</td>
+              <td data-label="対策">書かれた行の順番どおりに実行する</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        以下の6テーマは、この3つのつまずきを<strong>場面ごとに潰していく</strong>構成にしています。
+        各ページに例題があるので、答えを見る前に自分でトレースしてみてください。
+      </p>
+    </section>
+
+    <section class="notation-grid algorithm-grid">
+      <article class="notation-card algorithm-index-card themed-card" id="array">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">1</span>
+          <h2 class="algorithm-index-title">配列と添字の読み方</h2>
+          <span class="pattern-badge">基礎</span>
+        </div>
+        <p class="algorithm-index-summary">添字が0から始まること、Data[2] が何番目を指すか、要素の書き換えがどう反映されるか。すべての土台になるテーマで、ここがずれると後の問題もすべてずれます。</p>
+        <a href="read-array.html" class="algorithm-sim-link">読み方と例題を見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="loop">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">2</span>
+          <h2 class="algorithm-index-title">繰り返しの回数を数える</h2>
+          <span class="pattern-badge">基礎</span>
+        </div>
+        <p class="algorithm-index-summary">「0 から 3 まで」は何回か、「〜の間繰り返す」はいつ止まるか。実行回数を問う問題は毎年出ます。数え方の型を身につけます。</p>
+        <a href="read-loop.html" class="algorithm-sim-link">読み方と例題を見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="total">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">3</span>
+          <h2 class="algorithm-index-title">集計する（合計・平均・個数）</h2>
+          <span class="pattern-badge">標準</span>
+        </div>
+        <p class="algorithm-index-summary">total = total + Data[i] の形をした処理の読み方。条件をつけて数える、条件をつけて足す、平均を出すまでを一続きで理解します。</p>
+        <a href="read-total.html" class="algorithm-sim-link">読み方と例題を見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="max">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">4</span>
+          <h2 class="algorithm-index-title">最大値を探す・値を探す</h2>
+          <span class="pattern-badge">標準</span>
+        </div>
+        <p class="algorithm-index-summary">最大値の更新条件、位置を覚える変数、見つけたら抜ける打ち切り。探索系の問題に共通する形をまとめます。</p>
+        <a href="read-max.html" class="algorithm-sim-link">読み方と例題を見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="table">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">5</span>
+          <h2 class="algorithm-index-title">二重ループと2次元配列</h2>
+          <span class="pattern-badge">発展</span>
+        </div>
+        <p class="algorithm-index-summary">内側と外側のどちらが先に動くか、Table[i][j] の i と j がそれぞれ何を指すか。表形式のデータを扱う問題の読み方です。</p>
+        <a href="read-table.html" class="algorithm-sim-link">読み方と例題を見る</a>
+      </article>
+
+      <article class="notation-card algorithm-index-card themed-card" id="simulation">
+        <div class="algorithm-index-head">
+          <span class="algorithm-index-num">6</span>
+          <h2 class="algorithm-index-title">シミュレーション型の問題</h2>
+          <span class="pattern-badge">発展</span>
+        </div>
+        <p class="algorithm-index-summary">待ち行列、担当者への割り当て、累積で定員を超える時点。長い問題文から必要な数字だけを取り出して表にする練習です。</p>
+        <a href="read-simulation.html" class="algorithm-sim-link">読み方と例題を見る</a>
+      </article>
+    </section>
+
+    <section class="themed-card p-4 mt-4">
+      <h2 class="text-lg font-bold mb-3">あわせて使うページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="index.html" class="sim-next-card">
+          <span class="sim-next-title">アルゴリズムクイズ（210問）</span>
+          <span class="sim-next-desc">読み方を覚えたら、実際に手を動かして練習する</span>
+        </a>
+        <a href="algorithms.html" class="sim-next-card">
+          <span class="sim-next-title">アルゴリズムシミュレーター</span>
+          <span class="sim-next-desc">トレースの答え合わせに使える。動きを1ステップずつ確認</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="python-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">Pythonで押さえる基礎文法</a>
+        <a href="javascript-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">JavaScriptの配列・条件分岐・繰り返し</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>

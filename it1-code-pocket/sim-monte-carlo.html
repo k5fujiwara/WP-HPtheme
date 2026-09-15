@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/sim-monte-carlo.html">
+  <title>モンテカルロ法シミュレーター｜乱数で円周率を求める | IT1-CODE-POCKET</title>
+  <meta name="description" content="モンテカルロ法で円周率を求める様子を1ステップずつ確認できるシミュレーター。試行回数10〜1000回を選び、点が円の内側に入る割合から π が近似される過程を散布図で見られます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="モンテカルロ法シミュレーター｜乱数で円周率を求める">
+  <meta property="og:description" content="正方形に打った点が円の内側に入る割合から円周率が近似されていく様子を、1ステップずつ確認できるシミュレーター。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/sim-monte-carlo.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="モンテカルロ法シミュレーター｜乱数で円周率を求める">
+  <meta name="twitter:description" content="正方形に打った点が円の内側に入る割合から円周率が近似されていく様子を確認できるシミュレーター。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/sim-monte-carlo.html#article",
+        "headline": "モンテカルロ法シミュレーター｜乱数で円周率を求める",
+        "description": "モンテカルロ法の動きを1ステップずつ確認できるシミュレーターと、擬似コード・Python・JavaScript のコード例、共通テスト情報Ⅰでの出題ポイントの解説。",
+        "url": "https://it1-code-pocket.com/sim-monte-carlo.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-04",
+        "dateModified": "2026-08-04",
+        "inLanguage": "ja",
+        "about": "モンテカルロ法",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/sim-monte-carlo.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "重要アルゴリズム解説",
+            "item": "https://it1-code-pocket.com/algorithms.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "モンテカルロ法シミュレーター",
+            "item": "https://it1-code-pocket.com/sim-monte-carlo.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://it1-code-pocket.com/sim-monte-carlo.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "なぜ 4 を掛けると円周率になるのですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "1辺1の正方形の面積は1、その中にある半径1の四分円の面積は π/4 です。点が均一にばらまかれるなら、円の内側に入る割合は面積の比 π/4 に近づきます。したがって割合を4倍すれば π の近似値になります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "実行するたびに答えが変わるのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "乱数を使っているためです。モンテカルロ法は厳密な解を求める方法ではなく、近似値を出す方法です。試行回数を増やすほど真の値に近づきやすくなりますが、毎回同じ値にはなりません。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "円の内側かどうかはどう判定しますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "原点からの距離が1以下かどうかで判定します。距離の計算には平方根が必要ですが、両辺を2乗して x×x + y×y <= 1 と書けば平方根を使わずに判定できます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "試行回数を10倍にすると精度も10倍になりますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "なりません。モンテカルロ法の誤差はおおよそ試行回数の平方根に反比例するため、精度を10倍にするには試行回数を100倍にする必要があります。回数を増やすほど良くなりますが、その伸びはゆるやかです。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="algorithms.html" class="header-back-btn" aria-label="重要アルゴリズム解説へ戻る" title="重要アルゴリズム解説へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="algorithms.html">重要アルゴリズム解説</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">モンテカルロ法シミュレーター</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-2">モンテカルロ法シミュレーター</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        モンテカルロ法は、<strong>乱数で試行を繰り返し、条件を満たした割合から答えを近似する</strong>方法です。
+        正方形に点を打ち、円の内側に入った割合から円周率が求まっていく様子を確認できます。
+      </p>
+    </section>
+
+    <!-- ============ シミュレーター ============ -->
+    <section class="themed-card sim-panel mb-4" aria-labelledby="sim-heading">
+      <h2 id="sim-heading" class="sim-panel-title">動きを1ステップずつ確認する</h2>
+
+      <div class="sim-setup">
+        <div class="sim-setup-row sim-setup-row-stack">
+          <span class="sim-setup-label" id="sim-trials-label">試行回数（回）</span>
+          <div class="sim-chips sim-chips-scene sim-chips-scene-6" role="group" aria-labelledby="sim-trials-label">
+            <button type="button" class="sim-chip sim-chip-num" data-sim-trials="10" aria-pressed="false" aria-label="10回">10</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-trials="20" aria-pressed="true" aria-label="20回">20</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-trials="50" aria-pressed="false" aria-label="50回">50</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-trials="100" aria-pressed="false" aria-label="100回">100</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-trials="500" aria-pressed="false" aria-label="500回">500</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-trials="1000" aria-pressed="false" aria-label="1000回">1000</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-view-tabs" data-sim-view-tabs role="tablist" aria-label="表示を切り替え">
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-array"
+                aria-controls="view-array" aria-selected="true">点の散らばり</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-code"
+                aria-controls="view-code" aria-selected="false">実行中のコード</button>
+      </div>
+
+      <div class="sim-view">
+        <div class="sim-view-panel" id="view-array" role="tabpanel" aria-labelledby="viewtab-array">
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">1辺1の正方形と四分円</span>
+              <button type="button" class="sim-mini-btn" data-sim-random>打ち直す</button>
+            </div>
+            <div class="sim-plot-wrap">
+              <svg class="sim-plot" viewBox="0 0 100 100" role="img"
+                   aria-label="正方形の中に打たれた点の散らばり">
+                <path class="sim-plot-area" d="M 0 100 L 0 0 A 100 100 0 0 1 100 100 Z"></path>
+                <rect class="sim-plot-frame" x="0.75" y="0.75" width="98.5" height="98.5"></rect>
+                <path class="sim-plot-arc" d="M 0 0 A 100 100 0 0 1 100 100"></path>
+                <g id="sim-plot-dots"></g>
+              </svg>
+            </div>
+            <ul class="sim-plot-legend">
+              <li><span class="sim-plot-swatch" data-hit="in"></span>円の内側</li>
+              <li><span class="sim-plot-swatch" data-hit="out"></span>円の外側</li>
+              <li><span class="sim-plot-swatch" data-hit="new"></span>いま打った点（枠つき）</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-code" role="tabpanel" aria-labelledby="viewtab-code" hidden>
+          <pre class="sim-code" id="sim-code" aria-label="実行中の擬似コード"></pre>
+        </div>
+      </div>
+
+      <div class="sim-estimate">
+        <span class="sim-estimate-label">いまの近似値（4 × inside ÷ 試行回数）</span>
+        <span class="sim-estimate-value" id="sim-estimate-value">–</span>
+        <span class="sim-estimate-sub" id="sim-estimate-sub">まだ点を打っていません</span>
+      </div>
+
+      <div class="sim-vars sim-vars-4">
+        <div class="sim-var">
+          <span class="sim-var-name">試行</span>
+          <span class="sim-var-value" id="sim-var-done">0</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">inside</span>
+          <span class="sim-var-value" id="sim-var-inside">0</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">割合</span>
+          <span class="sim-var-value" id="sim-var-ratio">–</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">pi</span>
+          <span class="sim-var-value" id="sim-var-pi">–</span>
+        </div>
+      </div>
+
+      <div class="progress-bar" role="presentation">
+        <div class="progress-fill" id="sim-progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="sim-controls">
+        <button type="button" class="sim-btn sim-btn-prev" data-sim-action="prev">‹ 前へ</button>
+        <button type="button" class="sim-btn sim-btn-main sim-btn-next" data-sim-action="next">次へ ›</button>
+        <button type="button" class="sim-btn sim-btn-play" data-sim-action="play">▶ 自動再生</button>
+        <button type="button" class="sim-btn sim-btn-reset" data-sim-action="reset">⟲ 最初から</button>
+        <button type="button" class="sim-btn sim-btn-speed" data-sim-speed-cycle="normal">速さ ふつう</button>
+      </div>
+
+      <div class="sim-message" role="status" aria-live="polite">
+        <span class="sim-message-step" id="sim-message-step">STEP 1 / 1</span>
+        <span id="sim-message-text">読み込み中です。</span>
+      </div>
+
+      <div class="sim-result" id="sim-result" hidden></div>
+
+      <p class="sim-hint sim-hint-keyboard">
+        パソコンではキーボードでも操作できます：<code>→</code> 次へ ／ <code>←</code> 前へ ／ <code>スペース</code> 再生・一時停止
+      </p>
+
+      <details class="sim-log-details">
+        <summary>実行ログを見る（ここまでの処理）</summary>
+        <ol class="sim-log" id="sim-log"></ol>
+      </details>
+    </section>
+
+    <!-- ============ 解説 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">ALGORITHM</p>
+      <h2>モンテカルロ法とは何をしているか</h2>
+      <p>
+        モンテカルロ法は、<strong>乱数を使った試行をたくさん繰り返し、その結果の割合から答えを見積もる</strong>方法です。
+        数式で正確に解くのが難しい問題でも、「たくさん試して数える」だけで答えに近い値が得られます。
+        名前はカジノで有名なモナコの地区名から来ています。
+      </p>
+      <p>
+        円周率を求める例では、次の3つを繰り返すだけです。
+      </p>
+      <ol>
+        <li><strong>乱数で点を1つ作る</strong>（x と y をそれぞれ 0以上1未満の乱数にする）</li>
+        <li><strong>円の内側かどうか判定する</strong>（<code>x × x + y × y &lt;= 1</code> なら内側）</li>
+        <li><strong>内側なら数える</strong>（inside を1増やす）</li>
+      </ol>
+
+      <h3>なぜ4倍すると円周率になるのか</h3>
+      <p>
+        1辺が1の正方形の面積は <strong>1</strong> です。その正方形に収まる半径1の四分円（円の4分の1）の面積は
+        <strong>π ÷ 4</strong> です。点が正方形全体にまんべんなく散らばるなら、
+        <strong>円の内側に入る点の割合は、面積の比 π/4 に近づく</strong>はずです。
+      </p>
+      <p>
+        つまり <code>inside ÷ trial ≒ π ÷ 4</code> なので、両辺を4倍して
+        <code>π ≒ 4 × inside ÷ trial</code> となります。これがコードの最後の式です。
+        シミュレーターの「いまの近似値」は、この式をその時点までの結果で計算したものです。
+      </p>
+
+      <h3>平方根を使わない判定</h3>
+      <p>
+        本来、原点から点までの距離は <code>√(x² + y²)</code> です。「距離が1以下」を確かめるには平方根が必要に見えますが、
+        <strong>両辺を2乗しても大小関係は変わらない</strong>ため、<code>x × x + y × y &lt;= 1</code> と書けます。
+        計算が簡単になるうえ、平方根の関数を使わずに済みます。この書き換えはよく問われます。
+      </p>
+
+      <h3>試行回数を増やすとどうなるか</h3>
+      <p>
+        シミュレーターは20回までは1試行ずつ、それより多いときはまとめて進みます。試行回数を 10 → 100 → 1000 と切り替えてみてください。
+        回数が少ないうちは近似値が 2.8 や 3.6 のように大きくぶれますが、回数を増やすと
+        <strong>3.14 前後に落ち着いていく</strong>ことが分かります。
+      </p>
+      <div class="sim-note">
+        <strong>ただし「増やせば必ず正確」ではありません。</strong>
+        乱数を使うので、同じ試行回数でも実行するたびに結果が変わります。「打ち直す」ボタンで確かめてください。
+        誤差はおおよそ<strong>試行回数の平方根に反比例</strong>するため、精度を10倍にするには試行回数を100倍にする必要があります。
+      </div>
+
+      <h3>ここで使う「乱数」とは</h3>
+      <p>
+        乱数とは、次にどの値が出るか決まっていない数のことです。ただしコンピュータが作る乱数は、
+        実際には<strong>計算式で作られた「擬似乱数」</strong>で、見かけ上ばらばらに見えるだけです。
+        そのため「同じ出発点（シード）を与えれば同じ並びが再現できる」という性質を持ちます。
+      </p>
+      <p>
+        情報Ⅰでは「0以上1未満の乱数」という書き方がよく出ます。ここで<strong>1が含まれない</strong>点が大切です。
+        たとえばサイコロを作るなら <code>整数部分(乱数 × 6) + 1</code> と書きます。
+        1が含まれてしまうと 7 が出る可能性が生まれるため、範囲の指定は必ず確認してください。
+      </p>
+
+      <h3>試行回数と精度の目安</h3>
+      <p>
+        実際にどのくらいの精度になるのか、目安を持っておくと問題文の判断が速くなります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">試行回数</th>
+              <th scope="col">よくある結果の範囲</th>
+              <th scope="col">小数第何位まで信頼できるか</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">10 回</th>
+              <td data-label="よくある結果の範囲">2.0 〜 4.0</td>
+              <td data-label="小数第何位まで信頼できるか">整数の桁すら怪しい</td>
+            </tr>
+            <tr>
+              <th scope="row">100 回</th>
+              <td data-label="よくある結果の範囲">2.9 〜 3.4</td>
+              <td data-label="小数第何位まで信頼できるか">おおよそ「3」と分かる程度</td>
+            </tr>
+            <tr>
+              <th scope="row">1,000 回</th>
+              <td data-label="よくある結果の範囲">3.05 〜 3.25</td>
+              <td data-label="小数第何位まで信頼できるか">小数第1位（3.1）くらい</td>
+            </tr>
+            <tr>
+              <th scope="row">100,000 回</th>
+              <td data-label="よくある結果の範囲">3.135 〜 3.150</td>
+              <td data-label="小数第何位まで信頼できるか">小数第2位（3.14）くらい</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>10倍にしても1桁ぶんの精度は増えません。</strong>
+        誤差が試行回数の平方根に反比例するため、1桁増やすには回数を100倍にする必要があります。
+        シミュレーターで10回と1000回を交互に試すと、この差を実感できます。
+      </p>
+
+      <h3>他にどんなことに使えるか</h3>
+      <p>
+        面積や体積の見積もり、待ち時間の予測、ゲームの勝率の見積もりなど、<strong>「実際に何度も試してみないと分からない」問題</strong>全般に使えます。
+        共通テストでは、円周率のほかに<strong>複雑な図形の面積を求める</strong>題材で出題されることがあります。
+        考え方は同じで、「図形を囲む長方形に点を打ち、図形の内側に入った割合 × 長方形の面積」で求められます。
+      </p>
+    </section>
+
+    <!-- ============ コード ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの書き方で見るモンテカルロ法</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">inside = 0
+trial = 1000
+
+i を 1 から trial まで 1 ずつ増やしながら繰り返す:
+｜x = 0以上1未満の乱数
+｜y = 0以上1未満の乱数
+｜もし x × x + y × y &lt;= 1 ならば:
+⎿⎿ inside = inside + 1
+
+pi = 4 × inside ÷ trial
+表示する(pi)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">import random
+
+inside = 0
+trial = 1000
+
+for i in range(trial):
+    x = random.random()
+    y = random.random()
+    if x * x + y * y &lt;= 1:
+        inside = inside + 1
+
+pi = 4 * inside / trial
+print(pi)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">let inside = 0;
+const trial = 1000;
+
+for (let i = 0; i &lt; trial; i++) {
+  const x = Math.random();
+  const y = Math.random();
+  if (x * x + y * y &lt;= 1) {
+    inside = inside + 1;
+  }
+}
+
+const pi = (4 * inside) / trial;
+console.log(pi);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>割り算に注意：</strong>擬似言語の <code>÷</code> は整数どうしだと切り捨てになる場合があります。
+        円周率のように<strong>小数で答えを出したい</strong>ときは、<code>4 × inside</code> のように先に掛けてから割る、
+        または小数として計算することを明示します。Python では <code>/</code>（小数の割り算）と <code>//</code>（切り捨て）が別なので、
+        <code>/</code> を使う点に注意してください。
+      </div>
+    </section>
+
+    <!-- ============ 出題ポイント ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXAM POINT</p>
+      <h2>共通テスト「情報Ⅰ」での出題ポイント</h2>
+      <ol>
+        <li><strong>判定の条件式：</strong><code>x × x + y × y &lt;= 1</code> の空欄。平方根を使わない形に書き換えられている点が要点です。</li>
+        <li><strong>最後の式：</strong><code>pi = 4 × inside ÷ trial</code> の「4」がどこから来たのか。面積の比 π/4 から説明できるようにします。</li>
+        <li><strong>近似であること：</strong>「この方法の特徴として正しいものを選べ」という形。<strong>厳密解ではなく近似</strong>、<strong>実行のたびに結果が変わる</strong>が答えになります。</li>
+        <li><strong>試行回数と精度：</strong>「回数を増やすとどうなるか」。真の値に近づきやすくなるが、必ず近づくとは限らない点に注意します。</li>
+        <li><strong>他の図形への応用：</strong>正方形以外の範囲に点を打つ場合の式。「割合 × 全体の面積」で求めます。</li>
+      </ol>
+      <div class="sim-note sim-note-warn">
+        <strong>「乱数」の扱いに注意：</strong>問題文で「0以上1未満の乱数」と書かれているか、
+        「1から6までの整数の乱数」と書かれているかで、判定式が変わります。
+        <strong>範囲に1が含まれるかどうか</strong>を必ず確認してください。
+      </div>
+    </section>
+
+    <!-- ============ よくある間違い ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">MISTAKES</p>
+      <h2>よくある間違い</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">間違い</th>
+              <th scope="col">何が起きるか</th>
+              <th scope="col">正しくは</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">4 を掛け忘れる</th>
+              <td data-label="何が起きるか">0.785 前後（π/4）になる</td>
+              <td data-label="正しくは">面積比が π/4 なので4倍する</td>
+            </tr>
+            <tr>
+              <th scope="row">inside の初期化を忘れる</th>
+              <td data-label="何が起きるか">数え始めの値が定まらない</td>
+              <td data-label="正しくは">繰り返しの前に inside = 0 とする</td>
+            </tr>
+            <tr>
+              <th scope="row">条件を &lt; 1 と書く</th>
+              <td data-label="何が起きるか">ちょうど円周上の点を外側と数える</td>
+              <td data-label="正しくは">&lt;= 1（境界を含む）にする</td>
+            </tr>
+            <tr>
+              <th scope="row">毎回同じ答えになると思う</th>
+              <td data-label="何が起きるか">「近似」という性質を答えられない</td>
+              <td data-label="正しくは">乱数なので実行のたびに変わる</td>
+            </tr>
+            <tr>
+              <th scope="row">回数を増やせば必ず正確になると思う</th>
+              <td data-label="何が起きるか">「必ず」を含む選択肢を選んでしまう</td>
+              <td data-label="正しくは">近づきやすくなるだけで保証はない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 理解度チェック ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>理解度チェック</h2>
+      <div class="sim-quiz">
+        <details class="sim-quiz-item">
+          <summary>Q1. 1000回試行して、円の内側に入った点が 785 個でした。円周率の近似値はいくつですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>3.14。</strong>
+            <code>4 × 785 ÷ 1000 = 3.14</code> です。割合 0.785 がそのまま π/4 に対応しているので、4倍すると π の近似値になります。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q2. 同じプログラムを2回実行すると、同じ結果になりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>なりません。</strong>
+            乱数を使っているため、打たれる点の位置が毎回変わります。
+            シミュレーターの「打ち直す」ボタンで、同じ試行回数でも近似値が変わることを確認してください。
+            <strong>「実行のたびに結果が変わる」はモンテカルロ法の重要な性質</strong>です。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q3. 判定を <code>x × x + y × y &lt;= 1</code> ではなく <code>x + y &lt;= 1</code> にすると、何を求めることになりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>三角形の面積の割合（0.5）を求めることになります。</strong>
+            <code>x + y &lt;= 1</code> は直線より下の領域、つまり直角二等辺三角形の内側を表します。
+            その面積は 0.5 なので、割合は 0.5 に近づきます。<strong>条件式を変えると調べる図形が変わる</strong>という点が要点です。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q4. 精度を今の10倍にしたいとき、試行回数はおよそ何倍にすればよいですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>およそ100倍。</strong>
+            誤差は試行回数の平方根に反比例するため、誤差を 1/10 にするには試行回数を 10² = 100 倍にする必要があります。
+            <strong>回数を増やしても精度の伸びはゆるやか</strong>である、という点を押さえておきましょう。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 関連ページ ============ -->
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に確認したいアルゴリズム</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="sim-queue.html" class="sim-next-card">
+          <span class="sim-next-title">待ち行列シミュレーション</span>
+          <span class="sim-next-desc">到着・開始・終了の時刻を順に求める。表を埋める形で問われる</span>
+        </a>
+        <a href="sim-selection-sort.html" class="sim-next-card">
+          <span class="sim-next-title">選択法（選択ソート）</span>
+          <span class="sim-next-desc">最小値を探して1回だけ交換する整列</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説の一覧</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">問題を解いて確認する</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script src="js/sim-monte-carlo.js"></script>
+</body>
+</html>

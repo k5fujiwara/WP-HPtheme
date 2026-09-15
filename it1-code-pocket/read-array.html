@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/read-array.html">
+  <title>配列と添字の読み方｜情報Ⅰ 第3問 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問で必要な配列の読み方を、例題つきで解説します。添字が0から始まる理由、Data[2]が何番目かの数え方、要素の書き換え、配列全体を調べる繰り返しの書き方まで、間違えやすい点を整理します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="配列と添字の読み方｜情報Ⅰ 第3問">
+  <meta property="og:description" content="添字が0から始まる理由、Data[2]が何番目か、要素の書き換えまで、例題つきで解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/read-array.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="配列と添字の読み方｜情報Ⅰ 第3問">
+  <meta name="twitter:description" content="添字が0から始まる理由から要素の書き換えまで、例題つきで解説します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/read-array.html#article",
+        "headline": "配列と添字の読み方｜情報Ⅰ 第3問",
+        "description": "配列の添字の数え方、要素の書き換え、配列全体を調べる繰り返しの書き方を例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/read-array.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-26",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/read-array.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" },
+          { "@type": "ListItem", "position": 3, "name": "配列と添字の読み方", "item": "https://it1-code-pocket.com/read-array.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="reading.html" class="header-back-btn" aria-label="プログラムの読み方へ戻る" title="プログラムの読み方へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="reading.html">プログラムの読み方</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">配列と添字</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">配列と添字の読み方</h1>
+      <p>
+        配列は第3問のほぼ全問に登場します。ここがずれると、
+        <strong>後の計算がすべてずれる</strong>ため、真っ先に固めるべきテーマです。
+        添字の数え方と、値の書き換えがどう反映されるかを、例題で確認します。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">BASIC</p>
+      <h2>添字は0から始まる</h2>
+      <p>
+        共通テスト用プログラム表記では、特に断りがなければ<strong>配列の添字は0から</strong>始まります。
+        Python も JavaScript も同じです。日常の「1番目、2番目」とは1つずれるため、
+        ここが最初のつまずきになります。
+      </p>
+      <pre class="code-block">Data = [5, 10, 15, 20]</pre>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr>
+              <th scope="col">添字</th>
+              <th scope="col">0</th>
+              <th scope="col">1</th>
+              <th scope="col">2</th>
+              <th scope="col">3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">値</th>
+              <td>5</td>
+              <td>10</td>
+              <td>15</td>
+              <td>20</td>
+            </tr>
+            <tr>
+              <th scope="row">日常の言い方</th>
+              <td>1番目</td>
+              <td>2番目</td>
+              <td>3番目</td>
+              <td>4番目</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <code>Data[2]</code> は<strong>3番目の 15</strong> です。「2番目の10」ではありません。
+        問題文が「3番目の値」と書いていたら、頭の中で<strong>1を引いて添字にする</strong>と覚えてください。
+      </p>
+      <div class="sim-note sim-note-warn">
+        <strong>逆のパターンにも注意：</strong>問題文に「添字は1から始まるものとする」と書かれている場合があります。
+        その一文があれば従います。<strong>断り書きの有無を必ず確認</strong>してください。
+      </div>
+
+      <h3>要素数と最後の添字は1つずれる</h3>
+      <p>
+        要素が4個ある配列の最後の添字は <strong>3</strong> です。
+        <code>要素数(Data)</code> は4を返すので、最後の添字は <code>要素数(Data) - 1</code> と書きます。
+        この <code>- 1</code> を落とすと、存在しない <code>Data[4]</code> を参照してエラーになります。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 1</p>
+      <h2>例題1：添字を選ぶ</h2>
+      <p>次のプログラムの ［ ア ］ に入る値として正しいものを選びなさい。（x には 10 を代入したい）</p>
+      <pre class="code-block">Data = [5, 10, 15, 20]
+x = Data[［ ア ］]
+表示する(x)</pre>
+      <p><strong>選択肢：</strong>① 0　② 1　③ 2　④ 3</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 1</strong></p>
+          <p>
+            添字を左から 0、1、2、3 と振り直すと、値は 5、10、15、20 の順に並びます。
+            10 が入っているのは<strong>添字 1</strong> の位置です。
+          </p>
+          <p>
+            10 は日常の言い方では「2番目」なので、つい ③ の 2 を選んでしまいがちです。
+            <strong>「2番目 → 添字は1」</strong>と、必ず1を引いて考えてください。
+          </p>
+          <p>
+            なお ① の 0 を選ぶと 5、③ の 2 なら 15、④ の 3 なら 20 が入ります。
+            選択肢がすべて「配列の中の値の添字」になっているのは、
+            <strong>数え間違いを誘う典型的な作り</strong>です。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 2</p>
+      <h2>例題2：要素を1つだけ書き換える</h2>
+      <p>次のプログラムを実行したとき、表示される Data として正しいものを選びなさい。</p>
+      <pre class="code-block">Data = [4, 7, 1, 9]
+Data[2] = Data[2] + 5
+表示する(Data)</pre>
+      <p><strong>選択肢：</strong>① [4, 7, 6, 9]　② [4, 12, 1, 9]　③ [4, 7, 1, 14]　④ [4, 7, 5, 9]</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① [4, 7, 6, 9]</strong></p>
+          <p>
+            <code>Data[2] = Data[2] + 5</code> は、<strong>右辺を先に計算してから左辺に入れる</strong>という意味です。
+            右辺の <code>Data[2]</code> は現在 1 なので、1 + 5 = 6。これを <code>Data[2]</code> に書き戻します。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">添字</th><th scope="col">0</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">実行前</th><td>4</td><td>7</td><td>1</td><td>9</td></tr>
+                <tr><th scope="row">実行後</th><td>4</td><td>7</td><td><strong>6</strong></td><td>9</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            変わるのは<strong>添字2の1か所だけ</strong>です。② は添字を1と読み違えた場合、
+            ③ は添字を3と読み違えた場合、④ は「+5」を「=5」と読み違えた場合に選んでしまう選択肢です。
+          </p>
+          <p>
+            <strong>= は「等しい」ではなく「入れる」</strong>という意味だと押さえておくと、
+            <code>x = x + 1</code> のような一見おかしな式にも迷わなくなります。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 3</p>
+      <h2>例題3：配列全体を調べる範囲</h2>
+      <p>配列の全要素を添字 i で順に調べるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Data = [6, 2, 9, 4]
+total = 0
+
+i を ［ ア ］ まで 1 ずつ増やしながら繰り返す:
+⎿ total = total + Data[i]
+
+表示する(total)</pre>
+      <p>
+        <strong>選択肢：</strong>① 0 から 要素数(Data) - 1　② 0 から 要素数(Data) - 2
+        ③ 1 から 要素数(Data) - 1　④ 0 から 要素数(Data)
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① 0 から 要素数(Data) - 1</strong></p>
+          <p>
+            要素数は4、添字は 0・1・2・3 です。すべてを1回ずつ通るには、
+            <strong>0 から 3（= 要素数 - 1）まで</strong>動かします。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Data[i]</th><th scope="col">total</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">開始前</th><td>—</td><td>0</td></tr>
+                <tr><th scope="row">0</th><td>6</td><td>6</td></tr>
+                <tr><th scope="row">1</th><td>2</td><td>8</td></tr>
+                <tr><th scope="row">2</th><td>9</td><td>17</td></tr>
+                <tr><th scope="row">3</th><td>4</td><td>21</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>他の選択肢を選ぶと、次のようにずれます。</p>
+          <ul>
+            <li><strong>②（- 2 まで）</strong> … 0〜2 で終わり、最後の 4 が足されず total は 17</li>
+            <li><strong>③（1 から）</strong> … 先頭の 6 を飛ばして total は 15</li>
+            <li><strong>④（要素数 まで）</strong> … 存在しない Data[4] を参照してエラー</li>
+          </ul>
+          <p>
+            <strong>「0 から 要素数 - 1 まで」は配列を全部調べるときの定型</strong>です。
+            この形を丸ごと覚えてしまって構いません。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 4</p>
+      <h2>例題4：値から添字を逆に求める</h2>
+      <p>変数 x に 18 を代入するには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Scores = [12, 15, 18, 20]
+x = Scores[［ ア ］]
+
+表示する(x)</pre>
+      <p>
+        <strong>選択肢：</strong>① 1　② 2　③ 3　④ 18
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 2</strong></p>
+          <p>
+            例題1は「添字を見て値を答える」問題でした。今回は<strong>逆向き</strong>で、
+            「この値を取り出すには添字をいくつにすればよいか」を聞かれています。
+            向きが変わっても、やることは<strong>対応表を書き出すだけ</strong>です。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">添字</th><th scope="col">0</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">値</th><td>12</td><td>15</td><td><strong>18</strong></td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            18 が入っているのは<strong>左から3番目</strong>ですが、添字は0から始まるので
+            <strong>2</strong> になります。「3番目だから3」と答えてしまうのが最も多い誤りです。
+          </p>
+          <ul>
+            <li><strong>① 1</strong> … Scores[1] は 15 です</li>
+            <li><strong>③ 3</strong> … Scores[3] は 20 です。<strong>「何番目」をそのまま書いた誤り</strong>で、いちばん引っかかりやすい選択肢です</li>
+            <li>
+              <strong>④ 18</strong> … <code>Scores[18]</code> は「18番目の箱」を指しますが、
+              この配列に箱は4つしかないので<strong>エラー</strong>になります。
+              <strong>［ ］の中に入るのは「取り出したい値」ではなく「場所」</strong>です
+            </li>
+          </ul>
+          <div class="sim-note">
+            <strong>④ を選びたくなったら要注意です。</strong>
+            <code>Scores[2]</code> は「2という値を探す」ではなく、<strong>「2番の箱を開ける」</strong>という意味です。
+            配列は値で探すのではなく、<strong>場所を指定して取り出す</strong>——この違いが分かれば添字の問題はほぼ落としません。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 5</p>
+      <h2>例題5：添字の中に配列が入る</h2>
+      <p>次のプログラムを実行したとき、表示される Boxes として正しいものを選びなさい。</p>
+      <pre class="code-block">Boxes = [3, 0, 2]
+Moves = [1, 2, 0, 1]
+
+i を 0 から 要素数(Moves) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿ Boxes[Moves[i]] = Boxes[Moves[i]] + 1
+
+表示する(Boxes)</pre>
+      <p>
+        <strong>選択肢：</strong>① [4, 2, 3]　② [3, 2, 3]
+        ③ [4, 1, 3]　④ [1, 2, 0]
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① [4, 2, 3]</strong></p>
+          <p>
+            <code>Boxes[Moves[i]]</code> という<strong>［ ］が二重になった形</strong>が出てきました。
+            見た目で身構えてしまう人が多いところですが、
+            <strong>内側から順に計算するだけ</strong>です。
+          </p>
+          <p>
+            たとえば i が 0 のとき、内側の <code>Moves[0]</code> は <strong>1</strong> です。
+            これを外側に入れると <code>Boxes[1]</code> になります。つまり
+            <strong>「Moves は、どの箱を増やすかを指示する番号の並び」</strong>だと分かります。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Moves[i]</th><th scope="col">増やす箱</th><th scope="col">Boxes</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">開始前</th><td>—</td><td>—</td><td>[3, 0, 2]</td></tr>
+                <tr><th scope="row">0</th><td>1</td><td>Boxes[1]</td><td>[3, <strong>1</strong>, 2]</td></tr>
+                <tr><th scope="row">1</th><td>2</td><td>Boxes[2]</td><td>[3, 1, <strong>3</strong>]</td></tr>
+                <tr><th scope="row">2</th><td>0</td><td>Boxes[0]</td><td>[<strong>4</strong>, 1, 3]</td></tr>
+                <tr><th scope="row">3</th><td>1</td><td>Boxes[1]</td><td>[4, <strong>2</strong>, 3]</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Moves には 1 が2回、2 と 0 が1回ずつ入っています。
+            そのため <strong>Boxes[1] は 2回、Boxes[2] と Boxes[0] は 1回ずつ</strong>増えて [4, 2, 3] になります。
+          </p>
+          <ul>
+            <li><strong>③ [4, 1, 3]</strong> … i = 3 の行を忘れた場合の値です。<strong>Moves の要素は4つ</strong>なので、繰り返しは4回まわります</li>
+            <li><strong>④ [1, 2, 0]</strong> … 増やした回数そのものです。<strong>元の値に足す</strong>ことを忘れています</li>
+          </ul>
+          <div class="sim-note sim-note-warn">
+            <strong>二重の［ ］は必ず内側から。</strong>
+            <code>Boxes[Moves[i]]</code> を見たら、まず <code>Moves[i]</code> を計算して数字に置き換え、
+            <code>Boxes[1]</code> のような<strong>ふつうの形に書き直してから</strong>読んでください。
+            この形は<a href="read-table.html">2次元配列</a>や
+            <a href="read-simulation.html">シミュレーション型</a>でも繰り返し出てきます。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの表記での書き方の違い</h2>
+      <p>同じ「配列を全部調べて合計する」処理を、3つの表記で並べます。</p>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Data = [6, 2, 9, 4]
+total = 0
+
+i を 0 から 要素数(Data) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿ total = total + Data[i]
+
+表示する(total)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">data = [6, 2, 9, 4]
+total = 0
+
+for i in range(len(data)):
+    total = total + data[i]
+
+print(total)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const data = [6, 2, 9, 4];
+let total = 0;
+
+for (let i = 0; i &lt; data.length; i++) {
+  total = total + data[i];
+}
+
+console.log(total);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>範囲の書き方だけが違います。</strong>
+        擬似言語は「0 から 要素数 - 1 <strong>まで</strong>」と<strong>終わりの値</strong>を書きますが、
+        Python の <code>range(4)</code> と JavaScript の <code>i &lt; 4</code> は
+        <strong>「4の直前まで」</strong>という意味です。指す範囲（0〜3）は同じで、書き方の約束が違うだけです。
+        この違いを知らないと、Pythonの <code>range(len(data))</code> を見て「最後まで調べていない」と誤読します。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>このテーマのチェックリスト</h2>
+      <ul>
+        <li>「3番目の値」と言われたら、添字は <strong>2</strong> だと即答できる</li>
+        <li>要素数4の配列の最後の添字が <strong>3</strong> だと分かる</li>
+        <li><code>Data[2] = Data[2] + 5</code> で変わるのは<strong>1か所だけ</strong>だと分かる</li>
+        <li>配列全体を調べる範囲は <strong>0 から 要素数 - 1 まで</strong>だと覚えている</li>
+        <li><code>Data[Moves[i]]</code> のような<strong>二重の添字を内側から</strong>読める</li>
+        <li>Python・JavaScript の範囲指定が「直前まで」だと知っている</li>
+      </ul>
+      <p>
+        すべて即答できるようになったら、次は<a href="read-loop.html">繰り返しの回数を数える</a>へ進んでください。
+        実際の問題で練習したい場合は、<a href="index.html">クイズの「基礎」</a>から始めるのがおすすめです。
+      </p>
+    </section>
+
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="read-loop.html" class="sim-next-card">
+          <span class="sim-next-title">繰り返しの回数を数える</span>
+          <span class="sim-next-desc">「0 から 3 まで」は何回か。実行回数の数え方</span>
+        </a>
+        <a href="sim-linear-search.html" class="sim-next-card">
+          <span class="sim-next-title">線形探索シミュレーター</span>
+          <span class="sim-next-desc">添字 i が動く様子を1ステップずつ確認できる</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方 一覧</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="notation.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラム表記の解説</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.SimUI) window.SimUI.bindTabs(document);
+    });
+  </script>
+</body>
+</html>

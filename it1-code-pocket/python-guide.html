@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/python-guide.html">
+  <title>Pythonで押さえる基礎文法 | IT1-CODE-POCKET</title>
+  <meta name="description" content="情報Ⅰのプログラミング対策として、Pythonの配列、条件分岐、繰り返し、集計、探索の読み方を初心者向けに解説します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="Pythonで押さえる基礎文法 | IT1-CODE-POCKET">
+  <meta property="og:description" content="情報Ⅰのプログラミング対策に必要なPythonの読み方を整理します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/python-guide.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pythonで押さえる基礎文法 | IT1-CODE-POCKET">
+  <meta name="twitter:description" content="情報Ⅰのプログラミング対策に必要なPythonの読み方を整理します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/python-guide.html#article",
+        "headline": "Pythonで押さえる基礎文法",
+        "description": "情報Ⅰのプログラミング対策として、Pythonの配列、条件分岐、繰り返し、集計、探索の読み方を初心者向けに解説します。",
+        "url": "https://it1-code-pocket.com/python-guide.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-06-19",
+        "dateModified": "2026-06-19",
+        "inLanguage": "ja",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/python-guide.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Pythonで押さえる基礎文法",
+            "item": "https://it1-code-pocket.com/python-guide.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pb-8 pt-4">
+    <article class="themed-card p-5 leading-relaxed sim-doc">
+      <h1 class="text-2xl font-bold mb-3">Pythonで押さえる基礎文法</h1>
+      <p class="themed-text-muted text-sm mb-5">
+        Pythonは読みやすい文法ですが、共通テスト形式では「コードを実行したらどうなるか」を正確に追う力が必要です。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">配列（リスト）と添字</h2>
+      <p class="mb-3">
+        Pythonでは、複数の値をまとめるものとしてリストを使います。例えば <code>nums = [3, 8, 5]</code> のように書き、最初の値は <code>nums[0]</code>、2番目の値は <code>nums[1]</code> で取り出します。添字が0から始まる点は、情報Ⅰの問題で特に間違えやすい部分です。
+      </p>
+      <p>
+        「3番目の値」と「添字3」は同じではありません。3番目の値は添字2です。実行結果を選ぶ問題では、まず配列の各位置を書き出してから考えると、取り違えを防ぎやすくなります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">条件分岐の読み方</h2>
+      <p class="mb-3">
+        <code>if</code> は、条件を満たすときだけ内側の処理を実行します。例えば <code>if score &gt;= 60:</code> は、score が60以上のときにだけ実行されます。比較演算子の向き、等しい場合を含むかどうか、複数条件を同時に満たすかがポイントです。
+      </p>
+      <p>
+        問題を解くときは、条件式を日本語に直すと理解しやすくなります。<code>n % 2 == 0</code> なら「nを2で割った余りが0」、つまり偶数です。条件の意味を言葉にできれば、空欄補充や正誤判定の問題にも対応しやすくなります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">繰り返しとrange</h2>
+      <p class="mb-3">
+        Pythonの <code>range(5)</code> は 0, 1, 2, 3, 4 を順に作ります。5は含まれません。<code>range(1, 5)</code> は 1, 2, 3, 4 です。共通テストでは、繰り返し回数や変数の最終値を問う問題がよく出ます。
+      </p>
+      <p>
+        繰り返し問題では、最初から最後まで頭の中だけで追うより、i の値、条件判定、更新される変数を表にすると安定します。特に、合計を入れる <code>total</code>、個数を数える <code>count</code>、最大値を保存する <code>best</code> のような変数は、1回の繰り返しごとにどう変わるかを確認しましょう。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">よく出る処理パターン</h2>
+      <p class="mb-3">
+        情報Ⅰでは、配列の合計、条件を満たす個数、最大値の更新、線形探索が頻出です。例えば最大値を求める処理では、最初に仮の最大値を置き、より大きい値が見つかったら更新します。探索では、目的の値を見つけたときに位置を保存したり、処理を止めたりします。
+      </p>
+      <p>
+        これらは暗記項目ではなく、考え方の型です。変数名や題材が変わっても「何を保存している変数か」「どの条件で更新するか」を見れば、同じ型として読めるようになります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">range の3つの書き方</h2>
+      <p class="mb-3">
+        Python でもっとも間違えやすいのが <code>range</code> です。
+        <strong>終わりの値は含まれません</strong>。3つの形を表で覚えてしまうのが早道です。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">書き方</th>
+              <th scope="col">i がとる値</th>
+              <th scope="col">回数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">range(5)</th>
+              <td data-label="i がとる値">0, 1, 2, 3, 4</td>
+              <td class="sim-td-num" data-label="回数">5回</td>
+            </tr>
+            <tr>
+              <th scope="row">range(1, 5)</th>
+              <td data-label="i がとる値">1, 2, 3, 4</td>
+              <td class="sim-td-num" data-label="回数">4回</td>
+            </tr>
+            <tr>
+              <th scope="row">range(0, 10, 2)</th>
+              <td data-label="i がとる値">0, 2, 4, 6, 8</td>
+              <td class="sim-td-num" data-label="回数">5回</td>
+            </tr>
+            <tr>
+              <th scope="row">range(len(nums))</th>
+              <td data-label="i がとる値">0 〜 要素数-1</td>
+              <td class="sim-td-num" data-label="回数">要素数と同じ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        共通テスト用プログラム表記の「0 から 4 まで」は<strong>5を含まない range(5) と同じ</strong>です。
+        擬似言語では終わりの値を書き、Python では「その手前まで」を書く——
+        <strong>同じ範囲でも数字の書き方が違う</strong>点に注意してください。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">コード例と実行結果</h2>
+      <p class="mb-3">
+        頻出の4つの処理を、実際のコードと出力で確認します。どれも形が決まっています。
+      </p>
+
+      <h3 class="font-bold mt-4 mb-2">合計を求める</h3>
+      <pre class="code-block">nums = [3, 8, 5]
+total = 0
+for i in range(len(nums)):
+    total = total + nums[i]
+print(total)      # 16</pre>
+
+      <h3 class="font-bold mt-4 mb-2">条件を満たす個数を数える</h3>
+      <pre class="code-block">nums = [1, 4, 6, 7, 10]
+count = 0
+for i in range(len(nums)):
+    if nums[i] % 2 == 0:
+        count = count + 1
+print(count)      # 3（偶数は 4, 6, 10）</pre>
+
+      <h3 class="font-bold mt-4 mb-2">最大値を求める</h3>
+      <pre class="code-block">nums = [4, 9, 2, 7]
+mx = nums[0]
+for i in range(len(nums)):
+    if nums[i] &gt; mx:
+        mx = nums[i]
+print(mx)         # 9</pre>
+
+      <h3 class="font-bold mt-4 mb-2">目的の値を探す</h3>
+      <pre class="code-block">nums = [3, 8, 1, 5]
+target = 1
+pos = -1
+for i in range(len(nums)):
+    if nums[i] == target and pos == -1:
+        pos = i
+print(pos)        # 2（見つからなければ -1 のまま）</pre>
+      <p>
+        <strong>4つとも「箱を用意 → 繰り返しの中で更新 → 最後に使う」</strong>という同じ形です。
+        変わるのは初期値と更新の条件だけです。この型の詳しい解説は
+        <a href="read-total.html" class="font-bold" style="color: var(--accent);">集計する処理の読み方</a>と
+        <a href="read-max.html" class="font-bold" style="color: var(--accent);">最大値を探す・値を探す</a>にあります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">Python特有のつまずき</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">つまずき</th>
+              <th scope="col">内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">/ と //</th>
+              <td data-label="内容"><code>7 / 2</code> は 3.5、<code>7 // 2</code> は 3。<strong>添字の計算には // を使う</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">インデント</th>
+              <td data-label="内容">字下げが処理のまとまりを表す。<strong>ずれると if や for の外に出てしまう</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">= と ==</th>
+              <td data-label="内容"><code>=</code> は代入、<code>==</code> は比較。条件式に <code>=</code> は書けない</td>
+            </tr>
+            <tr>
+              <th scope="row">len() の位置</th>
+              <td data-label="内容"><code>len(nums)</code> は要素数。<strong>最後の添字は len(nums) - 1</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">and / or</th>
+              <td data-label="内容">「かつ」は <code>and</code>、「または」は <code>or</code>。記号（&amp;&amp;）は使わない</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        なかでも <strong>インデント</strong>は、共通テスト形式の問題でも意味を持ちます。
+        <code>count = count + 1</code> が <code>if</code> の内側にあるか外側にあるかで、
+        「条件を満たした回数」か「繰り返した回数」かが変わります。
+        <strong>字下げの位置は必ず確認</strong>してください。
+      </p>
+
+      <section class="themed-card p-4 mt-6">
+        <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方（トレース練習）</a>
+          <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+          <a href="javascript-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">JavaScriptの配列・条件分岐・繰り返し</a>
+          <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+          <a href="index.html?lang=python" class="themed-btn-primary block w-full py-3 px-4 text-sm font-bold text-center">Pythonモードで練習する</a>
+        </div>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>

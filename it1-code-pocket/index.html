@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/">
+  <title>情報Ⅰ 第3問 対策クイズ | IT1-CODE-POCKET</title>
+  <meta name="description" content="IT1-CODE-POCKETは、共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策をスマホで学べるクイズアプリです。Python、JavaScript、DNCLの問題を選んで演習できます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="IT1-CODE-POCKET | 情報Ⅰ 第3問対策">
+  <meta property="og:description" content="共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策をスマホで学べるクイズアプリです。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://it1-code-pocket.com/">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:secure_url" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://it1-code-pocket.com/">
+  <meta name="twitter:title" content="IT1-CODE-POCKET | 情報Ⅰ 第3問対策">
+  <meta name="twitter:description" content="共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策をスマホで学べるクイズアプリです。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta name="twitter:image:alt" content="IT1-CODE-POCKET 情報Ⅰ 第3問 プログラミング・アルゴリズム対策">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://it1-code-pocket.com/#website",
+        "name": "IT1-CODE-POCKET",
+        "url": "https://it1-code-pocket.com/",
+        "inLanguage": "ja",
+        "description": "共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策をスマートフォンで学べるクイズ学習サイトです。"
+      },
+      {
+        "@type": "EducationalApplication",
+        "@id": "https://it1-code-pocket.com/#app",
+        "name": "IT1-CODE-POCKET",
+        "url": "https://it1-code-pocket.com/",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "ja",
+        "educationalLevel": "HighSchool",
+        "learningResourceType": "Quiz",
+        "teaches": [
+          "情報Ⅰ",
+          "プログラミング",
+          "アルゴリズム",
+          "Python",
+          "JavaScript",
+          "DNCL"
+        ],
+        "description": "Python、JavaScript、DNCLの問題を通して、共通テスト「情報Ⅰ」第3問で問われる配列、条件分岐、繰り返し、探索、集計を練習できます。",
+        "isAccessibleForFree": true
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+    crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <!-- ヘッダー -->
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <span class="app-title truncate" id="header-title">IT1-CODE-POCKET</span>
+    </div>
+    <div id="learning-status-actions" class="learning-status-actions hidden" aria-label="学習状況">
+      <button id="status-session-btn" class="learning-status-btn learning-status-btn-session hidden" onclick="openLearningStatusModal('resume')" type="button">再開</button>
+      <button id="status-review-btn" class="learning-status-btn learning-status-btn-review hidden" onclick="openLearningStatusModal('review')" type="button">復習 0</button>
+    </div>
+    <div class="header-quiz-actions">
+      <button class="header-quiz-action-btn" onclick="suspendQuiz()">中断</button>
+      <button class="header-quiz-action-btn" onclick="abandonQuiz()">戻る</button>
+    </div>
+    <div class="header-stats shrink-0" id="header-stats">
+      0 / 0
+    </div>
+  </header>
+
+  <main class="app-shell max-w-lg mx-auto px-4 pb-8 pt-4">
+
+    <!-- ===== トップ画面 ===== -->
+    <section id="screen-top">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold mb-1">プログラミング<br>アルゴリズム クイズ</h1>
+        <p class="themed-text-muted text-sm">共通テスト「情報Ⅰ」第3問 対策</p>
+      </div>
+
+      <div class="top-layout">
+        <div class="top-action-panel">
+          <div class="themed-card p-4 mb-4">
+            <h2 class="font-bold mb-3 text-sm">🌐 言語モード</h2>
+            <div class="grid grid-cols-1 gap-2" id="lang-mode-group">
+              <button class="themed-btn-secondary selected w-full py-3 px-4 text-left text-sm" data-lang="python" onclick="selectLangMode('python')">
+                🐍 Pythonモード
+              </button>
+              <button class="themed-btn-secondary w-full py-3 px-4 text-left text-sm" data-lang="javascript" onclick="selectLangMode('javascript')">
+                🟨 JavaScriptモード
+              </button>
+              <button class="themed-btn-secondary w-full py-3 px-4 text-left text-sm" data-lang="dncl" onclick="selectLangMode('dncl')">
+                🌰 DNCL（どんくり）モード
+              </button>
+            </div>
+          </div>
+
+          <div class="themed-card p-4 mb-4">
+            <h2 class="font-bold mb-3 text-sm">📊 難易度</h2>
+            <div class="grid grid-cols-3 gap-2" id="difficulty-group">
+              <button class="themed-btn-secondary selected py-3 text-sm font-bold" data-diff="基礎" onclick="selectDifficulty('基礎')">基礎</button>
+              <button class="themed-btn-secondary py-3 text-sm font-bold" data-diff="標準" onclick="selectDifficulty('標準')">標準</button>
+              <button class="themed-btn-secondary py-3 text-sm font-bold" data-diff="発展" onclick="selectDifficulty('発展')">発展</button>
+            </div>
+          </div>
+
+          <div class="themed-card p-4 mb-6">
+            <h2 class="font-bold mb-3 text-sm">🔢 問題数</h2>
+            <div class="grid grid-cols-4 gap-2" id="question-count-group">
+              <button class="themed-btn-secondary py-3 text-sm font-bold" data-count="5" onclick="selectQuestionCount(5)">5問</button>
+              <button class="themed-btn-secondary selected py-3 text-sm font-bold" data-count="10" onclick="selectQuestionCount(10)">10問</button>
+              <button class="themed-btn-secondary py-3 text-sm font-bold" data-count="20" onclick="selectQuestionCount(20)">20問</button>
+              <button class="themed-btn-secondary py-3 text-sm font-bold" data-count="40" onclick="selectQuestionCount(40)">40問</button>
+            </div>
+          </div>
+
+          <button class="themed-btn-primary w-full py-4 text-lg font-bold" onclick="startQuiz()">
+            🚀 スタート！
+          </button>
+          <div class="mt-3">
+            <a href="settings.html" class="themed-btn-secondary block w-full py-3 text-center text-sm font-bold">
+              ⚙️ 設定
+            </a>
+          </div>
+          <a href="reading.html" class="themed-btn-secondary block w-full py-3 mt-2 text-center text-sm font-bold">
+            📖 プログラムの読み方
+          </a>
+          <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 mt-2 text-center text-sm font-bold">
+            🧭 重要アルゴリズム解説
+          </a>
+          <a href="notation.html" class="themed-btn-secondary block w-full py-3 mt-2 text-center text-sm font-bold">
+            📘 共通テスト用プログラム表記の解説
+          </a>
+        </div>
+
+        <div class="top-info-panel">
+          <section class="themed-card p-5 leading-relaxed">
+            <h2 class="text-lg font-bold mb-3">IT1-CODE-POCKETで学べること</h2>
+            <p class="mb-3">
+              IT1-CODE-POCKETは、共通テスト「情報Ⅰ」の第3問で問われやすいプログラミングとアルゴリズムの考え方を、スマートフォンで短時間ずつ練習できる学習サイトです。
+              単に答えを覚えるのではなく、配列の添字、条件分岐、繰り返し、変数の更新、探索、集計、シミュレーションなど、プログラムを読むための基本動作を確認できるように構成しています。
+            </p>
+            <p>
+              問題は「基礎」「標準」「発展」に分け、Python、JavaScript、共通テスト用プログラム表記（DNCL）を選んで演習できます。
+              同じ考え方を複数の表記で見比べることで、特定の文法だけでなく、処理の流れそのものを理解しやすくすることを目指しています。
+            </p>
+          </section>
+
+          <section class="themed-card p-5 mt-4 leading-relaxed">
+            <h2 class="text-lg font-bold mb-3">おすすめの使い方</h2>
+            <ol class="space-y-2 list-decimal pl-5">
+              <li>まずは「基礎」を5問または10問で解き、配列・条件分岐・繰り返しの読み方を確認します。</li>
+              <li>慣れてきたら「標準」で、合計、最大値、探索、条件付きカウントなどの頻出処理を練習します。</li>
+              <li>最後に「発展」で、二重ループ、待ち行列、割り当て、表形式データの処理など、長めのプログラムに挑戦します。</li>
+              <li>間違えた問題は復習機能に残るため、翌日以降にもう一度解き直すと定着しやすくなります。</li>
+            </ol>
+          </section>
+
+          <section class="themed-card p-5 mt-4 leading-relaxed sim-doc">
+            <h2 class="text-lg font-bold mb-3">共通テスト「情報Ⅰ」第3問とはどんな問題か</h2>
+            <p>
+              第3問は、与えられたプログラムを読んで空欄を埋めたり、実行結果を答えたりする問題です。
+              特徴は<strong>「知識を覚えていれば解ける問題ではない」</strong>という点にあります。
+              用語の意味を知っていても、プログラムの中で変数がどう変わっていくかを追えなければ答えは出ません。
+            </p>
+            <p>
+              出題は、大きく次の4つの形に分けられます。本サイトの問題も、この4つのパターンで作成しています。
+            </p>
+            <div class="sim-table-wrap">
+              <table class="sim-table">
+                <thead>
+                  <tr>
+                    <th scope="col">パターン</th>
+                    <th scope="col">問われること</th>
+                    <th scope="col">つまずきやすい点</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">穴埋め</th>
+                    <td data-label="問われること">［ ア ］に入る式や値を選ぶ</td>
+                    <td data-label="つまずきやすい点">添字の始まりが0か1か、条件式の向き</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">実行結果</th>
+                    <td data-label="問われること">表示される値を答える</td>
+                    <td data-label="つまずきやすい点">変数の更新順、繰り返しを抜けるタイミング</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">実行回数</th>
+                    <td data-label="問われること">処理が何回行われるか数える</td>
+                    <td data-label="つまずきやすい点">繰り返しの終わりの値、二重ループの数え方</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">正誤判定</th>
+                    <td data-label="問われること">プログラムの説明として正しいものを選ぶ</td>
+                    <td data-label="つまずきやすい点">前提条件（整列済みかどうかなど）の見落とし</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              いずれも、必要な力は共通しています。<strong>プログラムを上から1行ずつ読み、変数の値を書き換えながら追いかける</strong>ことです。
+              この作業は「トレース」と呼ばれ、慣れるまでは時間がかかりますが、
+              練習量に比例して確実に速く正確になります。
+            </p>
+
+            <h2 class="text-lg font-bold mb-3">つまずきの原因は「読み方」にある</h2>
+            <p>
+              第3問が苦手な人の多くは、プログラムを<strong>全体の雰囲気で読もうとしています</strong>。
+              しかし、プログラムは1行ずつ順番に実行されるものなので、雰囲気で読むと必ずどこかでずれます。
+              特に次の3つは、間違いの原因として非常に多いところです。
+            </p>
+            <ul>
+              <li><strong>添字の始まり</strong> — 共通テスト用プログラム表記では、特に断りがなければ配列の添字は0から始まります。「3番目の要素」は Data[2] です。</li>
+              <li><strong>繰り返しの終わりの値</strong> — 「0 から 要素数 - 1 まで」の <code>- 1</code> を見落とすと、範囲外を参照したり回数が1回ずれたりします。</li>
+              <li><strong>更新の順序</strong> — <code>x = x + v</code> と <code>v = v - 1</code> は、書く順番を入れ替えると結果が変わります。</li>
+            </ul>
+            <p>
+              本サイトのクイズは、こうした<strong>間違えやすいポイントを狙って</strong>作られています。
+              間違えた問題は復習リストに残るので、翌日以降に解き直すと、自分がどこで読み違えるかの傾向が見えてきます。
+            </p>
+
+            <h2 class="text-lg font-bold mb-3">シミュレーターで動きを目で確かめる</h2>
+            <p>
+              トレースは紙の上でもできますが、最初のうちは「自分の追い方が合っているのか」が分かりません。
+              そこで本サイトでは、代表的な7つのアルゴリズムについて、
+              <strong>1ステップずつ止めながら動きを見られるシミュレーター</strong>を用意しています。
+            </p>
+            <p>
+              配列のどのマスを比べているか、変数がいくつになったか、擬似コードのどの行を実行しているかが同時に表示されます。
+              自分で予測してから答え合わせに使うと、トレースの精度が上がります。
+              整列していない配列で二分探索が失敗する場面や、更新の順序を間違えて処理が終わらなくなる場面など、
+              <strong>失敗する様子もあえて再現できる</strong>ようにしてあります。
+            </p>
+            <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold text-center mt-3">
+              7つのアルゴリズムを見る
+            </a>
+          </section>
+
+          <section class="themed-card p-5 mt-4 leading-relaxed">
+            <h2 class="text-lg font-bold mb-3">学習ガイド</h2>
+            <p class="mb-3">
+              クイズだけでなく、情報Ⅰ 第3問の学習方針や各言語の読み方も整理しています。演習前の確認や、間違えた後の復習に活用してください。
+            </p>
+            <div class="grid grid-cols-1 gap-2 top-guide-links">
+              <a href="question-examples.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">3言語で比べる問題例と詳しい解き方</a>
+              <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方（トレース練習）</a>
+              <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+              <a href="python-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">Pythonで押さえる基礎文法</a>
+              <a href="javascript-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">JavaScriptの配列・条件分岐・繰り返し</a>
+              <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== クイズ画面 ===== -->
+    <section id="screen-quiz" class="hidden">
+      <div class="progress-bar quiz-progress">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="quiz-desktop-grid">
+        <div class="quiz-main-pane">
+          <h2 class="font-bold text-base mb-2" id="quiz-title"></h2>
+          <p class="text-sm leading-relaxed mb-3 quiz-prompt" id="quiz-prompt"></p>
+
+          <!-- 言語注意書き -->
+          <div id="notice-area" class="space-y-2 mb-3"></div>
+
+          <!-- コード表示 -->
+          <div id="code-area" class="mb-4"></div>
+        </div>
+
+        <div class="quiz-side-pane">
+          <!-- 正誤フィードバック -->
+          <div id="feedback-area" class="hidden mb-3 text-center py-3 font-bold text-lg"></div>
+
+          <!-- 選択肢 -->
+          <div id="choices-area" class="grid grid-cols-1 gap-2.5 mb-4"></div>
+
+          <!-- 解説アコーディオン -->
+          <details id="explanation-details" class="explanation hidden mb-4">
+            <summary>💡 解説を見る 🔽</summary>
+            <div class="explanation-body" id="explanation-body"></div>
+          </details>
+
+          <button id="btn-next" class="themed-btn-primary hidden w-full py-4 text-lg font-bold" onclick="nextQuestion()">
+            次へ進む →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 結果画面 ===== -->
+    <section id="screen-result" class="hidden text-center">
+      <div class="themed-card p-6 mb-6">
+        <div class="text-5xl mb-3" id="result-emoji">🎉</div>
+        <h2 class="text-2xl font-bold mb-2">お疲れさま！</h2>
+        <p class="text-4xl font-bold mb-1" style="color:var(--accent)" id="result-score"></p>
+        <p class="themed-text-muted text-sm" id="result-detail"></p>
+      </div>
+      <button class="themed-btn-primary w-full py-4 text-lg font-bold mb-3" onclick="retryQuiz()">
+        🔄 もう一度
+      </button>
+      <button class="themed-btn-secondary w-full py-3 text-sm font-bold" onclick="goHome()">
+        🏠 トップに戻る
+      </button>
+    </section>
+
+  </main>
+  <div id="learning-status-modal" class="learning-status-modal hidden" role="dialog" aria-modal="true" aria-labelledby="learning-status-title">
+    <button class="learning-status-backdrop" onclick="closeLearningStatusModal()" aria-label="学習状況を閉じる"></button>
+    <div class="learning-status-panel">
+      <div class="learning-status-panel-head">
+        <div>
+          <p class="learning-status-kicker">LEARNING STATUS</p>
+          <h2 id="learning-status-title" class="text-lg font-bold">学習状況</h2>
+        </div>
+        <button class="learning-status-close" onclick="closeLearningStatusModal()" aria-label="閉じる">×</button>
+      </div>
+
+      <div id="resume-card" class="learning-status-section hidden">
+        <div>
+          <h3 class="font-bold mb-1">中断したクイズ</h3>
+          <p class="themed-text-muted text-sm" id="resume-summary"></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button class="themed-btn-primary py-3 text-sm font-bold" onclick="resumeQuiz()">再開する</button>
+          <button class="themed-btn-secondary py-3 text-sm font-bold" onclick="deleteSavedSession()">削除</button>
+        </div>
+      </div>
+
+      <div id="review-card" class="learning-status-section hidden">
+        <div>
+          <h3 class="font-bold mb-1">間違えた問題を復習</h3>
+          <p class="themed-text-muted text-sm" id="review-summary"></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button class="themed-btn-primary py-3 text-sm font-bold" onclick="startReviewQuiz()">復習する</button>
+          <button class="themed-btn-secondary py-3 text-sm font-bold" onclick="clearReviewQuestions()">リセット</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <div class="site-footer-share" aria-label="SNSで共有">
+        <a class="site-footer-share-btn share-x" href="https://twitter.com/intent/tweet?text=IT1-CODE-POCKET%20%7C%20%E6%83%85%E5%A0%B1%E2%85%A0%20%E7%AC%AC3%E5%95%8F%E5%AF%BE%E7%AD%96&url=https%3A%2F%2Fit1-code-pocket.com%2F%3Fshare%3Dx" target="_blank" rel="noopener noreferrer">Xで共有</a>
+        <a class="site-footer-share-btn share-line" href="https://line.me/R/share?text=IT1-CODE-POCKET%20%7C%20%E6%83%85%E5%A0%B1%E2%85%A0%20%E7%AC%AC3%E5%95%8F%E5%AF%BE%E7%AD%96%0Ahttps%3A%2F%2Fit1-code-pocket.com%2F">LINEで共有</a>
+        <a class="site-footer-share-btn share-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fit1-code-pocket.com%2F" target="_blank" rel="noopener noreferrer">Facebook</a>
+      </div>
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+
+  <script src="js/questions-python.js"></script>
+  <script src="js/questions-dncl.js"></script>
+  <script src="js/questions-javascript.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/footer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

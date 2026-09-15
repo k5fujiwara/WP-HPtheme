@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/read-loop.html">
+  <title>繰り返しの回数を数える｜情報Ⅰ 第3問 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問で頻出の「実行回数」を数える方法を例題つきで解説します。0から3までは何回か、条件繰り返しはいつ止まるか、繰り返しを抜ける場合の判定回数まで、数え間違いを防ぐ型を整理します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="繰り返しの回数を数える｜情報Ⅰ 第3問">
+  <meta property="og:description" content="「0から3まで」は何回か、条件繰り返しはいつ止まるか。実行回数の数え方を例題つきで解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/read-loop.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="繰り返しの回数を数える｜情報Ⅰ 第3問">
+  <meta name="twitter:description" content="実行回数の数え方を例題つきで解説します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/read-loop.html#article",
+        "headline": "繰り返しの回数を数える｜情報Ⅰ 第3問",
+        "description": "実行回数の数え方、条件繰り返しの止まり方、繰り返しを抜ける場合の判定回数を例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/read-loop.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-26",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/read-loop.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" },
+          { "@type": "ListItem", "position": 3, "name": "繰り返しの回数を数える", "item": "https://it1-code-pocket.com/read-loop.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="reading.html" class="header-back-btn" aria-label="プログラムの読み方へ戻る" title="プログラムの読み方へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="reading.html">プログラムの読み方</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">繰り返しの回数</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">繰り返しの回数を数える</h1>
+      <p>
+        「この行は何回実行されますか」という問題は、第3問で毎年のように出ます。
+        考え方は単純ですが、<strong>1回ずれる間違いが非常に多い</strong>ところです。
+        ずれを防ぐ数え方の型を、例題で身につけます。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">BASIC</p>
+      <h2>「〜から〜まで」は両端を含む</h2>
+      <p>
+        共通テスト用プログラム表記の <code>i を a から b まで 1 ずつ増やしながら繰り返す</code> は、
+        <strong>a も b も含めて</strong>繰り返します。したがって回数は次の式で求まります。
+      </p>
+      <pre class="code-block">繰り返す回数 ＝ b − a + 1</pre>
+      <p>
+        この <strong>「+ 1」を忘れる</strong>のが、最も多い間違いです。
+        不安なときは、迷わず i の値を書き出してください。「0, 1, 2, 3」と書けば、4個だと目で分かります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">書き方</th>
+              <th scope="col">i がとる値</th>
+              <th scope="col">回数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">0 から 3 まで</th>
+              <td data-label="i がとる値">0, 1, 2, 3</td>
+              <td class="sim-td-num" data-label="回数">4回</td>
+            </tr>
+            <tr>
+              <th scope="row">1 から 4 まで</th>
+              <td data-label="i がとる値">1, 2, 3, 4</td>
+              <td class="sim-td-num" data-label="回数">4回</td>
+            </tr>
+            <tr>
+              <th scope="row">2 から 6 まで</th>
+              <td data-label="i がとる値">2, 3, 4, 5, 6</td>
+              <td class="sim-td-num" data-label="回数">5回</td>
+            </tr>
+            <tr>
+              <th scope="row">0 から 要素数 - 1 まで</th>
+              <td data-label="i がとる値">0 〜 要素数-1</td>
+              <td class="sim-td-num" data-label="回数">要素数と同じ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sim-note">
+        <strong>覚え方：</strong>「0 から 要素数 - 1 まで」なら、回数は<strong>ちょうど要素数</strong>です。
+        -1 と +1 が打ち消し合うので、この形のときだけは何も計算せずに答えられます。
+      </div>
+
+      <h3>「〜の間繰り返す」は条件で止まる</h3>
+      <p>
+        もうひとつの形が <code>条件 の間繰り返す</code> です。こちらは回数が最初から決まっておらず、
+        <strong>条件が成り立たなくなった時点で止まります</strong>。
+        回数を知るには、変数の値を1周ごとに書き出すしかありません。
+      </p>
+      <p>
+        重要なのは<strong>判定のタイミング</strong>です。この形は<strong>繰り返しの前に条件を調べる</strong>ため、
+        最初から条件が成り立たなければ<strong>1回も実行されません</strong>。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 1</p>
+      <h2>例題1：回数を数える</h2>
+      <p>次のプログラムで、<code>total = total + i</code> は何回実行されますか。</p>
+      <pre class="code-block">total = 0
+
+i を 2 から 6 まで 1 ずつ増やしながら繰り返す:
+⎿ total = total + i
+
+表示する(total)</pre>
+      <p><strong>選択肢：</strong>① 3回　② 4回　③ 5回　④ 6回</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：③ 5回</strong></p>
+          <p>
+            i がとる値を書き出すと <strong>2, 3, 4, 5, 6</strong> の5個です。
+            式で求めるなら 6 − 2 + 1 = 5 となります。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th><th scope="col">6</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">total</th><td>2</td><td>5</td><td>9</td><td>14</td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            ② の4回は 6 − 2 = 4 と計算して「+1」を忘れた場合です。
+            <strong>この引き算だけで答えると必ず1回少なくなります。</strong>
+          </p>
+          <p>
+            なお、この問題では合計は20になります。「何回実行されるか」と「合計はいくつか」は
+            別々に問われるので、<strong>問われているのがどちらか</strong>を必ず確認してください。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 2</p>
+      <h2>例題2：条件で止まる繰り返し</h2>
+      <p>次のプログラムで、<code>count = count + 1</code> は何回実行されますか。（÷ は小数を切り捨てます）</p>
+      <pre class="code-block">x = 48
+count = 0
+
+x &gt; 5 の間繰り返す:
+｜x = x ÷ 2
+⎿ count = count + 1
+
+表示する(x, count)</pre>
+      <p><strong>選択肢：</strong>① 3回　② 4回　③ 5回　④ 6回</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 4回</strong></p>
+          <p>
+            回数が決まっていないので、<strong>1周ごとに表を作る</strong>のが確実です。
+            条件は繰り返しの<strong>前</strong>に判定される点に注意します。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">判定</th><th scope="col">x &gt; 5 ?</th><th scope="col">実行後の x</th><th scope="col">count</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">1回目</th><td>48 &gt; 5 ○</td><td>24</td><td>1</td></tr>
+                <tr><th scope="row">2回目</th><td>24 &gt; 5 ○</td><td>12</td><td>2</td></tr>
+                <tr><th scope="row">3回目</th><td>12 &gt; 5 ○</td><td>6</td><td>3</td></tr>
+                <tr><th scope="row">4回目</th><td>6 &gt; 5 ○</td><td>3</td><td>4</td></tr>
+                <tr><th scope="row">5回目</th><td>3 &gt; 5 ×</td><td colspan="2">条件が成り立たないので終了</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            x は 48 → 24 → 12 → 6 → 3 と変化し、3 になった時点で <code>x &gt; 5</code> が成り立たなくなります。
+            <strong>最後の判定（5回目）では中身が実行されない</strong>ため、count は4のままです。
+          </p>
+          <p>
+            ③ の5回は、この最後の判定も1回に数えてしまった場合です。
+            <strong>「判定した回数」と「中身が実行された回数」は1つ違う</strong>ことを押さえてください。
+            問題文が「何回判定されますか」と聞いていれば5回が正解になります。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 3</p>
+      <h2>例題3：途中で抜ける場合</h2>
+      <p>次のプログラムにおいて、<code>もし Nums[i] == 4 ならば</code> の行は何回判定されますか。</p>
+      <pre class="code-block">Nums = [1, 3, 4, 6]
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] == 4 ならば:
+⎿⎿ 繰り返しを抜ける</pre>
+      <p><strong>選択肢：</strong>① 1回　② 2回　③ 3回　④ 4回</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：③ 3回</strong></p>
+          <p>
+            範囲だけを見ると「0 から 3 まで」で4回に見えますが、
+            <code>繰り返しを抜ける</code> があるため<strong>途中で終わります</strong>。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">== 4 ?</th><th scope="col">動作</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>1</td><td>×</td><td>次へ</td></tr>
+                <tr><th scope="row">1</th><td>3</td><td>×</td><td>次へ</td></tr>
+                <tr><th scope="row">2</th><td>4</td><td>○</td><td>抜ける</td></tr>
+                <tr><th scope="row">3</th><td colspan="3">一度も調べられない</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            判定が行われるのは i = 0、1、2 の<strong>3回</strong>です。
+            ④ の4回は、抜ける処理を見落として最後まで回ると考えた場合です。
+          </p>
+          <p>
+            <strong>「繰り返しを抜ける」を見たら、範囲の計算はいったん忘れてください。</strong>
+            回数はデータ次第で変わります。この形は
+            <a href="sim-linear-search.html">線形探索</a>でそのまま使われるので、
+            シミュレーターで動きを見ておくと理解が早まります。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">NESTED</p>
+      <h2>二重ループは掛け算になる</h2>
+      <p>
+        繰り返しの中に繰り返しがある場合、実行回数は<strong>外側の回数 × 内側の回数</strong>です。
+      </p>
+      <pre class="code-block">i を 1 から 3 まで 1 ずつ増やしながら繰り返す:
+｜j を 1 から 2 まで 1 ずつ増やしながら繰り返す:
+⎿⎿ 表示する(i, j)</pre>
+      <p>
+        外側が3回、そのそれぞれで内側が2回動くので、<strong>3 × 2 = 6回</strong>です。
+        実際に表示される組み合わせを並べると、次のようになります。
+      </p>
+      <pre class="code-block">(1,1) (1,2) → i=1 のとき
+(2,1) (2,2) → i=2 のとき
+(3,1) (3,2) → i=3 のとき</pre>
+      <p>
+        <strong>内側が先に最後まで回り、それから外側が1つ進む</strong>——この順番が二重ループの基本です。
+        内側の範囲が外側の値によって変わる場合（<code>j を i から …</code> など）は掛け算では求まらないので、
+        1行ずつ書き出す必要があります。詳しくは
+        <a href="read-table.html">二重ループと2次元配列</a>で扱います。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 4</p>
+      <h2>例題4：回数から終わりの値を逆算する</h2>
+      <p>「Hello」をちょうど5回表示するには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">i を 0 から ［ ア ］ まで 1 ずつ増やしながら繰り返す:
+⎿ 表示する("Hello")</pre>
+      <p>
+        <strong>選択肢：</strong>① 4　② 5　③ 6　④ 10
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① 4</strong></p>
+          <p>
+            例題1は「この繰り返しは何回まわるか」を数える問題でした。
+            今回は<strong>逆に、決まった回数にするための終わりの値を決める</strong>問題です。
+            出題としては例題1よりよく見かける形です。
+          </p>
+          <p>
+            i は <strong>0 から</strong> 始まります。0 を1回目と数えるので、
+            5回まわしたいなら最後の i は 4 です。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">何回目</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">i の値</th><td>0</td><td>1</td><td>2</td><td>3</td><td><strong>4</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul>
+            <li><strong>② 5</strong> … 0〜5 の<strong>6回</strong>になります。「5回だから5」と考えた誤りで、選ぶ人がいちばん多い選択肢です</li>
+            <li><strong>③ 6</strong> … 0〜6 の7回です</li>
+            <li><strong>④ 10</strong> … 0〜10 の11回です</li>
+          </ul>
+          <div class="sim-note">
+            <strong>0 から始まると、回数は「終わりの値 + 1」になります。</strong>
+            逆に言えば、n 回まわしたいときの終わりの値は <strong>n - 1</strong> です。
+            配列を全部調べる <code>0 から 要素数 - 1 まで</code> が
+            <strong>「要素数の回数だけまわる」</strong>のも、まったく同じ理由です。
+            <a href="read-array.html">配列と添字</a>で覚えた形とつながっていることを確認しておいてください。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 5</p>
+      <h2>例題5：隣どうしを比べるときの範囲</h2>
+      <p><code>Data[i]</code> と <code>Data[i + 1]</code> を安全に比べるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Data = [3, 5, 4, 6, 8]
+pos = -1
+
+i を ［ ア ］ まで 1 ずつ増やしながら繰り返す:
+｜もし Data[i] &gt; Data[i + 1] ならば:
+｜｜pos = i
+⎿⎿ 繰り返しを抜ける
+
+表示する(pos)</pre>
+      <p>
+        <strong>選択肢：</strong>① 0 から 要素数(Data) - 1　② 0 から 要素数(Data) - 2
+        ③ 1 から 要素数(Data) - 1　④ 0 から 要素数(Data)
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 0 から 要素数(Data) - 2</strong></p>
+          <p>
+            繰り返しの範囲は<strong>いつも「0 から 要素数 - 1 まで」とはかぎりません</strong>。
+            決め方は1つだけで、<strong>「繰り返しの中で使っている、いちばん大きい添字は何か」</strong>を見ます。
+          </p>
+          <p>
+            このプログラムが使っているのは <code>Data[i]</code> と <code>Data[i + 1]</code> です。
+            要素数は5なので、存在する添字は 0〜4。
+            <strong><code>i + 1</code> が 4 を超えてはいけない</strong>ので、i の最大は <strong>3</strong>、
+            つまり <strong>要素数 - 2</strong> までとなります。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Data[i]</th><th scope="col">Data[i+1]</th><th scope="col">大きい?</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>3</td><td>5</td><td>×</td></tr>
+                <tr><th scope="row">1</th><td>5</td><td>4</td><td><strong>○ → pos = 1 で抜ける</strong></td></tr>
+                <tr><th scope="row">2</th><td>4</td><td>6</td><td>（実行されない）</td></tr>
+                <tr><th scope="row">3</th><td>6</td><td>8</td><td>（実行されない）</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>表示されるのは <strong>1</strong> です。他の選択肢は次のようになります。</p>
+          <ul>
+            <li>
+              <strong>①（- 1 まで）</strong> … i が 4 のとき <code>Data[5]</code> を見ようとします。
+              5番の箱は存在しないので<strong>エラー</strong>です。ここが最大のひっかけです
+            </li>
+            <li><strong>③（1 から）</strong> … 先頭どうしの比較（3 と 5）を飛ばしてしまいます</li>
+            <li><strong>④（要素数 まで）</strong> … ①よりさらに1つ多く、確実にエラーになります</li>
+          </ul>
+          <div class="sim-note sim-note-warn">
+            <strong>「+ 1 を使ったら、範囲は 1 つ手前まで」</strong>と覚えてください。
+            隣どうしの比較は<a href="sim-bubble-sort.html">バブルソート</a>でも
+            <a href="read-total.html">前日より増えた日を数える処理</a>でも出てくる定番なので、
+            この範囲の決め方は必ず押さえておきたいところです。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの表記での書き方の違い</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">i を 0 から 3 まで 1 ずつ増やしながら繰り返す:
+⎿ 表示する(i)
+
+x = 48
+x &gt; 5 の間繰り返す:
+⎿ x = x ÷ 2</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">for i in range(4):
+    print(i)
+
+x = 48
+while x &gt; 5:
+    x = x // 2</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">for (let i = 0; i &lt;= 3; i++) {
+  console.log(i);
+}
+
+let x = 48;
+while (x &gt; 5) {
+  x = Math.floor(x / 2);
+}</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>ここが混乱しやすいところです。</strong>
+        擬似言語の「0 から 3 まで」は4回ですが、Python の <code>range(3)</code> は
+        <strong>0, 1, 2 の3回</strong>です。同じ「3」でも意味が違います。
+        Python では <code>range(4)</code> と書いて初めて4回になります。
+        JavaScript は <code>i &lt;= 3</code> なら4回、<code>i &lt; 3</code> なら3回です。
+        <strong>問題がどの表記で書かれているかを最初に確認</strong>してください。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>このテーマのチェックリスト</h2>
+      <ul>
+        <li>「a から b まで」の回数が <strong>b − a + 1</strong> だと即答できる</li>
+        <li>「0 から 要素数 - 1 まで」の回数が<strong>要素数と同じ</strong>だと分かる</li>
+        <li>「〜の間繰り返す」で、<strong>最後の判定では中身が実行されない</strong>と分かる</li>
+        <li>「判定した回数」と「実行された回数」を区別して答えられる</li>
+        <li>「繰り返しを抜ける」があれば<strong>データ次第で回数が変わる</strong>と分かる</li>
+        <li>二重ループの回数が<strong>掛け算</strong>で求まると分かる</li>
+        <li>n 回まわしたいときの終わりの値が <strong>n - 1</strong> だと逆算できる</li>
+        <li><code>Data[i + 1]</code> を使うなら範囲は<strong>1つ手前まで</strong>だと分かる</li>
+      </ul>
+      <p>
+        数え方が身についたら、次は<a href="read-table.html">二重ループと2次元配列</a>へ。
+        実際の問題で練習するなら、<a href="index.html">クイズの「実行回数」パターン</a>が対応しています。
+      </p>
+    </section>
+
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="read-table.html" class="sim-next-card">
+          <span class="sim-next-title">二重ループと2次元配列</span>
+          <span class="sim-next-desc">内側と外側の動く順番、表形式データの読み方</span>
+        </a>
+        <a href="read-array.html" class="sim-next-card">
+          <span class="sim-next-title">配列と添字の読み方</span>
+          <span class="sim-next-desc">添字が0から始まる理由と、要素の書き換え</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方 一覧</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+        <a href="sim-linear-search.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">線形探索シミュレーター</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.SimUI) window.SimUI.bindTabs(document);
+    });
+  </script>
+</body>
+</html>

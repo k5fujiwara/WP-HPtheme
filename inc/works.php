@@ -1570,8 +1570,8 @@ function mytheme_get_work_card_secondary_cta($post_id, string $detail_url, strin
     // IT1-CODE-POCKETは確認済みのため、既存CTAをそのまま維持する。
     if ( $key === 'it1-code-pocket' ) {
         return [
-            'label'       => 'デモを見る',
-            'url'         => $demo_url,
+            'label'       => 'クイズを開く',
+            'url'         => function_exists('mytheme_it1_home_url') ? mytheme_it1_home_url() : home_url('/it1-code-pocket/'),
             'is_external' => false,
         ];
     }

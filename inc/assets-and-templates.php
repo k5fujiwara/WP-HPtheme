@@ -98,6 +98,10 @@ function mytheme_assets() {
         }
         return;
     }
+
+    if ( function_exists('mytheme_is_it1_page') && mytheme_is_it1_page() ) {
+        return;
+    }
     
     // ===== メインCSS読み込み =====
     $main_css_rel  = mytheme_get_theme_asset_rel_path('/assets/css/main', '.css');

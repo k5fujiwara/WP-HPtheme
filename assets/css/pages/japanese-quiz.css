@@ -40,6 +40,12 @@
   border-color: #9a3b32;
 }
 
+.japanese-quiz-app .sq-tools a.sq-tools__btn--info {
+  color: #fff;
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
 .japanese-quiz-app .sq-wait__spin {
   border-color: rgba(154, 59, 50, 0.2);
   border-top-color: #9a3b32;

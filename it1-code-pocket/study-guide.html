@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/study-guide.html">
+  <title>情報Ⅰ 第3問の勉強法 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策として、配列、条件分岐、繰り返し、トレース、復習の進め方を解説します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="情報Ⅰ 第3問の勉強法 | IT1-CODE-POCKET">
+  <meta property="og:description" content="情報Ⅰ 第3問のプログラミング・アルゴリズム対策を、学習順と復習方法から整理します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/study-guide.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="情報Ⅰ 第3問の勉強法 | IT1-CODE-POCKET">
+  <meta name="twitter:description" content="情報Ⅰ 第3問のプログラミング・アルゴリズム対策を、学習順と復習方法から整理します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/study-guide.html#article",
+        "headline": "情報Ⅰ 第3問の勉強法",
+        "description": "共通テスト「情報Ⅰ」第3問のプログラミング・アルゴリズム対策として、配列、条件分岐、繰り返し、トレース、復習の進め方を解説します。",
+        "url": "https://it1-code-pocket.com/study-guide.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-06-19",
+        "dateModified": "2026-06-19",
+        "inLanguage": "ja",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/study-guide.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "情報Ⅰ 第3問の勉強法",
+            "item": "https://it1-code-pocket.com/study-guide.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pb-8 pt-4">
+    <article class="themed-card p-5 leading-relaxed sim-doc">
+      <h1 class="text-2xl font-bold mb-3">情報Ⅰ 第3問の勉強法</h1>
+      <p class="themed-text-muted text-sm mb-5">
+        共通テスト「情報Ⅰ」のプログラミング問題は、文法を丸暗記するよりも、変数の変化を正しく追う力が重要です。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">最初に押さえるべき考え方</h2>
+      <p class="mb-3">
+        第3問では、配列、条件分岐、繰り返し、変数の更新が組み合わさって出題されます。長いプログラムに見えても、実際には「今どの値を見ているか」「条件を満たしたときに何が変わるか」「繰り返しが何回行われるか」を順番に確認すれば解ける問題が多くあります。
+      </p>
+      <p>
+        そのため、学習の最初から難しいアルゴリズム名を覚えようとするより、短いコードを1行ずつ読み、変数表を作る練習をするのがおすすめです。特に配列の添字が0から始まること、範囲の終わりを含むか含まないか、合計や個数を保存する変数がいつ更新されるかは頻出です。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">おすすめの学習順</h2>
+      <p class="mb-3">
+        まずは、代入、四則演算、比較演算、if文、for文、配列の参照を確認します。ここで大切なのは、コードを書けるようになることだけではありません。共通テストでは、提示されたプログラムを読み、実行結果や空欄に入る式を選ぶ力が問われます。
+      </p>
+      <p class="mb-3">
+        次に、合計、最大値、最小値、個数のカウント、線形探索を練習します。これらは多くの応用問題の土台です。例えば「条件を満たす人数を数える」「最も大きい値を更新する」「目的の値を見つけたら位置を記録する」といった処理は、題材が変わっても考え方はほとんど同じです。
+      </p>
+      <p>
+        最後に、二重ループ、表形式データ、待ち行列、割り当て、シミュレーションに進みます。発展的な問題では、処理の意味を日本語で説明できるかが重要です。コードを見てすぐに答えを選ぶのではなく、「この変数は何を表しているか」を言葉にしてから選択肢を見ると、ミスを減らせます。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">間違えた問題の復習方法</h2>
+      <p class="mb-3">
+        間違えた問題は、すぐに答えだけを覚えるより、どの行で読み違えたかを確認することが大切です。添字の開始位置を間違えたのか、条件式の向きを逆に読んだのか、繰り返し回数を1回多く数えたのかで、次に注意すべき点が変わります。
+      </p>
+      <p>
+        IT1-CODE-POCKETでは、間違えた問題を復習用に残せます。1回目は解説を見て理解し、時間を置いてからもう一度解くことで、位置や答えの記憶ではなく、処理を追う力として定着しやすくなります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">トレース表の書き方（実演）</h2>
+      <p class="mb-3">
+        「変数表を作る」と言われても、最初はどう書けばよいか分かりにくいものです。
+        次の短いプログラムで、実際の書き方を示します。
+      </p>
+      <pre class="code-block">Nums = [3, 8, 5]
+total = 0
+count = 0
+
+i を 0 から 2 まで 1 ずつ増やしながら繰り返す:
+｜total = total + Nums[i]
+｜もし Nums[i] &gt; 4 ならば:
+⎿⎿ count = count + 1
+
+表示する(total, count)</pre>
+      <p class="mb-3">
+        紙には、<strong>出てくる変数を横に並べた表</strong>を書きます。あとは繰り返し1周ごとに1行ずつ埋めるだけです。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">total</th><th scope="col">4より大</th><th scope="col">count</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">開始前</th><td>—</td><td>0</td><td>—</td><td>0</td></tr>
+            <tr><th scope="row">0</th><td>3</td><td>3</td><td>×</td><td>0</td></tr>
+            <tr><th scope="row">1</th><td>8</td><td>11</td><td>○</td><td>1</td></tr>
+            <tr><th scope="row">2</th><td>5</td><td>16</td><td>○</td><td>2</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        答えは 16 と 2 です。これだけの表を書けば、<strong>読み違えようがありません</strong>。
+        慣れると頭の中でできるようになりますが、最初から暗算しようとすると必ずどこかでずれます。
+        テーマ別の詳しい練習は<a href="reading.html" class="font-bold" style="color: var(--accent);">プログラムの読み方</a>にまとめています。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">学習の進め方の目安</h2>
+      <p class="mb-3">
+        受験までの残り時間に応じて、どこに時間を使うかの目安です。1日15〜30分でも、続ければ十分に間に合います。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">段階</th>
+              <th scope="col">やること</th>
+              <th scope="col">到達の目安</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">第1段階</th>
+              <td data-label="やること">配列の添字、繰り返しの回数を確実にする</td>
+              <td data-label="到達の目安">「基礎」を8割正解できる</td>
+            </tr>
+            <tr>
+              <th scope="row">第2段階</th>
+              <td data-label="やること">合計・個数・最大値・探索の型を覚える</td>
+              <td data-label="到達の目安">「標準」を7割正解できる</td>
+            </tr>
+            <tr>
+              <th scope="row">第3段階</th>
+              <td data-label="やること">二重ループ、表、シミュレーションに慣れる</td>
+              <td data-label="到達の目安">「発展」で時間内に解ける</td>
+            </tr>
+            <tr>
+              <th scope="row">仕上げ</th>
+              <td data-label="やること">間違えた問題を解き直し、傾向をつかむ</td>
+              <td data-label="到達の目安">同じ種類のミスが減る</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>飛ばさないでください。</strong>第1段階が曖昧なまま発展問題に進むと、
+        「難しいから解けない」のではなく「添字がずれているから解けない」という状態になり、
+        原因が分からないまま時間だけが過ぎます。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">本番での解き方</h2>
+      <p class="mb-3">
+        第3問は問題文が長く、読むだけで時間を使いがちです。次の順番で進めると、迷う時間を減らせます。
+      </p>
+      <ol class="space-y-2 list-decimal pl-5 mb-3">
+        <li><strong>設問を先に見る</strong> … 何を答えるのか（実行結果か、回数か、空欄か）を確認する</li>
+        <li><strong>プログラムの変数を書き出す</strong> … 配列名と、集計用の変数を余白にメモする</li>
+        <li><strong>表を作って追う</strong> … 選択肢は見ずに、自分で値を出す</li>
+        <li><strong>最後に選択肢と照合する</strong> … 先に選択肢を見ると、それらしいものに引っ張られる</li>
+      </ol>
+      <p class="mb-3">
+        特に <strong>4</strong> が重要です。選択肢には、添字を1つずらした値や、繰り返しを1回多く数えた値が
+        <strong>わざと並べられています</strong>。自分の答えを出してから照合すれば、この罠にかかりません。
+      </p>
+      <p>
+        また、途中で分からなくなったら<strong>行を戻さず、表を1行目から書き直す</strong>ほうが早いことが多いです。
+        どこでずれたか探すより、確実な位置からやり直すほうが結果的に速く終わります。
+      </p>
+
+      <div class="mt-6">
+        <a href="index.html" class="themed-btn-primary block w-full py-3 text-center font-bold">クイズで練習する</a>
+      </div>
+
+      <section class="themed-card p-4 mt-5">
+        <h2 class="text-lg font-bold mb-3">関連する学習ページ</h2>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="question-examples.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">3言語で比べる問題例と詳しい解き方</a>
+          <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方（トレース練習）</a>
+          <a href="python-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">Pythonで押さえる基礎文法</a>
+          <a href="javascript-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">JavaScriptの配列・条件分岐・繰り返し</a>
+          <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+          <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説</a>
+        </div>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>

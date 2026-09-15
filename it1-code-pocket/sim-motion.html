@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/sim-motion.html">
+  <title>運動シミュレーター｜更新の順序で結果が変わる | IT1-CODE-POCKET</title>
+  <meta name="description" content="位置 x と速度 v を繰り返し更新する運動シミュレーション。x を先に更新するか v を先にするかで結果が変わること、処理が終わらなくなる場合を数直線と推移表で確認できます。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="運動シミュレーター｜更新の順序で結果が変わる">
+  <meta property="og:description" content="位置と速度の更新順で結果が変わる様子を、数直線と推移表で1ステップずつ確認できるシミュレーター。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/sim-motion.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="運動シミュレーター｜更新の順序で結果が変わる">
+  <meta name="twitter:description" content="位置と速度の更新順で結果が変わる様子を、数直線と推移表で1ステップずつ確認できます。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/sim-motion.html#article",
+        "headline": "運動シミュレーター｜更新の順序で結果が変わる",
+        "description": "運動シミュレーションの動きを1ステップずつ確認できるシミュレーターと、擬似コード・Python・JavaScript のコード例、共通テスト情報Ⅰでの出題ポイントの解説。",
+        "url": "https://it1-code-pocket.com/sim-motion.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-04",
+        "dateModified": "2026-08-04",
+        "inLanguage": "ja",
+        "about": "運動シミュレーション",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/sim-motion.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "重要アルゴリズム解説",
+            "item": "https://it1-code-pocket.com/algorithms.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "運動シミュレーター",
+            "item": "https://it1-code-pocket.com/sim-motion.html"
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://it1-code-pocket.com/sim-motion.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "更新の順序を変えると、なぜ結果が変わるのですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "x = x + v の計算に使われる v が、更新前の値か更新後の値かで変わるためです。x を先に更新すれば古い v が使われ、v を先に更新すれば新しい v が使われます。1回の繰り返しの中でも、書いた順に上から実行される点が要点です。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "処理が終わらなくなることがあるのはなぜですか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "終了条件が「x が目標に届くこと」なのに、速度が 0 以下になって x が増えなくなる場合があるためです。条件が成り立ち続けるので繰り返しが終わりません。繰り返しを書くときは「条件がいつか成り立たなくなるか」を必ず確認します。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "t は何を表していますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "繰り返した回数、つまり経過した時間の単位数です。1回の繰り返しが1単位時間に対応します。最後に t を表示すると「目標に届くまでに何単位時間かかったか」が分かります。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "速度が負になるとどうなりますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "x = x + v の v が負になるため、位置が後ろに戻ります。上に投げたボールが落ちてくる動きに対応します。数直線上でも点が左へ動く様子が確認できます。"
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="algorithms.html" class="header-back-btn" aria-label="重要アルゴリズム解説へ戻る" title="重要アルゴリズム解説へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="algorithms.html">重要アルゴリズム解説</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">運動シミュレーター</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4">
+      <h1 class="text-xl font-bold mb-2">運動シミュレーター</h1>
+      <p class="themed-text-muted text-sm leading-relaxed">
+        位置 x と速度 v を、決められた順番で繰り返し更新するシミュレーションです。
+        <strong>更新の順序を入れ替えると結果が変わる</strong>ことを、数直線と表で確かめられます。
+      </p>
+    </section>
+
+    <!-- ============ シミュレーター ============ -->
+    <section class="themed-card sim-panel mb-4" aria-labelledby="sim-heading">
+      <h2 id="sim-heading" class="sim-panel-title">動きを1ステップずつ確認する</h2>
+
+      <div class="sim-setup">
+        <div class="sim-setup-row">
+          <span class="sim-setup-label" id="sim-speed-label">初速 v</span>
+          <div class="sim-chips sim-chips-scene sim-chips-scene-5" role="group" aria-labelledby="sim-speed-label">
+            <button type="button" class="sim-chip sim-chip-num" data-sim-speed-value="2" aria-pressed="false" aria-label="初速2">2</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-speed-value="3" aria-pressed="false" aria-label="初速3">3</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-speed-value="4" aria-pressed="true" aria-label="初速4">4</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-speed-value="5" aria-pressed="false" aria-label="初速5">5</button>
+            <button type="button" class="sim-chip sim-chip-num" data-sim-speed-value="6" aria-pressed="false" aria-label="初速6">6</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <span class="sim-setup-label" id="sim-order-label">更新順</span>
+          <div class="sim-chips sim-chips-grid" role="group" aria-labelledby="sim-order-label">
+            <button type="button" class="sim-chip" data-sim-order="xFirst" aria-pressed="true" aria-label="位置を先に更新する">x が先</button>
+            <button type="button" class="sim-chip" data-sim-order="vFirst" aria-pressed="false" aria-label="速度を先に更新する">v が先</button>
+          </div>
+        </div>
+
+        <div class="sim-setup-row">
+          <label class="sim-setup-label" for="sim-input-condition">条件</label>
+          <select class="sim-select" id="sim-input-condition">
+            <option value="x10" selected>x &lt; 10 の間くり返す</option>
+            <option value="x20">x &lt; 20 の間くり返す</option>
+            <option value="vPositive">v &gt; 0 の間くり返す</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sim-view-tabs" data-sim-view-tabs role="tablist" aria-label="表示を切り替え">
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-line"
+                aria-controls="view-line" aria-selected="true">位置の動き</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-table"
+                aria-controls="view-table" aria-selected="false">推移表</button>
+        <button type="button" class="sim-view-tab" role="tab" id="viewtab-code"
+                aria-controls="view-code" aria-selected="false">コード</button>
+      </div>
+
+      <div class="sim-view sim-view-3">
+        <div class="sim-view-panel" id="view-line" role="tabpanel" aria-labelledby="viewtab-line">
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">数直線上の位置 x</span>
+            </div>
+            <div class="sim-line-wrap">
+              <div class="sim-line" id="sim-line"></div>
+              <div class="sim-line-ticks" id="sim-line-ticks"></div>
+            </div>
+            <ul class="sim-plot-legend" id="sim-line-legend">
+              <li><span class="sim-plot-swatch" data-hit="point"></span>いまの位置</li>
+              <li id="sim-legend-goal"><span class="sim-plot-swatch" data-hit="goal"></span>ゴール</li>
+              <li><span class="sim-plot-swatch" data-hit="speed"></span>速度</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-table" role="tabpanel" aria-labelledby="viewtab-table" hidden>
+          <div class="sim-board">
+            <div class="sim-board-head">
+              <span class="sim-board-title">値の移り変わり</span>
+            </div>
+            <div class="sim-table-wrap">
+              <table class="sim-table sim-table-compact">
+                <thead>
+                  <tr>
+                    <th scope="col">t</th>
+                    <th scope="col">x</th>
+                    <th scope="col">v</th>
+                  </tr>
+                </thead>
+                <tbody id="sim-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-view-panel" id="view-code" role="tabpanel" aria-labelledby="viewtab-code" hidden>
+          <pre class="sim-code" id="sim-code" aria-label="実行中の擬似コード"></pre>
+        </div>
+      </div>
+
+      <div class="sim-estimate">
+        <span class="sim-estimate-label">いまの位置</span>
+        <span class="sim-estimate-value" id="sim-estimate-value">x = 0</span>
+        <span class="sim-estimate-sub" id="sim-estimate-sub">v = 4 ／ t = 0</span>
+      </div>
+
+      <div class="sim-vars">
+        <div class="sim-var">
+          <span class="sim-var-name">t</span>
+          <span class="sim-var-value" id="sim-var-t">0</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">x</span>
+          <span class="sim-var-value" id="sim-var-x">0</span>
+        </div>
+        <div class="sim-var">
+          <span class="sim-var-name">v</span>
+          <span class="sim-var-value" id="sim-var-v">4</span>
+        </div>
+      </div>
+
+      <div class="progress-bar" role="presentation">
+        <div class="progress-fill" id="sim-progress-fill" style="width:0%"></div>
+      </div>
+
+      <div class="sim-controls">
+        <button type="button" class="sim-btn sim-btn-prev" data-sim-action="prev">‹ 前へ</button>
+        <button type="button" class="sim-btn sim-btn-main sim-btn-next" data-sim-action="next">次へ ›</button>
+        <button type="button" class="sim-btn sim-btn-play" data-sim-action="play">▶ 自動再生</button>
+        <button type="button" class="sim-btn sim-btn-reset" data-sim-action="reset">⟲ 最初から</button>
+        <button type="button" class="sim-btn sim-btn-speed" data-sim-speed-cycle="normal">速さ ふつう</button>
+      </div>
+
+      <div class="sim-message" role="status" aria-live="polite">
+        <span class="sim-message-step" id="sim-message-step">STEP 1 / 1</span>
+        <span id="sim-message-text">読み込み中です。</span>
+      </div>
+
+      <div class="sim-result" id="sim-result" hidden></div>
+
+      <p class="sim-hint sim-hint-keyboard">
+        パソコンではキーボードでも操作できます：<code>→</code> 次へ ／ <code>←</code> 前へ ／ <code>スペース</code> 再生・一時停止
+      </p>
+
+      <details class="sim-log-details">
+        <summary>実行ログを見る（ここまでの処理）</summary>
+        <ol class="sim-log" id="sim-log"></ol>
+      </details>
+    </section>
+
+    <!-- ============ 解説 ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">ALGORITHM</p>
+      <h2>運動シミュレーションとは何をしているか</h2>
+      <p>
+        ボールが転がる、車が進むといった動きを、<strong>「短い時間ごとに位置と速度を計算し直す」</strong>ことで再現するシミュレーションです。
+        1回の繰り返しが「1単位時間」に対応し、その中で
+        <strong>位置 x を速度 v のぶんだけ進め、速度 v を変化させ、時間 t を1進める</strong>という更新を行います。
+      </p>
+      <p>
+        <code>v = v - 1</code> は「1単位時間ごとに速度が1ずつ減る」という意味で、
+        坂を上るボールや、上に投げた物体のような<strong>だんだん遅くなる動き</strong>を表します。
+        速度が負になれば、位置は後ろへ戻ります。
+      </p>
+
+      <h3>更新の順序で結果が変わる</h3>
+      <p>
+        このアルゴリズムでいちばん問われるのがここです。次の2つは、行が入れ替わっただけですが<strong>結果が変わります</strong>。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">書き方</th>
+              <th scope="col">x の計算に使われる v</th>
+              <th scope="col">初速4・x &lt; 10 のときの結果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">x が先<br>（x = x + v → v = v - 1）</th>
+              <td data-label="x の計算に使われる v">更新前の v</td>
+              <td data-label="初速4・x &lt; 10 のときの結果">x = 10、v = 0、t = 4 で終了</td>
+            </tr>
+            <tr>
+              <th scope="row">v が先<br>（v = v - 1 → x = x + v）</th>
+              <td data-label="x の計算に使われる v">更新後の v</td>
+              <td data-label="初速4・x &lt; 10 のときの結果">x が 6 までしか伸びず<strong>終わらない</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        「v が先」の場合、1回目からすでに速度が1減った状態で位置を進めるため、進む距離が毎回1ずつ少なくなります。
+        その結果 x は 3 → 5 → 6 → 6 と伸びが止まり、<strong>x &lt; 10 の条件が成り立ち続けて処理が終わりません</strong>。
+      </p>
+      <div class="sim-note sim-note-warn">
+        <strong>実際に試してください：</strong>更新順を「v が先」に切り替えると、シミュレーターが
+        「このままでは止まりません」と表示して打ち切ります。
+        <strong>繰り返しを書くときは「条件がいつか成り立たなくなるか」を必ず確認する</strong>——これが体験として身につきます。
+      </div>
+
+      <h3>終了条件の選び方</h3>
+      <p>
+        条件を <code>v &gt; 0 の間</code> に変えると、速度が0以下になった時点で必ず終わるため、
+        <strong>どちらの更新順でも処理が終わります</strong>。
+        「目標の位置に届くまで」と「速度がなくなるまで」では、止まる仕組みがまったく違うということです。
+        条件を切り替えて、終わり方の違いを比べてみてください。
+      </p>
+
+      <h3>なぜ「短い時間ごとに計算し直す」のか</h3>
+      <p>
+        現実の動きは連続していて、位置は途切れなく変化します。しかしコンピュータは連続した変化をそのまま扱えないため、
+        <strong>時間を細かく区切り、その区切りごとに「いまの速度で進んだ分」を足していく</strong>という方法で近づけます。
+        これがシミュレーションの基本的な考え方で、モンテカルロ法と同じく<strong>答えは近似</strong>になります。
+      </p>
+      <p>
+        区切る時間を短くすればするほど、本当の動きに近づきます。逆に区切りが粗いと、
+        「1回の更新の間ずっと同じ速度で進んだ」と見なすため誤差が大きくなります。
+        このページの <code>t = t + 1</code> は「1単位時間ずつ区切る」というもっとも粗い設定にあたります。
+      </p>
+
+      <h3>v = v - 1 は何を表しているか</h3>
+      <p>
+        1単位時間ごとに速度が1ずつ減るという意味で、物理でいう<strong>加速度が -1</strong> の状態です。
+        上に投げたボール、坂を上る自転車、ブレーキをかけた車など、<strong>だんだん遅くなる動き</strong>に対応します。
+      </p>
+      <p>
+        速度が 0 を通り過ぎて負になると、位置は逆向きに動き始めます。
+        ボールが最高点に達して落ちてくる動きがこれにあたります。
+        シミュレーターで初速を大きくし条件を <code>v &gt; 0</code> 以外にすると、数直線上で点が左へ戻る様子が見られます。
+        <code>v = v - 1</code> を <code>v = v</code>（変化なし）にすれば等速運動、<code>v = v + 1</code> にすれば加速する動きになります。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">速度の更新</th>
+              <th scope="col">表す動き</th>
+              <th scope="col">身近な例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">v = v - 1</th>
+              <td data-label="表す動き">だんだん遅くなる（減速）</td>
+              <td data-label="身近な例">上に投げたボール、坂を上る</td>
+            </tr>
+            <tr>
+              <th scope="row">v は変えない</th>
+              <td data-label="表す動き">同じ速さで進む（等速）</td>
+              <td data-label="身近な例">一定速度で走る車</td>
+            </tr>
+            <tr>
+              <th scope="row">v = v + 1</th>
+              <td data-label="表す動き">だんだん速くなる（加速）</td>
+              <td data-label="身近な例">落下、坂を下る</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>t が表しているもの</h3>
+      <p>
+        <code>t</code> は繰り返した回数、つまり<strong>経過した時間</strong>です。
+        最後に t を表示すれば「目標に届くまでに何単位時間かかったか」が分かります。
+        <code>t = t + 1</code> を書き忘れると時間が進まないため、答えが出せなくなります。
+      </p>
+    </section>
+
+    <!-- ============ コード ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの書き方で見る運動シミュレーション</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">x = 0
+v = 4
+t = 0
+
+x &lt; 10 の間繰り返す:
+｜x = x + v
+｜v = v - 1
+⎿ t = t + 1
+
+表示する(x, v, t)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">x = 0
+v = 4
+t = 0
+
+while x &lt; 10:
+    x = x + v
+    v = v - 1
+    t = t + 1
+
+print(x, v, t)</pre>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">let x = 0;
+let v = 4;
+let t = 0;
+
+while (x &lt; 10) {
+  x = x + v;
+  v = v - 1;
+  t = t + 1;
+}
+
+console.log(x, v, t);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>「〜の間繰り返す」は前判定：</strong>擬似言語の <code>〜の間繰り返す</code>、Python と JavaScript の <code>while</code> は、
+        いずれも<strong>繰り返しの前に条件を調べます</strong>。
+        そのため、最初から条件が成り立たなければ<strong>1回も実行されません</strong>。
+        たとえば初速 v = 0 のとき x は 0 のままなので、x &lt; 10 は成り立ち続け、逆に処理が終わらなくなります。
+      </div>
+    </section>
+
+    <!-- ============ 出題ポイント ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXAM POINT</p>
+      <h2>共通テスト「情報Ⅰ」での出題ポイント</h2>
+      <ol>
+        <li><strong>更新の順序：</strong>2行を入れ替えた選択肢が並び、正しい結果を選ぶ形。<strong>x の計算に使う v が更新前か更新後か</strong>で見分けます。</li>
+        <li><strong>トレース（値の追跡）：</strong>t・x・v の表を1行ずつ埋める形。繰り返しの<strong>途中の値</strong>を書けることが大切です。</li>
+        <li><strong>終了条件：</strong><code>x &lt; 10</code> の空欄。<code>&lt;=</code> にすると1回多く繰り返す点にも注意します。</li>
+        <li><strong>終わらない場合：</strong>「この繰り返しはどうなるか」という問い。速度が0以下になって位置が進まなくなるケースが定番です。</li>
+        <li><strong>表示のタイミング：</strong>表示を繰り返しの中に入れるか外に置くかで、出力される回数と値が変わります。</li>
+      </ol>
+      <div class="sim-note sim-note-warn">
+        <strong>トレースのコツ：</strong>t・x・v の3列を紙に書き、<strong>1回の繰り返しごとに1行</strong>追加します。
+        このとき、コードに書かれた<strong>上の行から順に</strong>値を更新するのがポイントです。
+        シミュレーターの「推移表」タブは、この表を画面上で作っているのと同じです。
+      </div>
+    </section>
+
+    <!-- ============ よくある間違い ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">MISTAKES</p>
+      <h2>よくある間違い</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">間違い</th>
+              <th scope="col">何が起きるか</th>
+              <th scope="col">正しくは</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">更新の順序を入れ替える</th>
+              <td data-label="何が起きるか">進む距離が変わり、答えがずれる</td>
+              <td data-label="正しくは">問題文のコードの並び順どおりに計算する</td>
+            </tr>
+            <tr>
+              <th scope="row">v を更新し忘れる</th>
+              <td data-label="何が起きるか">速度が変わらず等速で進み続ける</td>
+              <td data-label="正しくは">繰り返しの中で v も更新する</td>
+            </tr>
+            <tr>
+              <th scope="row">t = t + 1 を書き忘れる</th>
+              <td data-label="何が起きるか">経過時間が求められない</td>
+              <td data-label="正しくは">1回の繰り返しにつき t を1増やす</td>
+            </tr>
+            <tr>
+              <th scope="row">終了条件を確かめない</th>
+              <td data-label="何が起きるか">条件が成り立ち続け、処理が終わらない</td>
+              <td data-label="正しくは">条件がいつか成り立たなくなるか確認する</td>
+            </tr>
+            <tr>
+              <th scope="row">最後の値だけ見て途中を追わない</th>
+              <td data-label="何が起きるか">トレース問題で途中の値を答えられない</td>
+              <td data-label="正しくは">1回ごとに t・x・v を書き出す</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ 理解度チェック ============ -->
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>理解度チェック</h2>
+      <div class="sim-quiz">
+        <details class="sim-quiz-item">
+          <summary>Q1. x = 0、v = 4 から「x が先」の順で x &lt; 10 の間繰り返すと、最後の x・v・t はいくつですか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>x = 10、v = 0、t = 4。</strong>
+            x は 4 → 7 → 9 → 10 と進み、v は 3 → 2 → 1 → 0 と減ります。
+            4回目の更新で x が 10 になり、条件 x &lt; 10 が成り立たなくなって終了します。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q2. 同じ初期値で「v が先」の順にすると、どうなりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>x は 6 までしか伸びず、処理が終わりません。</strong>
+            x は 3 → 5 → 6 → 6 と進み、その後は v が負になるため<strong>後ろに戻り始めます</strong>。
+            x &lt; 10 が成り立ち続けるので終了できません。
+            <strong>行を入れ替えただけで、終わるはずの処理が終わらなくなる</strong>という例です。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q3. 終了条件を <code>v &gt; 0 の間</code> に変えると、「v が先」でも終わりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>終わります。</strong>
+            v は毎回必ず1ずつ減るので、いつか 0 以下になります。
+            <strong>終了条件を「必ず変化する変数」に結びつけると、処理が終わることを保証しやすくなります</strong>。
+          </div>
+        </details>
+        <details class="sim-quiz-item">
+          <summary>Q4. 条件を <code>x &lt;= 10</code> に変えると、繰り返しの回数はどうなりますか。</summary>
+          <div class="sim-quiz-answer">
+            <strong>1回増えます（「x が先」の場合）。</strong>
+            x = 10 になった時点で <code>x &lt; 10</code> なら終了しますが、<code>x &lt;= 10</code> ならまだ条件が成り立つため、
+            もう1回繰り返します。<strong>不等号に = が付くかどうかで回数が1回変わる</strong>のは頻出の注意点です。
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ============ 関連ページ ============ -->
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に確認したいアルゴリズム</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="sim-queue.html" class="sim-next-card">
+          <span class="sim-next-title">待ち行列シミュレーション</span>
+          <span class="sim-next-desc">到着・開始・終了の時刻を順に求める。表を埋める形で問われる</span>
+        </a>
+        <a href="sim-monte-carlo.html" class="sim-next-card">
+          <span class="sim-next-title">モンテカルロ法</span>
+          <span class="sim-next-desc">乱数で試行を繰り返して答えを近似する</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="algorithms.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">重要アルゴリズム解説の一覧</a>
+        <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">問題を解いて確認する</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script src="js/sim-motion.js"></script>
+</body>
+</html>

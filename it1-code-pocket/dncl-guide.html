@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/dncl-guide.html">
+  <title>DNCL表記の読み方 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト「情報Ⅰ」で使われるプログラム表記（DNCL）の読み方を、配列、代入、条件分岐、繰り返し、添字の考え方から解説します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="DNCL表記の読み方 | IT1-CODE-POCKET">
+  <meta property="og:description" content="共通テスト「情報Ⅰ」で使われるプログラム表記の読み方を整理します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/dncl-guide.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DNCL表記の読み方 | IT1-CODE-POCKET">
+  <meta name="twitter:description" content="共通テスト「情報Ⅰ」で使われるプログラム表記の読み方を整理します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/dncl-guide.html#article",
+        "headline": "DNCL表記の読み方",
+        "description": "共通テスト「情報Ⅰ」で使われるプログラム表記（DNCL）の読み方を、配列、代入、条件分岐、繰り返し、添字の考え方から解説します。",
+        "url": "https://it1-code-pocket.com/dncl-guide.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-06-19",
+        "dateModified": "2026-06-19",
+        "inLanguage": "ja",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/dncl-guide.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "DNCL表記の読み方",
+            "item": "https://it1-code-pocket.com/dncl-guide.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pb-8 pt-4">
+    <article class="themed-card p-5 leading-relaxed sim-doc">
+      <h1 class="text-2xl font-bold mb-3">DNCL表記の読み方</h1>
+      <p class="themed-text-muted text-sm mb-5">
+        DNCLは、共通テスト「情報Ⅰ」で使われる日本語寄りのプログラム表記です。実際のプログラミング言語とは少し違いますが、処理の考え方は同じです。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">DNCLは「処理の流れ」を読むための表記</h2>
+      <p class="mb-3">
+        DNCLでは、特定のプログラミング言語に依存しすぎないように、「表示する」「もし」「繰り返す」など、日本語に近い表現が使われます。PythonやJavaScriptの文法を知らなくても、変数に値を入れる、条件を判定する、同じ処理を繰り返す、配列の値を取り出す、といった基本動作を読み取れることが大切です。
+      </p>
+      <p>
+        問題を解くときは、記号を暗記するよりも、各行が何をしているかを短い日本語に直してみましょう。「合計に加える」「条件を満たしたら個数を1増やす」「今までの最大値より大きければ更新する」と読めるようになると、長い問題でも落ち着いて対応できます。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">配列と添字</h2>
+      <p class="mb-3">
+        DNCLでも、複数の値をまとめたものとして配列が出てきます。特に説明がない場合、IT1-CODE-POCKETでは添字を0から始める形で扱っています。例えば <code>Nums[0]</code> は最初の値、<code>Nums[1]</code> は2番目の値です。
+      </p>
+      <p>
+        添字を使う問題では、配列の中身と添字を書き出すことが効果的です。「iを0から要素数-1まで増やす」という繰り返しなら、配列の全要素を順に見ていると判断できます。「i+1」を使う場合は、最後の添字まで進めてよいかを必ず確認しましょう。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">条件分岐と繰り返し</h2>
+      <p class="mb-3">
+        「もし 条件 ならば」は、条件を満たす場合だけ処理を実行します。条件には、等しいか、大きいか、小さいか、余りがいくつか、といった比較がよく使われます。例えば「n ÷ 2 の余りが0」は偶数判定です。
+      </p>
+      <p>
+        「繰り返す」は、同じ処理を何度も行うための表現です。回数が決まっている繰り返しでは、変数がどの値から始まり、どの値まで増えるのかを確認します。条件を満たす間だけ続く繰り返しでは、どの行で条件が変化するかを見ることが重要です。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">よくある読み間違い</h2>
+      <p class="mb-3">
+        DNCLで多い読み間違いは、添字を1から数えてしまうこと、条件の「以上」「より大きい」を取り違えること、繰り返しの最後の値を含めるかどうかを見落とすことです。これらは、答えの選択肢を見る前に小さな表を作るだけでかなり防げます。
+      </p>
+      <p>
+        また、変数名には意味があります。<code>count</code> は個数、<code>total</code> は合計、<code>max</code> や <code>best</code> は最大値や最良値を表すことが多いです。変数名から役割を推測し、更新されるタイミングを追うと、プログラム全体の目的が見えやすくなります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">記号の意味を一覧で覚える</h2>
+      <p class="mb-3">
+        DNCLで使われる記号は多くありません。この表の分だけ覚えれば、まず困りません。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">記号</th>
+              <th scope="col">意味</th>
+              <th scope="col">例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">｜ ⎿</th>
+              <td data-label="意味">処理のまとまり（字下げの代わり）</td>
+              <td data-label="例">繰り返しや条件の内側を示す</td>
+            </tr>
+            <tr>
+              <th scope="row">÷</th>
+              <td data-label="意味">割り算（整数どうしは商だけ）</td>
+              <td data-label="例">23 ÷ 4 は 5</td>
+            </tr>
+            <tr>
+              <th scope="row">％</th>
+              <td data-label="意味">割った余り</td>
+              <td data-label="例">23 ％ 4 は 3</td>
+            </tr>
+            <tr>
+              <th scope="row">==　!=</th>
+              <td data-label="意味">等しい／等しくない</td>
+              <td data-label="例">score == 100</td>
+            </tr>
+            <tr>
+              <th scope="row">かつ　または</th>
+              <td data-label="意味">2つの条件の組み合わせ</td>
+              <td data-label="例">a &gt;= 15 かつ b &gt;= 40</td>
+            </tr>
+            <tr>
+              <th scope="row">要素数( )</th>
+              <td data-label="意味">配列の個数を返す</td>
+              <td data-label="例">要素数(Nums) - 1 が最後の添字</td>
+            </tr>
+            <tr>
+              <th scope="row">最大値( )</th>
+              <td data-label="意味">2つ以上の値のうち大きいほう</td>
+              <td data-label="例">最大値(到着, 前の終了)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sim-note">
+        <strong>÷ と ％ はセットで覚えてください。</strong>
+        「23個のカードを4人で分ける」なら、1人あたりが <code>23 ÷ 4 = 5</code> 枚、
+        余りが <code>23 ％ 4 = 3</code> 枚です。偶数判定の <code>n ％ 2 == 0</code> も、この余りの考え方です。
+      </div>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">3つの表記の対応表</h2>
+      <p class="mb-3">
+        同じ処理を DNCL・Python・JavaScript でどう書くかを並べると、
+        <strong>違うのは書き方だけで、考え方は同じ</strong>だとはっきりします。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">やること</th>
+              <th scope="col">DNCL</th>
+              <th scope="col">Python</th>
+              <th scope="col">JavaScript</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">表示</th>
+              <td data-label="DNCL">表示する(x)</td>
+              <td data-label="Python">print(x)</td>
+              <td data-label="JavaScript">console.log(x)</td>
+            </tr>
+            <tr>
+              <th scope="row">要素数</th>
+              <td data-label="DNCL">要素数(Nums)</td>
+              <td data-label="Python">len(nums)</td>
+              <td data-label="JavaScript">nums.length</td>
+            </tr>
+            <tr>
+              <th scope="row">条件分岐</th>
+              <td data-label="DNCL">もし 〜 ならば:</td>
+              <td data-label="Python">if 〜:</td>
+              <td data-label="JavaScript">if (〜) { }</td>
+            </tr>
+            <tr>
+              <th scope="row">回数の繰り返し</th>
+              <td data-label="DNCL">i を 0 から 3 まで</td>
+              <td data-label="Python">for i in range(4)</td>
+              <td data-label="JavaScript">for (i = 0; i &lt;= 3; i++)</td>
+            </tr>
+            <tr>
+              <th scope="row">条件の繰り返し</th>
+              <td data-label="DNCL">〜 の間繰り返す:</td>
+              <td data-label="Python">while 〜:</td>
+              <td data-label="JavaScript">while (〜) { }</td>
+            </tr>
+            <tr>
+              <th scope="row">余り</th>
+              <td data-label="DNCL">n ％ 2</td>
+              <td data-label="Python">n % 2</td>
+              <td data-label="JavaScript">n % 2</td>
+            </tr>
+            <tr>
+              <th scope="row">まとまり</th>
+              <td data-label="DNCL">｜ と ⎿</td>
+              <td data-label="Python">字下げ</td>
+              <td data-label="JavaScript">波かっこ { }</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <strong>いちばん注意すべきは「回数の繰り返し」の行</strong>です。
+        DNCL の「0 から 3 まで」は<strong>両端を含んで4回</strong>、
+        Python の <code>range(4)</code> も4回ですが、書かれている数字の意味が違います
+        （DNCLは「3まで」、Pythonは「4の手前まで」）。
+        <strong>数字をそのまま読み替えると1回ずれます。</strong>
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">1行ずつ日本語に直す練習</h2>
+      <p class="mb-3">
+        DNCLは日本語に近い表記なので、<strong>各行を短い日本語に言い換える</strong>のが有効です。
+      </p>
+      <pre class="code-block">Nums = [3, 8, 5]
+count = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] &gt; 4 ならば:
+⎿⎿ count = count + 1
+
+表示する(count)</pre>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">行</th>
+              <th scope="col">日本語に直すと</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Nums = [3, 8, 5]</th>
+              <td data-label="日本語に直すと">3個の数を用意する</td>
+            </tr>
+            <tr>
+              <th scope="row">count = 0</th>
+              <td data-label="日本語に直すと">数える箱を0にしておく</td>
+            </tr>
+            <tr>
+              <th scope="row">i を 0 から …</th>
+              <td data-label="日本語に直すと">全部の要素を先頭から1つずつ見る</td>
+            </tr>
+            <tr>
+              <th scope="row">もし Nums[i] &gt; 4</th>
+              <td data-label="日本語に直すと">いま見ている値が4より大きければ</td>
+            </tr>
+            <tr>
+              <th scope="row">count = count + 1</th>
+              <td data-label="日本語に直すと">箱を1増やす</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        通して読むと「<strong>4より大きい値が何個あるかを数えるプログラム</strong>」だと分かります（答えは2）。
+        <strong>プログラム全体の目的を言葉にできれば、選択肢の絞り込みが一気に楽になります。</strong>
+        テーマ別の練習は<a href="reading.html" class="font-bold" style="color: var(--accent);">プログラムの読み方</a>にまとめています。
+      </p>
+
+      <div class="mt-6">
+        <a href="notation.html" class="themed-btn-secondary block w-full py-3 text-center font-bold">表記解説ページも見る</a>
+      </div>
+
+      <section class="themed-card p-4 mt-5">
+        <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方（トレース練習）</a>
+          <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+          <a href="python-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">Pythonで押さえる基礎文法</a>
+          <a href="javascript-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">JavaScriptの配列・条件分岐・繰り返し</a>
+          <a href="index.html?lang=dncl" class="themed-btn-primary block w-full py-3 px-4 text-sm font-bold text-center">DNCLモードで練習する</a>
+        </div>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>

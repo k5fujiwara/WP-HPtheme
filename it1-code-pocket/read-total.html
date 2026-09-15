@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/read-total.html">
+  <title>集計する処理の読み方｜情報Ⅰ 第3問 | IT1-CODE-POCKET</title>
+  <meta name="description" content="共通テスト情報Ⅰ第3問で頻出の集計処理の読み方を例題つきで解説します。total = total + Data[i] の意味、条件をつけて数える・足す書き方、平均の求め方、累積和の作り方まで、間違えやすい点を整理します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="集計する処理の読み方｜情報Ⅰ 第3問">
+  <meta property="og:description" content="total = total + Data[i] の意味、条件つきの集計、平均、累積和までを例題つきで解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/read-total.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="集計する処理の読み方｜情報Ⅰ 第3問">
+  <meta name="twitter:description" content="合計・個数・平均・累積和の読み方を例題つきで解説します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/read-total.html#article",
+        "headline": "集計する処理の読み方｜情報Ⅰ 第3問",
+        "description": "合計・個数・平均・累積和を求める処理の読み方を例題つきで解説します。",
+        "url": "https://it1-code-pocket.com/read-total.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-26",
+        "inLanguage": "ja",
+        "author": { "@type": "Organization", "name": "IT1-CODE-POCKET" },
+        "publisher": { "@type": "Organization", "name": "IT1-CODE-POCKET" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/read-total.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "トップ", "item": "https://it1-code-pocket.com/" },
+          { "@type": "ListItem", "position": 2, "name": "プログラムの読み方", "item": "https://it1-code-pocket.com/reading.html" },
+          { "@type": "ListItem", "position": 3, "name": "集計する処理の読み方", "item": "https://it1-code-pocket.com/read-total.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="reading.html" class="header-back-btn" aria-label="プログラムの読み方へ戻る" title="プログラムの読み方へ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="notation-shell max-w-5xl mx-auto px-4 pb-8 pt-4">
+
+    <nav class="sim-breadcrumb" aria-label="パンくずリスト">
+      <a href="index.html">トップ</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <a href="reading.html">プログラムの読み方</a>
+      <span class="sim-breadcrumb-sep">›</span>
+      <span aria-current="page">集計する</span>
+    </nav>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <h1 class="text-xl font-bold mb-2">集計する処理の読み方（合計・個数・平均）</h1>
+      <p>
+        「配列の値を全部足す」「条件に合うものを数える」——第3問でもっともよく出る処理です。
+        形が決まっているので、<strong>型を覚えてしまえば一瞬で読める</strong>ようになります。
+        逆に、型を知らないと毎回1行ずつ考えることになり、時間が足りなくなります。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">BASIC</p>
+      <h2>集計はすべて「箱を用意して足していく」</h2>
+      <p>
+        合計を求めるプログラムは、例外なく次の3つの部分でできています。
+      </p>
+      <ol>
+        <li><strong>箱を用意する</strong> … <code>total = 0</code>（繰り返しの<strong>前</strong>）</li>
+        <li><strong>1つずつ足す</strong> … <code>total = total + Nums[i]</code>（繰り返しの<strong>中</strong>）</li>
+        <li><strong>結果を使う</strong> … <code>表示する(total)</code>（繰り返しの<strong>後</strong>）</li>
+      </ol>
+      <pre class="code-block">Nums = [2, 4, 6]
+total = 0                    ← ① 箱を用意
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿ total = total + Nums[i]    ← ② 1つずつ足す
+
+表示する(total)               ← ③ 結果を使う</pre>
+      <p>
+        <code>total = total + Nums[i]</code> は<strong>「いまの total に Nums[i] を足した値を、あらためて total に入れる」</strong>という意味です。
+        数学の等式ではないので、「total と total + Nums[i] が等しい」と読むと混乱します。
+        <strong>右辺を計算してから左辺に入れる</strong>、と覚えてください。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">計算</th><th scope="col">total</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">開始前</th><td>—</td><td>—</td><td>0</td></tr>
+            <tr><th scope="row">0</th><td>2</td><td>0 + 2</td><td>2</td></tr>
+            <tr><th scope="row">1</th><td>4</td><td>2 + 4</td><td>6</td></tr>
+            <tr><th scope="row">2</th><td>6</td><td>6 + 4… ではなく 6 + 6</td><td>12</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>数える場合は「+ 1」</h3>
+      <p>
+        個数を数えるときも形は同じで、足す値が <strong>1</strong> に変わるだけです。
+        <code>count = count + 1</code> と書けば、条件が成り立った回数を数えられます。
+      </p>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">求めたいもの</th>
+              <th scope="col">箱の初期値</th>
+              <th scope="col">繰り返しの中</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">合計</th>
+              <td class="sim-td-num" data-label="箱の初期値">total = 0</td>
+              <td data-label="繰り返しの中">total = total + Nums[i]</td>
+            </tr>
+            <tr>
+              <th scope="row">個数</th>
+              <td class="sim-td-num" data-label="箱の初期値">count = 0</td>
+              <td data-label="繰り返しの中">count = count + 1</td>
+            </tr>
+            <tr>
+              <th scope="row">積</th>
+              <td class="sim-td-num" data-label="箱の初期値">p = 1</td>
+              <td data-label="繰り返しの中">p = p × Nums[i]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sim-note sim-note-warn">
+        <strong>積のときだけ初期値は 1 です。</strong>
+        0 から始めると、何を掛けても 0 のままになってしまいます。
+        「なぜ 0 ではないのか」を問う出題があります。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 1</p>
+      <h2>例題1：足す式を選ぶ</h2>
+      <p>配列の値を順に total に加えるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Nums = [2, 4, 6]
+total = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿ ［ ア ］
+
+表示する(total)</pre>
+      <p>
+        <strong>選択肢：</strong>① total = total + Nums[i]　② total = Nums[i]
+        ③ Nums[i] = total + Nums[i]　④ total = total - Nums[i]
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① total = total + Nums[i]</strong></p>
+          <p>
+            他の選択肢がなぜ違うのかを見ると、この形の意味がはっきりします。
+          </p>
+          <ul>
+            <li>
+              <strong>② total = Nums[i]</strong> …
+              「足す」ではなく「入れ替える」になります。前の値が消えるので、
+              最後に残るのは<strong>最後の要素 6 だけ</strong>です。合計になりません。
+            </li>
+            <li>
+              <strong>③ Nums[i] = total + Nums[i]</strong> …
+              左辺が <code>Nums[i]</code> なので、<strong>配列のほうが書き換わって</strong>しまいます。
+              total は 0 のままです。
+            </li>
+            <li>
+              <strong>④ total = total - Nums[i]</strong> …
+              引き算なので total は −12 になります。
+            </li>
+          </ul>
+          <p>
+            <strong>「左辺が箱、右辺が計算」</strong>という対応で見分けてください。
+            集計したい変数が左辺に来ていなければ、その選択肢は誤りです。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 2</p>
+      <h2>例題2：条件をつけて数える</h2>
+      <p>次のプログラムを実行したとき、表示される count の値として正しいものを選びなさい。</p>
+      <pre class="code-block">Nums = [1, 4, 6, 7, 10]
+count = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] ％ 2 == 0 ならば:
+⎿⎿ count = count + 1
+
+表示する(count)</pre>
+      <p><strong>選択肢：</strong>① 2　② 3　③ 4　④ 5</p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 3</strong></p>
+          <p>
+            <code>％</code> は<strong>割った余り</strong>を求める記号です。
+            <code>Nums[i] ％ 2 == 0</code> は「2で割った余りが0」、つまり<strong>偶数かどうか</strong>を判定しています。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">÷2 の余り</th><th scope="col">count</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">0</th><td>1</td><td>1（奇数）</td><td>0</td></tr>
+                <tr><th scope="row">1</th><td>4</td><td>0（偶数）</td><td>1</td></tr>
+                <tr><th scope="row">2</th><td>6</td><td>0（偶数）</td><td>2</td></tr>
+                <tr><th scope="row">3</th><td>7</td><td>1（奇数）</td><td>2</td></tr>
+                <tr><th scope="row">4</th><td>10</td><td>0（偶数）</td><td>3</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            偶数は 4、6、10 の<strong>3個</strong>です。
+            ④ の5は「要素の数」を答えてしまった場合、③ の4は奇数と偶数を取り違えた場合に選びます。
+          </p>
+          <p>
+            <strong>余りの判定はこの2つだけ覚えれば足ります。</strong>
+            <code>％ 2 == 0</code> が偶数、<code>％ 2 == 1</code> が奇数です。
+            <code>％ 3 == 0</code> なら「3の倍数」になります。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 3</p>
+      <h2>例題3：値の条件か、添字の条件か</h2>
+      <p>添字が偶数の要素だけを total に加えるには、［ ア ］に何を入れればよいですか。</p>
+      <pre class="code-block">Nums = [5, 8, 3, 6, 7, 2]
+total = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし ［ ア ］ ならば:
+⎿⎿ total = total + Nums[i]
+
+表示する(total)</pre>
+      <p>
+        <strong>選択肢：</strong>① i ％ 2 == 0　② i ％ 2 == 1
+        ③ Nums[i] ％ 2 == 0　④ Nums[i] ％ 2 == 1
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① i ％ 2 == 0</strong></p>
+          <p>
+            この問題の狙いは、<strong>「添字が偶数」と「値が偶数」の取り違え</strong>です。
+            問題文は「<strong>添字</strong>が偶数の要素」と言っているので、判定するのは <code>i</code> のほうです。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">i</th><th scope="col">0</th><th scope="col">1</th><th scope="col">2</th><th scope="col">3</th><th scope="col">4</th><th scope="col">5</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Nums[i]</th><td>5</td><td>8</td><td>3</td><td>6</td><td>7</td><td>2</td></tr>
+                <tr><th scope="row">① i が偶数</th><td>○</td><td></td><td>○</td><td></td><td>○</td><td></td></tr>
+                <tr><th scope="row">③ 値が偶数</th><td></td><td>○</td><td></td><td>○</td><td></td><td>○</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            ① なら 5 + 3 + 7 = <strong>15</strong>、③ なら 8 + 6 + 2 = <strong>16</strong> となり、答えがまったく変わります。
+            <strong>条件式の中身が <code>i</code> か <code>Nums[i]</code> か</strong>——ここだけを見れば見分けられます。
+          </p>
+          <p>
+            なお <code>i ％ 2 == 0</code> は 0、2、4 を選ぶので、日常の言い方では
+            <strong>「1番目、3番目、5番目」</strong>にあたります。「偶数番目」という日本語と
+            ずれる点にも注意してください。
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">APPLY</p>
+      <h2>平均と累積和</h2>
+
+      <h3>平均は「合計 ÷ 個数」</h3>
+      <p>
+        平均を求めるには、まず合計を出してから要素数で割ります。
+        <code>avg = 合計(Scores) ÷ 要素数(Scores)</code> という形になります。
+      </p>
+      <p>
+        注意点は<strong>割る順序</strong>と<strong>割り算の種類</strong>です。
+        <code>要素数 ÷ 合計</code> と逆にする間違いのほか、
+        擬似言語の <code>÷</code> は整数どうしだと切り捨てになる場合があるため、
+        小数の平均を求めたいときは扱いに注意が必要です。
+        Python でも <code>/</code>（小数）と <code>//</code>（切り捨て）は別物です。
+      </p>
+
+      <h3>累積和は「途中経過を配列に残す」</h3>
+      <p>
+        合計は最後の1つの値しか残りませんが、<strong>各時点までの合計</strong>を並べたものを累積和といいます。
+      </p>
+      <pre class="code-block">Nums = [2, 1, 3]
+Ans = []
+s = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜s = s + Nums[i]
+⎿ Ans の末尾に s を追加する
+
+表示する(Ans)</pre>
+      <div class="sim-table-wrap">
+        <table class="sim-table sim-table-compact">
+          <thead>
+            <tr><th scope="col">i</th><th scope="col">Nums[i]</th><th scope="col">s</th><th scope="col">Ans</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">0</th><td>2</td><td>2</td><td>[2]</td></tr>
+            <tr><th scope="row">1</th><td>1</td><td>3</td><td>[2, 3]</td></tr>
+            <tr><th scope="row">2</th><td>3</td><td>6</td><td>[2, 3, 6]</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        答えは <strong>[2, 3, 6]</strong> です。元の配列 [2, 1, 3] と混同しないでください。
+        累積和は「何日目までに何人来たか」「どこまでで目標に達したか」を調べる問題で使われます。
+        この形は<a href="read-simulation.html">シミュレーション型の問題</a>でも登場します。
+      </p>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 4</p>
+      <h2>例題4：平均を求める式を選ぶ</h2>
+      <p>配列 Scores の平均値を avg に求めるプログラム表記として正しいものを選びなさい。</p>
+      <pre class="code-block">Scores = [60, 80, 100]
+
+# avg に平均値を入れる</pre>
+      <p>
+        <strong>選択肢：</strong>① avg = 合計(Scores) ÷ 要素数(Scores)　② avg = 要素数(Scores) ÷ 合計(Scores)
+        ③ avg = 最大値(Scores) ÷ 要素数(Scores)　④ avg = Scores[0] + Scores[1] + Scores[2]
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：① avg = 合計(Scores) ÷ 要素数(Scores)</strong></p>
+          <p>
+            平均は<strong>「合計 ÷ 個数」</strong>です。
+            この配列なら 60 + 80 + 100 = 240 を 3 で割って <strong>80</strong> になります。
+          </p>
+          <p>
+            注目してほしいのは、<code>合計()</code> や <code>要素数()</code> のような
+            <strong>用意された関数を使うと、繰り返しを書かずに済む</strong>という点です。
+            自分で書けば次のようになります。
+          </p>
+          <pre class="code-block">total = 0
+i を 0 から 要素数(Scores) - 1 まで 1 ずつ増やしながら繰り返す:
+⎿ total = total + Scores[i]
+
+avg = total ÷ 要素数(Scores)</pre>
+          <p>
+            <strong>4行が1行になった</strong>だけで、やっていることは同じです。
+            出題では両方の書き方が登場するので、<strong>「この1行は繰り返し1つ分」</strong>と読み替えられるようにしておいてください。
+          </p>
+          <ul>
+            <li><strong>② 要素数 ÷ 合計</strong> … 3 ÷ 240 = 0.0125。<strong>割る順番が逆</strong>です。あわてると選んでしまいます</li>
+            <li><strong>③ 最大値 ÷ 要素数</strong> … 100 ÷ 3 で、平均とは無関係な値になります</li>
+            <li>
+              <strong>④ Scores[0] + Scores[1] + Scores[2]</strong> … 合計の 240 が入るだけで、<strong>割っていません</strong>。
+              さらに<strong>要素が3つのときしか動かない</strong>という問題もあります
+            </li>
+          </ul>
+          <div class="sim-note">
+            <strong>④ が「間違い」である理由は2つあります。</strong>
+            平均になっていないことに加えて、<strong>要素数が変わると書き直しが必要</strong>だからです。
+            繰り返しを使う本当の理由は「短く書くため」ではなく、
+            <strong>データの個数が変わっても同じプログラムで動かすため</strong>です。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">EXERCISE 5</p>
+      <h2>例題5：条件が2つある場合</h2>
+      <p>次のプログラムで、<code>count = count + 1</code> は何回実行されますか。</p>
+      <pre class="code-block">Nums = [2, 5, 8, 11, 14, 17]
+count = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜もし Nums[i] ％ 3 == 2 かつ Nums[i] &gt; 10 ならば:
+⎿⎿ count = count + 1
+
+表示する(count)</pre>
+      <p>
+        <strong>選択肢：</strong>① 2回　② 3回　③ 5回　④ 6回
+      </p>
+
+      <details class="sim-quiz-item">
+        <summary>答えと解説を見る</summary>
+        <div class="sim-quiz-answer">
+          <p><strong>答え：② 3回</strong></p>
+          <p>
+            条件が <strong>「かつ」</strong>でつながれています。
+            この場合、<strong>両方が成り立ったときだけ</strong>中身が実行されます。
+            片方だけでは足りません。
+          </p>
+          <p>
+            こういう問題は<strong>条件ごとに列を分けた表</strong>を書くと、まず間違えません。
+          </p>
+          <div class="sim-table-wrap">
+            <table class="sim-table sim-table-compact">
+              <thead>
+                <tr><th scope="col">Nums[i]</th><th scope="col">3で割った余り</th><th scope="col">余り = 2?</th><th scope="col">10より大きい?</th><th scope="col">両方?</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">2</th><td>2</td><td>○</td><td>×</td><td>×</td></tr>
+                <tr><th scope="row">5</th><td>2</td><td>○</td><td>×</td><td>×</td></tr>
+                <tr><th scope="row">8</th><td>2</td><td>○</td><td>×</td><td>×</td></tr>
+                <tr><th scope="row">11</th><td>2</td><td>○</td><td>○</td><td><strong>○</strong></td></tr>
+                <tr><th scope="row">14</th><td>2</td><td>○</td><td>○</td><td><strong>○</strong></td></tr>
+                <tr><th scope="row">17</th><td>2</td><td>○</td><td>○</td><td><strong>○</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            この配列は<strong>すべての値が「3で割ると余り2」</strong>になっています。
+            つまり1つ目の条件は全部○で、勝負を決めているのは<strong>2つ目の「10より大きい」だけ</strong>です。
+            11・14・17 の <strong>3回</strong>が答えになります。
+          </p>
+          <ul>
+            <li><strong>④ 6回</strong> … 1つ目の条件だけを見て、全部○と数えた場合です</li>
+            <li><strong>③ 5回</strong> … 「かつ」を「または」と読み違えると、この形に近い数え方になります</li>
+          </ul>
+          <div class="sim-note sim-note-warn">
+            <strong>「かつ」と「または」を読み飛ばさないでください。</strong>
+            「かつ」は<strong>両方そろって○</strong>、「または」は<strong>どちらか1つでも○</strong>です。
+            条件が2つ以上あるときは、上のように<strong>条件ごとに列を作った表</strong>を書くのが確実です。
+            <code>％</code>（余り）の意味があいまいなら、<a href="operator.html">演算子の一覧</a>で確認してください。
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CODE</p>
+      <h2>3つの表記での書き方の違い</h2>
+
+      <div class="sim-tabs" data-sim-tabs role="tablist" aria-label="コードの表記を切り替え">
+        <button type="button" class="sim-tab" role="tab" id="tab-dncl" aria-controls="panel-dncl" aria-selected="true">擬似言語</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-python" aria-controls="panel-python" aria-selected="false">Python</button>
+        <button type="button" class="sim-tab" role="tab" id="tab-js" aria-controls="panel-js" aria-selected="false">JavaScript</button>
+      </div>
+
+      <div class="sim-tabpanel" id="panel-dncl" role="tabpanel" aria-labelledby="tab-dncl">
+        <pre class="code-block">Nums = [1, 4, 6, 7, 10]
+total = 0
+count = 0
+
+i を 0 から 要素数(Nums) - 1 まで 1 ずつ増やしながら繰り返す:
+｜total = total + Nums[i]
+｜もし Nums[i] ％ 2 == 0 ならば:
+⎿⎿ count = count + 1
+
+表示する(total, count)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-python" role="tabpanel" aria-labelledby="tab-python" hidden>
+        <pre class="code-block">nums = [1, 4, 6, 7, 10]
+total = 0
+count = 0
+
+for i in range(len(nums)):
+    total = total + nums[i]
+    if nums[i] % 2 == 0:
+        count = count + 1
+
+print(total, count)</pre>
+      </div>
+      <div class="sim-tabpanel" id="panel-js" role="tabpanel" aria-labelledby="tab-js" hidden>
+        <pre class="code-block">const nums = [1, 4, 6, 7, 10];
+let total = 0;
+let count = 0;
+
+for (let i = 0; i &lt; nums.length; i++) {
+  total = total + nums[i];
+  if (nums[i] % 2 === 0) {
+    count = count + 1;
+  }
+}
+
+console.log(total, count);</pre>
+      </div>
+
+      <div class="sim-note">
+        <strong>余りの記号：</strong>擬似言語は全角の <code>％</code>、Python と JavaScript は半角の <code>%</code> を使います。
+        意味はどれも「割った余り」で同じです。
+        また Python・JavaScript には <code>total += nums[i]</code> という短い書き方もありますが、
+        意味は <code>total = total + nums[i]</code> とまったく同じです。
+      </div>
+    </section>
+
+    <section class="themed-card p-4 mb-4 sim-doc">
+      <p class="sim-kicker">CHECK</p>
+      <h2>このテーマのチェックリスト</h2>
+      <ul>
+        <li>集計が<strong>「箱を用意 → 足す → 使う」</strong>の3部構成だと分かる</li>
+        <li><code>total = total + Nums[i]</code> を「右辺を計算して左辺に入れる」と読める</li>
+        <li>数えるときは <code>+ 1</code>、掛けるときは初期値 <strong>1</strong> だと分かる</li>
+        <li><code>％ 2 == 0</code> が偶数判定だと即答できる</li>
+        <li>条件式が <code>i</code> か <code>Nums[i]</code> かで<strong>添字条件か値条件かを見分けられる</strong></li>
+        <li>累積和が<strong>途中経過を並べた配列</strong>だと分かる</li>
+        <li>平均が <strong>合計 ÷ 要素数</strong> で、順番を逆にできないと分かる</li>
+        <li><strong>「かつ」は両方、「または」はどちらか</strong>だと区別して数えられる</li>
+      </ul>
+      <p>
+        集計が読めるようになったら、次は<a href="read-max.html">最大値を探す・値を探す</a>へ。
+        同じ「箱を用意して更新する」形が、条件を変えて出てきます。
+      </p>
+    </section>
+
+    <section class="themed-card p-4">
+      <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+      <div class="sim-next-grid mb-3">
+        <a href="read-max.html" class="sim-next-card">
+          <span class="sim-next-title">最大値を探す・値を探す</span>
+          <span class="sim-next-desc">更新条件の書き方と、位置を覚える変数</span>
+        </a>
+        <a href="read-array.html" class="sim-next-card">
+          <span class="sim-next-title">配列と添字の読み方</span>
+          <span class="sim-next-desc">集計の土台になる添字の数え方</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方 一覧</a>
+        <a href="index.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">クイズで練習する</a>
+        <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+        <a href="notation.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラム表記の解説</a>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+  <script src="js/sim-core.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.SimUI) window.SimUI.bindTabs(document);
+    });
+  </script>
+</body>
+</html>

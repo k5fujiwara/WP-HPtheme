@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="icon" href="assets/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="canonical" href="https://it1-code-pocket.com/javascript-guide.html">
+  <title>JavaScriptの配列・条件分岐・繰り返し | IT1-CODE-POCKET</title>
+  <meta name="description" content="情報Ⅰのプログラミング対策として、JavaScriptの配列、if文、for文、console.log、Math.max、filterなどの読み方を解説します。">
+  <meta property="og:site_name" content="IT1-CODE-POCKET">
+  <meta property="og:title" content="JavaScriptの配列・条件分岐・繰り返し | IT1-CODE-POCKET">
+  <meta property="og:description" content="情報Ⅰの学習に役立つJavaScriptの基本文法とコードの読み方を整理します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://it1-code-pocket.com/javascript-guide.html">
+  <meta property="og:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JavaScriptの配列・条件分岐・繰り返し | IT1-CODE-POCKET">
+  <meta name="twitter:description" content="情報Ⅰの学習に役立つJavaScriptの基本文法とコードの読み方を整理します。">
+  <meta name="twitter:image" content="https://it1-code-pocket.com/assets/ogp-card.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": "https://it1-code-pocket.com/javascript-guide.html#article",
+        "headline": "JavaScriptの配列・条件分岐・繰り返し",
+        "description": "情報Ⅰのプログラミング対策として、JavaScriptの配列、if文、for文、console.log、Math.max、filterなどの読み方を解説します。",
+        "url": "https://it1-code-pocket.com/javascript-guide.html",
+        "image": "https://it1-code-pocket.com/assets/ogp-card.png",
+        "datePublished": "2026-06-19",
+        "dateModified": "2026-06-19",
+        "inLanguage": "ja",
+        "author": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "IT1-CODE-POCKET"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://it1-code-pocket.com/javascript-guide.html#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "トップ",
+            "item": "https://it1-code-pocket.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "JavaScriptの配列・条件分岐・繰り返し",
+            "item": "https://it1-code-pocket.com/javascript-guide.html"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6924336257757707"
+     crossorigin="anonymous"></script>
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/simulation.css">
+  <link rel="stylesheet" href="css/tailwind.css">
+</head>
+<body data-theme="simple">
+  <header class="themed-header sticky top-0 z-50 px-4 py-3 flex items-center justify-between gap-2">
+    <div class="header-brand flex items-center gap-2 min-w-0">
+      <a href="index.html" class="header-back-btn" aria-label="トップへ戻る" title="トップへ戻る">‹</a>
+      <span class="app-title truncate">IT1-CODE-POCKET</span>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 pb-8 pt-4">
+    <article class="themed-card p-5 leading-relaxed sim-doc">
+      <h1 class="text-2xl font-bold mb-3">JavaScriptの配列・条件分岐・繰り返し</h1>
+      <p class="themed-text-muted text-sm mb-5">
+        JavaScriptはWeb制作で使われる言語ですが、配列や繰り返しの考え方は情報Ⅰのアルゴリズム学習にも役立ちます。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">配列とlength</h2>
+      <p class="mb-3">
+        JavaScriptでは、複数の値をまとめるときに配列を使います。<code>nums = [4, 7, 2]</code> のような形で値を並べ、<code>nums[0]</code> が最初の値、<code>nums[1]</code> が2番目の値になります。PythonやDNCLと同じく、添字は0から始まります。
+      </p>
+      <p>
+        配列の要素数は <code>nums.length</code> で取得します。共通テスト形式の問題では、最後の添字が <code>nums.length - 1</code> になる点が重要です。隣り合う値を比較するときは <code>nums[i + 1]</code> を使うため、i を最後まで進めると範囲外を参照してしまいます。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">if文と条件式</h2>
+      <p class="mb-3">
+        JavaScriptの条件分岐は <code>if (条件) { ... }</code> の形で書きます。条件が真のときだけ、波かっこの中の処理が実行されます。例えば <code>if (score &gt;= 60)</code> は、score が60以上のときにだけ実行されます。
+      </p>
+      <p>
+        複数の条件を同時に満たす場合は <code>&amp;&amp;</code>、どちらかを満たせばよい場合は <code>||</code> を使います。問題を解くときは、記号をそのまま眺めるより、「かつ」「または」と日本語に直すと読みやすくなります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">for文の読み方</h2>
+      <p class="mb-3">
+        JavaScriptの代表的な繰り返しは <code>for (let i = 0; i &lt; nums.length; i++)</code> です。これは「iを0から始め、nums.lengthより小さい間、iを1ずつ増やす」という意味です。配列の全要素を添字で順に調べるときによく使います。
+      </p>
+      <p>
+        配列の値そのものを順番に取り出す場合は <code>for (const n of nums)</code> のように書くこともあります。添字が必要な問題では通常のfor文、値だけ見ればよい問題ではfor...ofが読みやすい、という違いがあります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">集計・最大値・抽出</h2>
+      <p class="mb-3">
+        合計を求めるときは、<code>total</code> のような変数を0から始め、条件に合う値を足していきます。最大値を求めるときは、仮の最大値を置き、より大きい値が出たら更新します。JavaScriptでは <code>Math.max(...nums)</code> のような書き方もありますが、共通テスト対策では「更新の流れ」を読めることが大切です。
+      </p>
+      <p>
+        また、条件を満たす要素だけを取り出すときは <code>filter</code> が使われます。例えば <code>nums.filter(n =&gt; n % 2 == 0)</code> は、偶数だけを残します。関数の形に慣れていなくても、「条件に合うものだけを残す」と考えると読みやすくなります。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">for文の3つの部分を分けて読む</h2>
+      <p class="mb-3">
+        JavaScript の for 文は、かっこの中に<strong>3つの部分がセミコロンで区切られて</strong>入っています。
+        まとめて読もうとすると難しく見えますが、分けて読めば単純です。
+      </p>
+      <pre class="code-block">for (let i = 0; i &lt; nums.length; i++) {
+      ↑          ↑              ↑
+     ①開始      ②続ける条件    ③1周ごとの変化
+}</pre>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">書き方</th>
+              <th scope="col">i がとる値</th>
+              <th scope="col">回数</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">i = 0; i &lt; 5; i++</th>
+              <td data-label="i がとる値">0, 1, 2, 3, 4</td>
+              <td class="sim-td-num" data-label="回数">5回</td>
+            </tr>
+            <tr>
+              <th scope="row">i = 0; i &lt;= 5; i++</th>
+              <td data-label="i がとる値">0, 1, 2, 3, 4, 5</td>
+              <td class="sim-td-num" data-label="回数">6回</td>
+            </tr>
+            <tr>
+              <th scope="row">i = 1; i &lt; 5; i++</th>
+              <td data-label="i がとる値">1, 2, 3, 4</td>
+              <td class="sim-td-num" data-label="回数">4回</td>
+            </tr>
+            <tr>
+              <th scope="row">i = 0; i &lt; nums.length; i++</th>
+              <td data-label="i がとる値">0 〜 要素数-1</td>
+              <td class="sim-td-num" data-label="回数">要素数と同じ</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        <code>&lt;</code> と <code>&lt;=</code> で<strong>回数が1回変わります</strong>。
+        共通テスト用プログラム表記の「0 から 5 まで」は両端を含むので、
+        JavaScript では <code>i &lt;= 5</code> にあたります。<strong>表記による違いを意識してください。</strong>
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">コード例と実行結果</h2>
+      <p class="mb-3">頻出の処理を、実際のコードと出力で確認します。</p>
+
+      <h3 class="font-bold mt-4 mb-2">合計と個数を同時に求める</h3>
+      <pre class="code-block">const nums = [1, 4, 6, 7, 10];
+let total = 0;
+let count = 0;
+
+for (let i = 0; i &lt; nums.length; i++) {
+  total = total + nums[i];
+  if (nums[i] % 2 === 0) {
+    count = count + 1;
+  }
+}
+console.log(total, count);   // 28 3</pre>
+
+      <h3 class="font-bold mt-4 mb-2">最大値とその位置を求める</h3>
+      <pre class="code-block">const nums = [4, 9, 2, 7];
+let mx = nums[0];
+let mxPos = 0;
+
+for (let i = 0; i &lt; nums.length; i++) {
+  if (nums[i] &gt; mx) {
+    mx = nums[i];
+    mxPos = i;
+  }
+}
+console.log(mx, mxPos);      // 9 1</pre>
+
+      <h3 class="font-bold mt-4 mb-2">隣どうしを比べる</h3>
+      <pre class="code-block">const nums = [3, 7, 10];
+let up = 0;
+
+for (let i = 0; i &lt; nums.length - 1; i++) {
+  if (nums[i] &lt; nums[i + 1]) {
+    up = up + 1;
+  }
+}
+console.log(up);             // 2</pre>
+      <p>
+        3つ目の例で、繰り返しの条件が <code>nums.length - 1</code> になっている点に注目してください。
+        <code>nums[i + 1]</code> を使うので、<strong>i を最後まで進めると範囲外</strong>になります。
+        隣どうしの比較では必ず1つ手前で止めます。詳しくは
+        <a href="read-loop.html" class="font-bold" style="color: var(--accent);">繰り返しの回数を数える</a>で扱っています。
+      </p>
+
+      <h2 class="text-lg font-bold mt-6 mb-2">JavaScript特有のつまずき</h2>
+      <div class="sim-table-wrap">
+        <table class="sim-table">
+          <thead>
+            <tr>
+              <th scope="col">つまずき</th>
+              <th scope="col">内容</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">= と == と ===</th>
+              <td data-label="内容"><code>=</code> は代入、<code>==</code> と <code>===</code> は比較。<strong>比較は === を使うのが基本</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">let と const</th>
+              <td data-label="内容">値が変わる変数は <code>let</code>、変わらないものは <code>const</code></td>
+            </tr>
+            <tr>
+              <th scope="row">割り算</th>
+              <td data-label="内容"><code>7 / 2</code> は 3.5。<strong>整数にするには Math.floor(7 / 2)</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">波かっこの範囲</th>
+              <td data-label="内容"><code>{ }</code> がどこまでかで、if の内側か外側かが変わる</td>
+            </tr>
+            <tr>
+              <th scope="row">&amp;&amp; と ||</th>
+              <td data-label="内容">「かつ」は <code>&amp;&amp;</code>、「または」は <code>||</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Python がインデントで処理のまとまりを表すのに対し、JavaScript は<strong>波かっこ</strong>で表します。
+        見た目が違うだけで、意味は同じです。
+        擬似言語の <code>｜</code> と <code>⎿</code> も、同じく「まとまり」を示す記号です。
+        <strong>3つの表記は書き方が違うだけで、処理の構造は共通</strong>だと押さえてください。
+      </p>
+
+      <section class="themed-card p-4 mt-6">
+        <h2 class="text-lg font-bold mb-3">次に読むページ</h2>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="reading.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">プログラムの読み方（トレース練習）</a>
+          <a href="study-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">情報Ⅰ 第3問の勉強法</a>
+          <a href="python-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">Pythonで押さえる基礎文法</a>
+          <a href="dncl-guide.html" class="themed-btn-secondary block w-full py-3 px-4 text-sm font-bold">DNCL表記の読み方</a>
+          <a href="index.html?lang=javascript" class="themed-btn-primary block w-full py-3 px-4 text-sm font-bold text-center">JavaScriptモードで練習する</a>
+        </div>
+      </section>
+    </article>
+  </main>
+  <div id="site-footer">
+    <footer class="site-footer">
+      <nav class="site-footer-links" aria-label="サイト情報">
+        <a href="study-guide.html">学習ガイド</a>
+        <a href="about.html">このサイトについて</a>
+        <a href="operator.html">運営者情報</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+        <a href="terms.html">利用規約・免責事項</a>
+      </nav>
+      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+    </footer>
+  </div>
+  <script src="js/footer.js"></script>
+</body>
+</html>
