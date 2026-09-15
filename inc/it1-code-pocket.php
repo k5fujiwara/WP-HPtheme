@@ -104,6 +104,7 @@ function mytheme_it1_hp_config(): array {
         'japanese'    => function_exists('mytheme_get_page_url_by_path') ? mytheme_get_page_url_by_path('japanese-quiz', home_url('/japanese-quiz/')) : home_url('/japanese-quiz/'),
         'siteHome'    => home_url('/'),
         'siteName'    => get_bloginfo('name'),
+        'year'        => (string) date('Y'),
     ];
 }
 
@@ -251,6 +252,8 @@ function mytheme_it1_transform_footer(string $html): string {
         . '<a href="' . esc_url($hp['disclaimer']) . '">利用規約・免責事項</a>'
         . '</nav>';
     $html = preg_replace('#<nav class="site-footer-links"[\s\S]*?</nav>#', $nav, $html, 1);
+    $copy = '© ' . esc_html($hp['year']) . ' ' . esc_html($hp['siteName']);
+    $html = preg_replace('#<p class="site-footer-copy">.*?</p>#', '<p class="site-footer-copy">' . $copy . '</p>', $html, 1);
     $home = mytheme_it1_home_url();
     $html = str_replace('https://it1-code-pocket.com/', $home, $html);
     $html = str_replace('https%3A%2F%2Fit1-code-pocket.com%2F', rawurlencode($home), $html);

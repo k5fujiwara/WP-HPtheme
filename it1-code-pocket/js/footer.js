@@ -16,16 +16,17 @@ function renderSiteFooter() {
   const mount = document.getElementById('site-footer');
   if (!mount) return;
 
-  if (mount.children.length > 0) return;
-
   const path = window.location.pathname.replace(/\/+$/, '');
   const isTopPage = /\/it1-code-pocket$/.test(path);
   const home = it1HomeUrl();
   const hp = window.IT1_HP || {};
+  const siteName = hp.siteName || document.title || 'IT1-CODE-POCKET';
+  const year = hp.year || String(new Date().getFullYear());
+  const copyright = `© ${year} ${siteName}`;
   const shareUrl = encodeURIComponent(home);
   const xShareUrl = encodeURIComponent(home + (home.includes('?') ? '&' : '?') + 'share=x');
-  const shareText = encodeURIComponent('IT1-CODE-POCKET | 情報Ⅰ 第3問対策');
-  const lineShareText = encodeURIComponent('IT1-CODE-POCKET | 情報Ⅰ 第3問対策\n' + home);
+  const shareText = encodeURIComponent(`${siteName} | 情報Ⅰ 第3問対策`);
+  const lineShareText = encodeURIComponent(`${siteName} | 情報Ⅰ 第3問対策\n${home}`);
   const shareLinks = isTopPage
     ? `
       <div class="site-footer-share" aria-label="SNSで共有">
@@ -54,7 +55,7 @@ function renderSiteFooter() {
         <a href="${contact}">お問い合わせ</a>
         <a href="${terms}">利用規約・免責事項</a>
       </nav>
-      <p class="site-footer-copy">© IT1-CODE-POCKET</p>
+      <p class="site-footer-copy">${copyright}</p>
     </footer>
   `;
 }
