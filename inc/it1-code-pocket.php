@@ -115,21 +115,23 @@ function mytheme_it1_hp_bar_html(): string {
         . '<a class="it1-hp-head__tool" href="' . esc_url($hp['quizHome']) . '">IT1-CODE-POCKET</a>'
         . '</div>'
         . '<nav class="it1-hp-tools" aria-label="学習ツール">'
-        . '<a class="it1-hp-tools__btn it1-hp-tools__btn--science" href="' . esc_url($hp['science']) . '">理科クイズへ</a>'
-        . '<a class="it1-hp-tools__btn it1-hp-tools__btn--japanese" href="' . esc_url($hp['japanese']) . '">国語クイズへ</a>'
-        . '<a class="it1-hp-tools__btn" href="' . esc_url($hp['siteHome']) . '">トップに戻る</a>'
+        . '<a class="it1-hp-tools__btn it1-hp-tools__btn--home" href="' . esc_url($hp['quizHome']) . '" data-it1-home>問題選択</a>'
+        . '<a class="it1-hp-tools__btn it1-hp-tools__btn--science" href="' . esc_url($hp['science']) . '">理科</a>'
+        . '<a class="it1-hp-tools__btn it1-hp-tools__btn--japanese" href="' . esc_url($hp['japanese']) . '">国語</a>'
+        . '<a class="it1-hp-tools__btn" href="' . esc_url($hp['siteHome']) . '">ホーム</a>'
         . '</nav>';
 }
 
 function mytheme_it1_hp_bar_css(): string {
     return '<style>
 html,body{margin:0!important}
-:root{--it1-header-h:3.5rem}
+:root{--it1-header-h:4.75rem}
+@media(max-width:640px){:root{--it1-header-h:6.75rem}}
 body{--header-bg:#fff!important;--header-text:#1e3a5f!important}
 body .themed-header{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:70;display:flex!important;flex-flow:row wrap!important;align-items:center!important;justify-content:flex-start!important;gap:6px 8px!important;width:100%!important;min-height:0!important;padding:8px 12px!important;background:#fff!important;background-image:none!important;color:#1e3a5f!important;border:0!important;border-bottom:1px solid #e2e8f0!important;outline:0!important;box-shadow:none!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
 body .themed-header::before,body .themed-header::after{content:none!important;display:none!important}
-body .themed-header+main{padding-top:calc(var(--it1-header-h) + 1rem)!important}
-body.is-quiz-screen .quiz-progress{position:fixed!important;top:var(--it1-header-h)!important;left:0!important;right:0!important}
+body .themed-header+main{padding-top:calc(var(--it1-header-h) + .75rem)!important}
+body.is-quiz-screen .quiz-progress{position:relative!important;top:auto!important;left:auto!important;right:auto!important;z-index:auto!important;margin:0 0 .65rem!important;border-radius:2px!important}
 .themed-header .header-brand{display:contents!important}
 .themed-header .app-title{display:none!important}
 .it1-hp-head{order:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;min-width:0;flex:0 1 auto;max-width:min(100%,22rem);line-height:1.2}
@@ -139,9 +141,10 @@ body.is-quiz-screen .quiz-progress{position:fixed!important;top:var(--it1-header
 .themed-header .header-back-btn{order:0;flex:0 0 auto;width:32px;height:32px;min-height:32px;padding:0;border-radius:8px;border:1px solid rgba(31,26,20,.16);background:#fff;color:#2563eb}
 .themed-header .header-back-btn::before{margin:0}
 .themed-header .it1-hp-tools__btn{flex:0 0 auto!important;width:auto!important;min-width:0;min-height:32px;display:inline-flex!important;align-items:center;justify-content:center;padding:5px 11px;border-radius:8px;border:1px solid rgba(31,26,20,.16)!important;background:#fff!important;color:#2563eb!important;font-size:.75rem;font-weight:700;line-height:1.2;text-decoration:none;white-space:nowrap}
+.themed-header .it1-hp-tools__btn--home{color:#fff!important;background:#0f62fe!important;border-color:#0f62fe!important}
 .themed-header .it1-hp-tools__btn--science{color:#fff!important;background:#1f6b4a!important;border-color:#1f6b4a!important}
 .themed-header .it1-hp-tools__btn--japanese{color:#fff!important;background:#9a3b32!important;border-color:#9a3b32!important}
-.it1-ad--bottom{margin:20px auto 0;max-width:48rem;width:calc(100% - 2rem);display:flex;justify-content:center;text-align:center;overflow:hidden}
+.it1-ad--bottom{margin:20px 0 0;max-width:none;width:100%;display:flex;justify-content:center;text-align:center;overflow:hidden}
 .it1-ad--bottom .adsbygoogle{display:block;width:100%;max-width:100%;max-height:90px;overflow:hidden}
 .it1-ad--bottom iframe{max-height:90px!important}
 .it1-ad--bottom:not(.is-filled){margin:0;min-height:0;width:auto}
@@ -152,11 +155,11 @@ body.is-quiz-screen .quiz-progress{position:fixed!important;top:var(--it1-header
 }
 @media(max-width:1099px){
 body.has-it1-bottom-ad{padding-bottom:120px}
-.it1-ad--bottom.is-filled{position:fixed;left:0;right:0;bottom:0;z-index:90;margin:0;max-width:none;width:auto;max-height:120px;display:block;padding:8px 12px 12px;background:var(--bg,#fff);box-shadow:0 -10px 16px var(--bg,#fff);overflow:hidden}
+.it1-ad--bottom.is-filled{position:fixed;left:0;right:0;bottom:0;z-index:90;margin:0;max-width:none;width:100%;max-height:120px;display:block;padding:8px 0 10px;background:var(--bg,#fff);box-shadow:0 -10px 16px var(--bg,#fff);overflow:hidden}
 .it1-ad--bottom.is-filled .adsbygoogle,.it1-ad--bottom.is-filled iframe{max-height:90px!important}
 }
 </style>
-<script>(function(){function syncIt1HeaderHeight(){var h=document.querySelector(".themed-header");if(!h)return;document.documentElement.style.setProperty("--it1-header-h",h.offsetHeight+"px");}function bind(){syncIt1HeaderHeight();window.addEventListener("resize",syncIt1HeaderHeight);var h=document.querySelector(".themed-header");if(h&&window.ResizeObserver){new ResizeObserver(syncIt1HeaderHeight).observe(h);}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind);else bind();})();</script>';
+<script>(function(){function syncIt1HeaderHeight(){var h=document.querySelector(".themed-header");if(!h)return;document.documentElement.style.setProperty("--it1-header-h",Math.ceil(h.getBoundingClientRect().height)+"px");}window.IT1_syncHeaderHeight=syncIt1HeaderHeight;function bind(){syncIt1HeaderHeight();window.addEventListener("resize",syncIt1HeaderHeight);window.addEventListener("load",syncIt1HeaderHeight);var h=document.querySelector(".themed-header");if(h&&window.ResizeObserver){new ResizeObserver(syncIt1HeaderHeight).observe(h);}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind);else bind();})();</script>';
 }
 
 function mytheme_it1_rewrite_html_links(string $html): string {

@@ -532,17 +532,17 @@ body.is-quiz-screen .header-quiz-actions {
 }
 
 body.is-quiz-screen .quiz-progress {
-  position: fixed;
-  top: var(--header-total-height);
-  left: 0;
-  right: 0;
-  z-index: 45;
-  margin: 0;
-  border-radius: 0;
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  z-index: auto;
+  margin: 0 0 0.65rem;
+  border-radius: 2px;
 }
 
 body.is-quiz-screen #screen-quiz {
-  padding-top: 0.75rem;
+  padding-top: 0;
 }
 
 .quiz-prompt {
@@ -873,50 +873,166 @@ body.is-quiz-screen .site-footer {
   display: none;
 }
 
+.top-hero {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.top-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.top-action-panel,
+.top-info-panel {
+  min-width: 0;
+}
+
+.top-guides {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
 @media (min-width: 900px) {
   body:not(.is-quiz-screen) .app-shell {
     max-width: 1120px;
   }
 
-  #screen-top > .text-center {
-    margin-bottom: 2rem;
+  #screen-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(19rem, 0.85fr);
+    grid-template-areas:
+      "hero action"
+      "info action";
+    align-items: start;
+    column-gap: 1.1rem;
+    row-gap: 0.85rem;
   }
 
-  #screen-top h1 {
-    font-size: 2.35rem;
-    line-height: 1.18;
+  .top-hero {
+    grid-area: hero;
+    margin: 0;
+    text-align: left;
   }
 
-  #screen-top > .text-center p {
-    font-size: 1rem;
+  .top-hero h1 {
+    font-size: 1.85rem;
+    line-height: 1.2;
+  }
+
+  .top-hero h1 br {
+    display: none;
+  }
+
+  .top-hero p {
+    font-size: 0.9rem;
   }
 
   .top-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
-    grid-template-areas: "info action";
-    align-items: start;
-    gap: 1.25rem;
+    display: contents;
   }
 
   .top-info-panel {
     grid-area: info;
-    min-width: 0;
   }
 
   .top-action-panel {
-    position: sticky;
-    top: calc(var(--header-total-height) + 1rem);
+    --top-action-h: calc(100dvh - var(--it1-header-h, var(--header-total-height)) - 1rem);
     grid-area: action;
-    min-width: 0;
+    position: sticky;
+    top: calc(var(--it1-header-h, var(--header-total-height)) + 0.5rem);
+    height: var(--top-action-h);
+    max-height: var(--top-action-h);
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-height: 0;
   }
 
-  .top-action-panel .themed-card {
-    margin-bottom: 0.9rem;
+  .top-action-panel > .themed-card {
+    margin: 0 !important;
+    padding: 0.7rem 0.8rem !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
-  .top-action-panel .themed-card:last-of-type {
-    margin-bottom: 1rem;
+  .top-action-panel > .themed-card:first-child {
+    flex: 1.35 1 0;
+  }
+
+  .top-action-panel > .themed-card:not(:first-child) {
+    flex: 0 0 auto;
+  }
+
+  .top-action-panel > .themed-card h2 {
+    margin-bottom: 0.45rem !important;
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+
+  .top-action-panel #lang-mode-group {
+    flex: 1;
+    display: grid;
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+    min-height: 0;
+  }
+
+  .top-action-panel #difficulty-group,
+  .top-action-panel #question-count-group {
+    gap: 0.4rem;
+  }
+
+  .top-action-panel .themed-btn-secondary {
+    min-height: 0;
+    height: 100%;
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.25;
+  }
+
+  .top-action-panel .learning-status-actions {
+    margin: 0;
+    gap: 0.4rem;
+    flex: 0 0 auto;
+  }
+
+  .top-action-panel .learning-status-btn {
+    min-height: 2.35rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .top-action-panel .top-start-btn {
+    margin: 0;
+    flex: 0 0 auto;
+    padding: 0.8rem 0.85rem !important;
+    font-size: 1.05rem !important;
+    line-height: 1.2;
+  }
+
+  .top-guides {
+    margin-top: 0;
+    flex: 1.15 1 0;
+    gap: 0.4rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    min-height: 0;
+  }
+
+  .top-guides .themed-btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 0;
+    padding: 0.45rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    line-height: 1.25;
+    white-space: nowrap;
   }
 
   .top-info-panel .themed-card:first-child {

@@ -425,7 +425,7 @@ function mytheme_quiz_tools_nav(string $current): void {
     foreach ( $other_items as $item ) {
         echo '<a class="sq-tools__btn sq-tools__btn--' . esc_attr($item['mod']) . '" href="' . esc_url($item['url']) . '">' . esc_html($item['label']) . '</a>';
     }
-    echo '<a class="sq-tools__btn" href="' . esc_url($home_url) . '">トップに戻る</a>';
+    echo '<a class="sq-tools__btn" href="' . esc_url($home_url) . '">ホーム</a>';
     echo '</nav>';
 }
 

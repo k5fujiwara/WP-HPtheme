@@ -134,13 +134,21 @@ function scrollQuizTop() {
   if (active && typeof active.blur === 'function') {
     active.blur();
   }
-  window.scrollTo(0, 0);
-  document.documentElement.scrollTop = 0;
-  document.body.scrollTop = 0;
-  requestAnimationFrame(() => {
+  if (typeof window.IT1_syncHeaderHeight === 'function') {
+    window.IT1_syncHeaderHeight();
+  }
+  const jump = () => {
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+  };
+  jump();
+  requestAnimationFrame(() => {
+    if (typeof window.IT1_syncHeaderHeight === 'function') {
+      window.IT1_syncHeaderHeight();
+    }
+    jump();
+    requestAnimationFrame(jump);
   });
 }
 
@@ -392,7 +400,7 @@ function suspendQuiz() {
 }
 
 function abandonQuiz() {
-  const ok = confirm('現在のクイズを終了して、問題の選択画面に戻りますか？');
+  const ok = confirm('今のクイズを終了して、問題の選択画面に戻りますか？');
   if (!ok) return;
   if (state.quizMode !== 'review') {
     clearSession();
@@ -671,6 +679,23 @@ function showResult() {
   updateResumeCard();
   updateReviewCard();
   updateHeaderStats();
+  document.addEventListener('click', event => {
+    const homeLink = event.target.closest('[data-it1-home], .it1-hp-head__tool');
+    if (!homeLink) return;
+    const quizEl = document.getElementById('screen-quiz');
+    const resultEl = document.getElementById('screen-result');
+    const onQuiz = quizEl && !quizEl.classList.contains('hidden');
+    const onResult = resultEl && !resultEl.classList.contains('hidden');
+    if (onQuiz) {
+      event.preventDefault();
+      abandonQuiz();
+      return;
+    }
+    if (onResult) {
+      event.preventDefault();
+      goHome();
+    }
+  });
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') closeLearningStatusModal();
   });

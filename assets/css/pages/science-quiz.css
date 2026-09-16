@@ -598,8 +598,10 @@
     bottom: 0;
     z-index: 90;
     margin: 0;
+    max-width: none;
+    width: 100%;
     max-height: 120px;
-    padding: 8px 12px 12px;
+    padding: 8px 0 10px;
     background: #efe6d4;
     box-shadow: 0 -10px 16px #efe6d4;
     overflow: hidden;
