@@ -69,9 +69,11 @@
         ins = document.createElement('ins');
         ins.className = 'adsbygoogle';
         ins.style.display = 'block';
+        ins.style.maxHeight = '90px';
+        ins.style.overflow = 'hidden';
         ins.setAttribute('data-ad-client', 'ca-pub-6924336257757707');
         ins.setAttribute('data-ad-format', 'horizontal');
-        ins.setAttribute('data-full-width-responsive', 'true');
+        ins.setAttribute('data-full-width-responsive', 'false');
         box.appendChild(ins);
       }
       if (ins.getAttribute('data-adsbygoogle-status')) return;

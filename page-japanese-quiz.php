@@ -46,10 +46,10 @@ get_header();
 
     <div class="sq-ad sq-ad--bottom" data-sq-ad>
         <ins class="adsbygoogle"
-             style="display:block"
+             style="display:block;max-height:90px;overflow:hidden"
              data-ad-client="ca-pub-6924336257757707"
              data-ad-format="horizontal"
-             data-full-width-responsive="true"></ins>
+             data-full-width-responsive="false"></ins>
     </div>
 </div>
 <?php

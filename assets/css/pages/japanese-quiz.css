@@ -111,5 +111,7 @@
   .japanese-quiz-app .sq-ad--bottom.is-filled {
     background: #f3e6d8;
     box-shadow: 0 -10px 16px #f3e6d8;
+    max-height: 120px;
+    overflow: hidden;
   }
 }

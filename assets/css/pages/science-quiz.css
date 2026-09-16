@@ -554,6 +554,20 @@
   display: none !important;
 }
 
+.sq-ad--bottom {
+  overflow: hidden;
+}
+
+.sq-ad--bottom .adsbygoogle {
+  display: block;
+  max-height: 90px;
+  overflow: hidden;
+}
+
+.sq-ad--bottom iframe {
+  max-height: 90px !important;
+}
+
 .sq-ad--bottom:not(.is-filled) {
   margin: 0;
   min-height: 0;
@@ -568,8 +582,13 @@
     padding-bottom: 24px;
   }
 
+  .science-quiz-app,
+  .japanese-quiz-app {
+    scroll-padding-top: 7.5rem;
+  }
+
   .sq.has-bottom-ad {
-    padding-bottom: 128px;
+    padding-bottom: 120px;
   }
 
   .sq-ad--bottom.is-filled {
@@ -579,13 +598,41 @@
     bottom: 0;
     z-index: 90;
     margin: 0;
+    max-height: 120px;
     padding: 8px 12px 12px;
     background: #efe6d4;
     box-shadow: 0 -10px 16px #efe6d4;
+    overflow: hidden;
+  }
+
+  .sq-ad--bottom.is-filled .adsbygoogle,
+  .sq-ad--bottom.is-filled iframe {
+    max-height: 90px !important;
   }
 }
 
 @media (max-width: 640px) {
+  .science-quiz-app .site-header,
+  .japanese-quiz-app .site-header {
+    padding: 10px 0 8px;
+  }
+
+  .science-quiz-app .sq-tools,
+  .japanese-quiz-app .sq-tools {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .science-quiz-app .sq-tools a,
+  .science-quiz-app .sq-tools button,
+  .japanese-quiz-app .sq-tools a,
+  .japanese-quiz-app .sq-tools button {
+    flex: 1 1 auto;
+    min-height: 36px;
+    padding: 6px 8px;
+    font-size: 0.74rem;
+  }
+
   .sq-title {
     font-size: 1.55rem;
   }

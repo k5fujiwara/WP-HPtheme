@@ -131,6 +131,11 @@
         .sq-tools a.sq-tools__btn--science,.sq-tools button.sq-tools__btn--science{color:#fff;background:#1f6b4a;border-color:#1f6b4a}
         .sq-tools a.sq-tools__btn--japanese,.sq-tools button.sq-tools__btn--japanese{color:#fff;background:#9a3b32;border-color:#9a3b32}
         .sq-tools a.sq-tools__btn--info{color:#fff;background:#2563eb;border-color:#2563eb}
+        @media(max-width:640px){
+            .site-header{padding:10px 0 8px}
+            .sq-tools{gap:6px;margin-top:8px}
+            .sq-tools a,.sq-tools button{flex:1 1 auto;min-height:36px;padding:6px 8px;font-size:.74rem}
+        }
         <?php endif; ?>
     </style>
     
