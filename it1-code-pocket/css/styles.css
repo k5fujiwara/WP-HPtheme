@@ -146,7 +146,7 @@ body {
 }
 
 .themed-header + main {
-  padding-top: calc(var(--header-total-height) + 1rem) !important;
+  padding-top: calc(var(--it1-header-h, var(--header-total-height)) + 1rem) !important;
 }
 
 .themed-card {

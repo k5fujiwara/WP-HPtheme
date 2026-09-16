@@ -137,19 +137,37 @@ function scrollQuizTop() {
   if (typeof window.IT1_syncHeaderHeight === 'function') {
     window.IT1_syncHeaderHeight();
   }
+
+  const quizEl = document.getElementById('screen-quiz');
+  const resultEl = document.getElementById('screen-result');
+  const onQuiz = quizEl && !quizEl.classList.contains('hidden');
+  const onResult = resultEl && !resultEl.classList.contains('hidden');
+  const target = onQuiz
+    ? (quizEl.querySelector('.quiz-toolbar') || quizEl)
+    : onResult
+      ? resultEl
+      : null;
+
   const jump = () => {
+    if (typeof window.IT1_syncHeaderHeight === 'function') {
+      window.IT1_syncHeaderHeight();
+    }
+    if (target && typeof target.scrollIntoView === 'function') {
+      target.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
+      return;
+    }
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   };
+
   jump();
   requestAnimationFrame(() => {
-    if (typeof window.IT1_syncHeaderHeight === 'function') {
-      window.IT1_syncHeaderHeight();
-    }
     jump();
     requestAnimationFrame(jump);
   });
+  setTimeout(jump, 60);
+  setTimeout(jump, 200);
 }
 
 // ===== 画面遷移 =====
