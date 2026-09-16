@@ -131,7 +131,7 @@ function shuffleQuestions(questions) {
 
 function scrollQuizTop() {
   const active = document.activeElement;
-  if (active && typeof active.blur === 'function') {
+  if (active && active !== document.body && typeof active.blur === 'function') {
     active.blur();
   }
   if (typeof window.IT1_syncHeaderHeight === 'function') {
@@ -141,6 +141,9 @@ function scrollQuizTop() {
   document.documentElement.scrollTop = 0;
   document.body.scrollTop = 0;
   requestAnimationFrame(() => {
+    if (typeof window.IT1_syncHeaderHeight === 'function') {
+      window.IT1_syncHeaderHeight();
+    }
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
