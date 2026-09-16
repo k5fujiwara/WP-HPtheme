@@ -129,6 +129,21 @@ function shuffleQuestions(questions) {
   return shuffled;
 }
 
+function scrollQuizTop() {
+  const active = document.activeElement;
+  if (active && typeof active.blur === 'function') {
+    active.blur();
+  }
+  window.scrollTo(0, 0);
+  document.documentElement.scrollTop = 0;
+  document.body.scrollTop = 0;
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  });
+}
+
 // ===== 画面遷移 =====
 function showScreen(id) {
   ['screen-top', 'screen-quiz', 'screen-result'].forEach(s => {
@@ -136,6 +151,7 @@ function showScreen(id) {
   });
   document.body.classList.toggle('is-quiz-screen', id === 'screen-quiz');
   updateHeaderStats();
+  scrollQuizTop();
 }
 
 function goHome() {
@@ -625,6 +641,7 @@ function nextQuestion() {
     renderQuestion();
     saveSession();
     updateHeaderStats();
+    scrollQuizTop();
   }
 }
 

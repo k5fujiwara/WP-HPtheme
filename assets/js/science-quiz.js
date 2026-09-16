@@ -275,9 +275,18 @@
   }
 
   function scrollQuizTop() {
+    var active = document.activeElement;
+    if (active && typeof active.blur === 'function') {
+      active.blur();
+    }
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+    requestAnimationFrame(function () {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
   }
 
   function request(path, body) {
@@ -456,6 +465,7 @@
         setWait(false);
         show(playEl);
         paintQuestion(data.question);
+        scrollQuizTop();
       })
       .catch(function (err) {
         setWait(false);

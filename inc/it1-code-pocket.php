@@ -124,11 +124,12 @@ function mytheme_it1_hp_bar_html(): string {
 function mytheme_it1_hp_bar_css(): string {
     return '<style>
 html,body{margin:0!important}
+:root{--it1-header-h:3.5rem}
 body{--header-bg:#fff!important;--header-text:#1e3a5f!important}
-body .themed-header{position:sticky!important;top:0!important;left:0!important;right:0!important;z-index:70;display:flex!important;flex-flow:row wrap!important;align-items:center!important;justify-content:flex-start!important;gap:6px 8px!important;width:100%!important;min-height:0!important;padding:8px 12px!important;background:#fff!important;background-image:none!important;color:#1e3a5f!important;border:0!important;border-bottom:1px solid #e2e8f0!important;outline:0!important;box-shadow:none!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
+body .themed-header{position:fixed!important;top:0!important;left:0!important;right:0!important;z-index:70;display:flex!important;flex-flow:row wrap!important;align-items:center!important;justify-content:flex-start!important;gap:6px 8px!important;width:100%!important;min-height:0!important;padding:8px 12px!important;background:#fff!important;background-image:none!important;color:#1e3a5f!important;border:0!important;border-bottom:1px solid #e2e8f0!important;outline:0!important;box-shadow:none!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif}
 body .themed-header::before,body .themed-header::after{content:none!important;display:none!important}
-body .themed-header+main{padding-top:1rem!important}
-body.is-quiz-screen .quiz-progress{position:relative!important;top:auto!important}
+body .themed-header+main{padding-top:calc(var(--it1-header-h) + 1rem)!important}
+body.is-quiz-screen .quiz-progress{position:fixed!important;top:var(--it1-header-h)!important;left:0!important;right:0!important}
 .themed-header .header-brand{display:contents!important}
 .themed-header .app-title{display:none!important}
 .it1-hp-head{order:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;min-width:0;flex:0 1 auto;max-width:min(100%,22rem);line-height:1.2}
@@ -154,7 +155,8 @@ body.has-it1-bottom-ad{padding-bottom:120px}
 .it1-ad--bottom.is-filled{position:fixed;left:0;right:0;bottom:0;z-index:90;margin:0;max-width:none;width:auto;max-height:120px;display:block;padding:8px 12px 12px;background:var(--bg,#fff);box-shadow:0 -10px 16px var(--bg,#fff);overflow:hidden}
 .it1-ad--bottom.is-filled .adsbygoogle,.it1-ad--bottom.is-filled iframe{max-height:90px!important}
 }
-</style>';
+</style>
+<script>(function(){function syncIt1HeaderHeight(){var h=document.querySelector(".themed-header");if(!h)return;document.documentElement.style.setProperty("--it1-header-h",h.offsetHeight+"px");}function bind(){syncIt1HeaderHeight();window.addEventListener("resize",syncIt1HeaderHeight);var h=document.querySelector(".themed-header");if(h&&window.ResizeObserver){new ResizeObserver(syncIt1HeaderHeight).observe(h);}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind);else bind();})();</script>';
 }
 
 function mytheme_it1_rewrite_html_links(string $html): string {
