@@ -146,18 +146,18 @@ body.is-quiz-screen #screen-quiz,body.is-quiz-screen .quiz-toolbar{scroll-margin
 .themed-header .it1-hp-tools__btn--home{color:#fff!important;background:#0f62fe!important;border-color:#0f62fe!important}
 .themed-header .it1-hp-tools__btn--science{color:#fff!important;background:#1f6b4a!important;border-color:#1f6b4a!important}
 .themed-header .it1-hp-tools__btn--japanese{color:#fff!important;background:#9a3b32!important;border-color:#9a3b32!important}
-.it1-ad{margin:20px 0 0}
+.it1-ad{margin:20px auto 0;max-width:40rem;width:100%}
 .it1-ad--bottom{overflow:hidden}
 .it1-ad--bottom .adsbygoogle{display:block;max-height:90px;overflow:hidden}
 .it1-ad--bottom iframe{max-height:90px!important}
-.it1-ad--bottom:not(.is-filled){margin:0;min-height:0}
+.it1-ad--bottom:not(.is-filled){margin:0 auto;min-height:0}
 .it1-ad--bottom:not(.is-filled) .adsbygoogle{min-height:0}
 @media(max-width:640px){
 .it1-hp-tools{gap:4px;width:100%;justify-content:flex-start;margin-left:0}
 .themed-header .it1-hp-tools__btn{min-height:30px;padding:4px 8px;font-size:.7rem}
 }
 @media(max-width:1099px){
-main.app-shell.has-it1-bottom-ad,body.has-it1-bottom-ad{padding-bottom:120px}
+body.has-it1-bottom-ad{padding-bottom:120px}
 .it1-ad--bottom.is-filled{position:fixed;left:0;right:0;bottom:0;z-index:90;margin:0;max-width:none;width:100%;max-height:120px;display:block;padding:8px 0 10px;background:var(--bg,#fff);box-shadow:0 -10px 16px var(--bg,#fff);overflow:hidden}
 .it1-ad--bottom.is-filled .adsbygoogle,.it1-ad--bottom.is-filled iframe{max-height:90px!important}
 }
@@ -260,9 +260,8 @@ function mytheme_it1_bottom_ad_html(): string {
         . '</div>'
         . '<script>'
         . '(function(){'
-        . 'function mark(){var box=document.querySelector("[data-it1-ad]");if(!box)return;var iframe=box.querySelector("iframe");var filled=!!(iframe&&iframe.offsetHeight>40);box.classList.toggle("is-filled",filled);var main=document.querySelector("main.app-shell,main");if(main)main.classList.toggle("has-it1-bottom-ad",filled);document.body.classList.toggle("has-it1-bottom-ad",filled);}'
-        . 'function visible(box){if(!box||box.hidden)return false;var s=window.getComputedStyle(box);if(s.display==="none"||s.visibility==="hidden")return false;return box.getBoundingClientRect().width>0;}'
-        . 'function request(){var box=document.querySelector("[data-it1-ad]");if(!box)return;var ins=box.querySelector("ins.adsbygoogle");if(!visible(box)){if(ins&&!ins.getAttribute("data-adsbygoogle-status"))ins.remove();mark();return;}if(!ins){ins=document.createElement("ins");ins.className="adsbygoogle";ins.style.display="block";ins.style.maxHeight="90px";ins.style.overflow="hidden";ins.setAttribute("data-ad-client","ca-pub-6924336257757707");ins.setAttribute("data-ad-format","horizontal");ins.setAttribute("data-full-width-responsive","false");box.appendChild(ins);}if(ins.getAttribute("data-adsbygoogle-status")){mark();return;}try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}[400,1200,3000,6000].forEach(function(ms){setTimeout(mark,ms);});}'
+        . 'function mark(){var box=document.querySelector("[data-it1-ad]");if(!box)return;var iframe=box.querySelector("iframe");var filled=!!(iframe&&iframe.offsetHeight>40);box.classList.toggle("is-filled",filled);document.body.classList.toggle("has-it1-bottom-ad",filled);}'
+        . 'function request(){var box=document.querySelector("[data-it1-ad]");if(!box)return;var ins=box.querySelector("ins.adsbygoogle");if(!ins){ins=document.createElement("ins");ins.className="adsbygoogle";ins.style.display="block";ins.style.maxHeight="90px";ins.style.overflow="hidden";ins.setAttribute("data-ad-client","ca-pub-6924336257757707");ins.setAttribute("data-ad-format","horizontal");ins.setAttribute("data-full-width-responsive","false");box.appendChild(ins);}if(ins.getAttribute("data-adsbygoogle-status")){mark();return;}try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}[400,1200,3000,6000].forEach(function(ms){setTimeout(mark,ms);});}'
         . 'if(document.readyState==="complete")request();else window.addEventListener("load",request);'
         . '})();'
         . '</script>';
@@ -298,7 +297,11 @@ function mytheme_it1_inject_chrome(string $html, string $slug = 'index'): string
     if ( ! mytheme_it1_skip_ads($slug) ) {
         $ad = mytheme_it1_bottom_ad_html();
         $placed = 0;
-        $html = preg_replace('#</main>#i', $ad . '</main>', $html, 1, $placed);
+        // 理科・国語と同様：本文コンテナの直後・フッター直前
+        $html = preg_replace('#(<div\b[^>]*\bid=["\']site-footer["\'][^>]*>)#i', $ad . '$1', $html, 1, $placed);
+        if ( ! $placed ) {
+            $html = preg_replace('#</main>#i', '</main>' . $ad, $html, 1, $placed);
+        }
         if ( ! $placed ) {
             if ( strpos($html, '</body>') !== false ) {
                 $html = str_replace('</body>', $ad . '</body>', $html);
