@@ -370,13 +370,13 @@ function suspendQuiz() {
     return;
   }
   saveSession();
-  alert('現在の進行状況を保存しました。トップ画面から再開できます。');
+  alert('現在の進行状況を保存しました。スタート画面の「再開する」から続けられます。');
   showScreen('screen-top');
   updateResumeCard();
 }
 
 function abandonQuiz() {
-  const ok = confirm('現在のクイズを終了してトップへ戻りますか？');
+  const ok = confirm('現在のクイズを終了して、問題の選択画面に戻りますか？');
   if (!ok) return;
   if (state.quizMode !== 'review') {
     clearSession();

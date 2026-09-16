@@ -77,17 +77,6 @@
     <div class="header-brand flex items-center gap-2 min-w-0">
       <span class="app-title truncate" id="header-title">IT1-CODE-POCKET</span>
     </div>
-    <div id="learning-status-actions" class="learning-status-actions hidden" aria-label="学習状況">
-      <button id="status-session-btn" class="learning-status-btn learning-status-btn-session hidden" onclick="openLearningStatusModal('resume')" type="button">再開</button>
-      <button id="status-review-btn" class="learning-status-btn learning-status-btn-review hidden" onclick="openLearningStatusModal('review')" type="button">復習 0</button>
-    </div>
-    <div class="header-quiz-actions">
-      <button class="header-quiz-action-btn" onclick="suspendQuiz()">中断</button>
-      <button class="header-quiz-action-btn" onclick="abandonQuiz()">戻る</button>
-    </div>
-    <div class="header-stats shrink-0" id="header-stats">
-      0 / 0
-    </div>
   </header>
 
   <main class="app-shell max-w-lg mx-auto px-4 pb-8 pt-4">
@@ -135,6 +124,10 @@
             </div>
           </div>
 
+          <div id="learning-status-actions" class="learning-status-actions hidden" aria-label="学習状況">
+            <button id="status-session-btn" class="learning-status-btn learning-status-btn-session hidden" onclick="openLearningStatusModal('resume')" type="button">再開する</button>
+            <button id="status-review-btn" class="learning-status-btn learning-status-btn-review hidden" onclick="openLearningStatusModal('review')" type="button">復習 0</button>
+          </div>
           <button class="themed-btn-primary w-full py-4 text-lg font-bold" onclick="startQuiz()">
             🚀 スタート！
           </button>
@@ -279,6 +272,13 @@
 
     <!-- ===== クイズ画面 ===== -->
     <section id="screen-quiz" class="hidden">
+      <div class="quiz-toolbar">
+        <div class="header-stats" id="header-stats">0 / 0</div>
+        <div class="header-quiz-actions">
+          <button class="header-quiz-action-btn" onclick="suspendQuiz()" type="button">中断</button>
+          <button class="header-quiz-action-btn" onclick="abandonQuiz()" type="button">戻る</button>
+        </div>
+      </div>
       <div class="progress-bar quiz-progress">
         <div class="progress-fill" id="progress-fill" style="width:0%"></div>
       </div>
@@ -327,7 +327,7 @@
         🔄 もう一度
       </button>
       <button class="themed-btn-secondary w-full py-3 text-sm font-bold" onclick="goHome()">
-        🏠 トップに戻る
+        問題を選びなおす
       </button>
     </section>
 
