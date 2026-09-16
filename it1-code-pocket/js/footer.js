@@ -12,30 +12,42 @@ function it1HomeUrl() {
   return window.location.origin + (match ? match[1] : '/it1-code-pocket') + '/';
 }
 
+function currentShareUrl() {
+  return window.location.href.split('#')[0];
+}
+
+function currentShareText() {
+  const hp = window.IT1_HP || {};
+  const title = (document.title || '').trim();
+  if (title) return title;
+  return (hp.siteName || 'IT1-CODE-POCKET') + ' | 情報Ⅰ 第3問対策';
+}
+
+function buildShareLinks() {
+  const pageUrl = currentShareUrl();
+  const shareUrl = encodeURIComponent(pageUrl);
+  const shareText = encodeURIComponent(currentShareText());
+  const xShareUrl = encodeURIComponent(pageUrl + (pageUrl.includes('?') ? '&' : '?') + 'share=x');
+
+  return `
+      <div class="site-footer-share" aria-label="SNSで共有">
+        <a class="site-footer-share-btn share-x" href="https://twitter.com/intent/tweet?text=${shareText}&url=${xShareUrl}" target="_blank" rel="noopener noreferrer">Xで共有</a>
+        <a class="site-footer-share-btn share-line" href="https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}" target="_blank" rel="noopener noreferrer">LINEで共有</a>
+        <a class="site-footer-share-btn share-facebook" href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" rel="noopener noreferrer">Facebook</a>
+      </div>
+    `;
+}
+
 function renderSiteFooter() {
   const mount = document.getElementById('site-footer');
   if (!mount) return;
 
-  const path = window.location.pathname.replace(/\/+$/, '');
-  const isTopPage = /\/it1-code-pocket$/.test(path);
   const home = it1HomeUrl();
   const hp = window.IT1_HP || {};
   const siteName = hp.siteName || document.title || 'IT1-CODE-POCKET';
   const year = hp.year || String(new Date().getFullYear());
   const copyright = `© ${year} ${siteName}`;
-  const shareUrl = encodeURIComponent(home);
-  const xShareUrl = encodeURIComponent(home + (home.includes('?') ? '&' : '?') + 'share=x');
-  const shareText = encodeURIComponent(`${siteName} | 情報Ⅰ 第3問対策`);
-  const lineShareText = encodeURIComponent(`${siteName} | 情報Ⅰ 第3問対策\n${home}`);
-  const shareLinks = isTopPage
-    ? `
-      <div class="site-footer-share" aria-label="SNSで共有">
-        <a class="site-footer-share-btn share-x" href="https://twitter.com/intent/tweet?text=${shareText}&url=${xShareUrl}" target="_blank" rel="noopener noreferrer">Xで共有</a>
-        <a class="site-footer-share-btn share-line" href="https://line.me/R/share?text=${lineShareText}">LINEで共有</a>
-        <a class="site-footer-share-btn share-facebook" href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" rel="noopener noreferrer">Facebook</a>
-      </div>
-    `
-    : '';
+  const shareLinks = buildShareLinks();
 
   const examples = hp.examples || (home + 'question-examples/');
   const guide = hp.guide || (home + 'study-guide/');

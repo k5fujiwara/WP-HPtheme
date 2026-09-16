@@ -2,21 +2,97 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * いま開いているページの共有用URL
+ */
+function mytheme_get_share_page_url(): string {
+    if ( is_singular() ) {
+        $permalink = get_permalink();
+        if ( is_string( $permalink ) && $permalink !== '' ) {
+            return $permalink;
+        }
+    }
+
+    if ( is_front_page() ) {
+        return home_url( '/' );
+    }
+
+    if ( is_home() ) {
+        $posts_page_id = (int) get_option( 'page_for_posts' );
+        if ( $posts_page_id > 0 ) {
+            $url = get_permalink( $posts_page_id );
+            if ( is_string( $url ) && $url !== '' ) {
+                return $url;
+            }
+        }
+        return home_url( '/' );
+    }
+
+    global $wp;
+    $request = isset( $wp->request ) ? trim( (string) $wp->request, '/' ) : '';
+    if ( $request !== '' ) {
+        return home_url( user_trailingslashit( $request ) );
+    }
+
+    if ( ! empty( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+        $scheme = is_ssl() ? 'https://' : 'http://';
+        return $scheme . $_SERVER['HTTP_HOST'] . strtok( (string) $_SERVER['REQUEST_URI'], '#' );
+    }
+
+    return home_url( '/' );
+}
+
+/**
+ * いま開いているページの共有テキスト
+ */
+function mytheme_get_share_page_text(): string {
+    if ( is_singular() ) {
+        $title = get_the_title();
+        if ( is_string( $title ) && $title !== '' ) {
+            return wp_strip_all_tags( $title );
+        }
+    }
+
+    $document_title = wp_get_document_title();
+    if ( is_string( $document_title ) && $document_title !== '' ) {
+        return wp_strip_all_tags( $document_title );
+    }
+
+    return (string) get_bloginfo( 'name' );
+}
+
+/**
+ * LINE Social Plugins の共有URL（PC/スマホ両対応）
+ */
+function mytheme_build_line_share_url( string $url = '', string $text = '' ): string {
+    $url  = $url !== '' ? $url : mytheme_get_share_page_url();
+    $text = $text !== '' ? $text : mytheme_get_share_page_text();
+
+    return add_query_arg(
+        [
+            'url'  => $url,
+            'text' => $text,
+        ],
+        'https://social-plugins.line.me/lineit/share'
+    );
+}
+
+/**
  * SNSシェアボタンを表示（コンテンツ内用）
  */
 function mytheme_sns_share_buttons() {
-    $url = urlencode(get_permalink());
-    $title = urlencode(get_the_title());
-    
-    // X (Twitter)のシェアURL
-    $twitter_url = 'https://twitter.com/intent/tweet?url=' . $url . '&text=' . $title;
-    
-    // Facebookのシェアurl
-    $facebook_url = 'https://www.facebook.com/sharer/sharer.php?u=' . $url;
-    
-    // LINEのシェアURL
-    $line_url = 'https://social-plugins.line.me/lineit/share?url=' . $url;
-    
+    $url = mytheme_get_share_page_url();
+    $title = mytheme_get_share_page_text();
+
+    $twitter_url = add_query_arg(
+        [
+            'url'  => $url,
+            'text' => $title,
+        ],
+        'https://twitter.com/intent/tweet'
+    );
+    $facebook_url = add_query_arg( [ 'u' => $url ], 'https://www.facebook.com/sharer/sharer.php' );
+    $line_url = mytheme_build_line_share_url( $url, $title );
+
     ?>
     <div class="sns-share">
         <span class="sns-share-label">シェア：</span>
@@ -59,18 +135,19 @@ function mytheme_sns_share_buttons() {
  * ヘッダーメニュー用のSNSシェアドロップダウンを表示
  */
 function mytheme_header_sns_share_menu() {
-    $url = urlencode(get_permalink());
-    $title = urlencode(get_the_title());
-    
-    // X (Twitter)のシェアURL
-    $twitter_url = 'https://twitter.com/intent/tweet?url=' . $url . '&text=' . $title;
-    
-    // Facebookのシェアurl
-    $facebook_url = 'https://www.facebook.com/sharer/sharer.php?u=' . $url;
-    
-    // LINEのシェアURL
-    $line_url = 'https://social-plugins.line.me/lineit/share?url=' . $url;
-    
+    $url = mytheme_get_share_page_url();
+    $title = mytheme_get_share_page_text();
+
+    $twitter_url = add_query_arg(
+        [
+            'url'  => $url,
+            'text' => $title,
+        ],
+        'https://twitter.com/intent/tweet'
+    );
+    $facebook_url = add_query_arg( [ 'u' => $url ], 'https://www.facebook.com/sharer/sharer.php' );
+    $line_url = mytheme_build_line_share_url( $url, $title );
+
     echo '<div class="sns-share-menu-wrapper">' .
          '<button class="sns-share-menu-toggle" aria-expanded="false" aria-label="シェアする">' .
          '<svg class="sns-share-menu-toggle__icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' .

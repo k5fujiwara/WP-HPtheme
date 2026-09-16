@@ -81,23 +81,33 @@
 
         <div class="site-footer__bottom">
             <?php
-            global $wp;
-            $share_url  = rawurlencode( home_url( add_query_arg( [], $wp->request ) ) );
-            $share_text = rawurlencode( get_bloginfo('name') );
+            $share_page_url  = function_exists( 'mytheme_get_share_page_url' ) ? mytheme_get_share_page_url() : home_url( '/' );
+            $share_page_text = function_exists( 'mytheme_get_share_page_text' ) ? mytheme_get_share_page_text() : get_bloginfo( 'name' );
+            $share_x_url = add_query_arg(
+                [
+                    'url'  => $share_page_url,
+                    'text' => $share_page_text,
+                ],
+                'https://twitter.com/intent/tweet'
+            );
+            $share_fb_url = add_query_arg( [ 'u' => $share_page_url ], 'https://www.facebook.com/sharer/sharer.php' );
+            $share_line_url = function_exists( 'mytheme_build_line_share_url' )
+                ? mytheme_build_line_share_url( $share_page_url, $share_page_text )
+                : add_query_arg( [ 'url' => $share_page_url ], 'https://social-plugins.line.me/lineit/share' );
             ?>
             <div class="global-share" aria-label="このページをシェア">
                 <div class="share-buttons">
-                    <a class="share-x" href="<?php echo esc_url( 'https://twitter.com/intent/tweet?url=' . $share_url . '&text=' . $share_text ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Xでシェア">
+                    <a class="share-x" href="<?php echo esc_url( $share_x_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Xでシェア">
                         <span>𝕏</span>
                         <span class="label-desktop">シェアする</span>
                         <span class="label-mobile">シェア</span>
                     </a>
-                    <a class="share-fb" href="<?php echo esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . $share_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Facebookでシェア">
+                    <a class="share-fb" href="<?php echo esc_url( $share_fb_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="Facebookでシェア">
                         <span>f</span>
                         <span class="label-desktop">シェアする</span>
                         <span class="label-mobile">シェア</span>
                     </a>
-                    <a class="share-line" href="<?php echo esc_url( 'https://social-plugins.line.me/lineit/share?url=' . $share_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="LINEでシェア">
+                    <a class="share-line" href="<?php echo esc_url( $share_line_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="LINEでシェア">
                         <span>LINE</span>
                         <span class="label-desktop">シェアする</span>
                         <span class="label-mobile">シェア</span>
