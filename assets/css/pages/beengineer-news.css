@@ -17,6 +17,30 @@
     border-radius: 8px;
     box-shadow: 0 16px 36px rgba(9, 20, 14, 0.14);
     color: #ffffff;
+    margin-top: 0;
+}
+
+/* パンくずとタイトルの間に入る自動広告の空き枠を消す */
+.beengineer-news-archive-page .breadcrumb + *:not(.page-header):has(+ .page-header),
+.single-beengineer-news-content .breadcrumb + *:not(.page-header):has(+ .page-header),
+.beengineer-news-archive-page > ins.adsbygoogle,
+.single-beengineer-news-content > ins.adsbygoogle,
+.beengineer-news-archive-page > .google-auto-placed,
+.single-beengineer-news-content > .google-auto-placed,
+.beengineer-news-archive-page ins.adsbygoogle[data-ad-status="unfilled"],
+.single-beengineer-news-content ins.adsbygoogle[data-ad-status="unfilled"],
+body.single-beengineer-news .site-main > .google-auto-placed:first-child,
+body.single-beengineer-news .site-main > ins.adsbygoogle:first-child,
+body.post-type-archive-beengineer-news .site-main > .google-auto-placed:first-child,
+body.post-type-archive-beengineer-news .site-main > ins.adsbygoogle:first-child {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
 }
 
 .beengineer-news-archive__eyebrow,
