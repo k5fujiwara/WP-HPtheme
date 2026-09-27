@@ -6697,11 +6697,57 @@ html {
     border-radius: var(--radius-md);
 }
 
-.page-content:not(.legal-page) .page-body table {
-    display: block;
+.page-content:not(.legal-page) .page-body figure.wp-block-table,
+.page-content:not(.legal-page) .page-body .wp-block-table {
     width: 100%;
+    max-width: 100%;
+    margin: 1.6em 0;
     overflow-x: auto;
+}
+
+.page-content:not(.legal-page) .page-body .wp-block-table.aligncenter,
+.page-content:not(.legal-page) .page-body .wp-block-table.alignwide {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.page-content:not(.legal-page) .page-body table {
+    display: table;
+    width: 100%;
+    margin: 1.4em 0;
+    border-collapse: collapse;
     border-spacing: 0;
+    table-layout: auto;
+}
+
+.page-content:not(.legal-page) .page-body .wp-block-table table {
+    margin: 0;
+}
+
+.page-content:not(.legal-page) .page-body th,
+.page-content:not(.legal-page) .page-body td {
+    padding: 14px 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    color: var(--text-primary);
+    font-size: 0.98rem;
+    line-height: 1.75;
+    text-align: left;
+    vertical-align: top;
+    word-break: break-word;
+}
+
+.page-content:not(.legal-page) .page-body thead th,
+.page-content:not(.legal-page) .page-body th {
+    background: #f3f6fa;
+    font-weight: 700;
+}
+
+.page-content:not(.legal-page) .page-body tbody tr:nth-child(even) td {
+    background: #f7f9fc;
+}
+
+.page-content:not(.legal-page) .page-body tbody tr:nth-child(odd) td {
+    background: #fff;
 }
 
 .article-callout {
