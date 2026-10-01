@@ -99,7 +99,8 @@
             .site-nav__menu{display:none}
             .site-nav__actions{display:none}
             .site-nav__submenu{position:static;border:none;box-shadow:none;background:transparent;min-width:0;width:100%;padding:0 0 8px}
-            .site-nav__item--has-children:hover>.site-nav__submenu{display:none}
+            .site-nav__item--has-children:hover>.site-nav__submenu,
+            .site-nav__item--has-children:focus-within>.site-nav__submenu{display:none}
             .site-nav__item--has-children.is-open>.site-nav__submenu{display:block}
             .site-nav__submenu .site-nav__link{padding:12px 12px 12px 28px}
         }

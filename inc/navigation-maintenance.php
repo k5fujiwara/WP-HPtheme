@@ -179,10 +179,24 @@ function mytheme_primary_menu_fallback($args = []) {
         return;
     }
 
+    $news_url = function_exists('get_post_type_archive_link')
+        ? get_post_type_archive_link('news')
+        : '';
+    if ( ! $news_url ) {
+        $news_url = home_url('/news/');
+    }
+    $news_current = is_post_type_archive('news') || is_singular('news');
+
     echo '<ul id="' . esc_attr((string) $args['menu_id']) . '" class="' . esc_attr((string) $args['menu_class']) . '">';
     foreach ( $menu_items as $it ) {
         mytheme_render_primary_menu_item($it);
     }
+    echo '<li class="menu-item site-nav__item site-nav__item--sp-only' . ( $news_current ? ' current-menu-item site-nav__item--current' : '' ) . '">';
+    echo '<a class="site-nav__link" href="' . esc_url($news_url) . '"' . ( $news_current ? ' aria-current="page"' : '' ) . '>更新情報</a>';
+    echo '</li>';
+    echo '<li class="menu-item site-nav__item site-nav__item--sp-only">';
+    echo '<a class="note-cta site-nav__note" href="' . esc_url('https://note.com/k5fujiwara?utm_source=info-study&utm_medium=referral&utm_campaign=nav') . '" target="_blank" rel="noopener noreferrer external">note を読む</a>';
+    echo '</li>';
     echo '</ul>';
 }
 

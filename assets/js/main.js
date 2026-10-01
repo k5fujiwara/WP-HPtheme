@@ -378,6 +378,9 @@
                 closeNavSubmenus(nav);
                 item.classList.toggle('is-open', willOpen);
                 toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                if (!willOpen) {
+                    toggle.blur();
+                }
             });
         });
 
