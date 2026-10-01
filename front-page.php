@@ -75,7 +75,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <div class="hero-section__inner">
             <p class="hero-eyebrow">Learning, Growth, and Creation</p>
             <h1 class="hero-title">学び続ける、成長し続ける</h1>
-            <p class="hero-lead">教育現場での実践、AI・プログラミング、資格学習、個人開発など、自分自身が学び・試したことを体系的に整理しています。</p>
+            <p class="hero-lead">教育現場での実践、AI・プログラミング、資格学習、個人開発など、自分自身が学び・試したことを<wbr>体系的に整理しています。</p>
         </div>
     </div>
 
@@ -83,24 +83,24 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <div class="front-section-heading">
             <p class="front-section-kicker">Start Here</p>
             <h2 id="front-finder-title" class="front-section-title">何を探していますか？</h2>
-            <p class="front-section-lead">目的に合わせて、記事・ツール・プロフィールへ進めます。</p>
+            <p class="front-section-lead">目的に合わせて、記事・ツール・<wbr>プロフィールへ進めます。</p>
         </div>
 
         <div class="front-choice-grid">
             <a class="front-choice-card" href="<?php echo esc_url($learning_column_url); ?>">
                 <span class="front-choice-card__label">学びたい</span>
                 <span class="front-choice-card__title">学習コラム</span>
-                <span class="front-choice-card__text">教育・AI・プログラミング・資格・学習法などを体系的に整理。</span>
+                <span class="front-choice-card__text">教育・AI・プログラミング・<wbr>資格・学習法などを体系的に整理。</span>
             </a>
             <a class="front-choice-card" href="<?php echo esc_url($works_url); ?>">
                 <span class="front-choice-card__label">使ってみたい</span>
                 <span class="front-choice-card__title">開発作品</span>
-                <span class="front-choice-card__text">情報Ⅰ対策や学習支援など、実際に制作したツールやプロジェクト。</span>
+                <span class="front-choice-card__text">情報Ⅰ対策や学習支援など、実際に制作した<wbr>ツールやプロジェクト。</span>
             </a>
             <a class="front-choice-card" href="<?php echo esc_url($about_url); ?>">
                 <span class="front-choice-card__label">運営者を知りたい</span>
                 <span class="front-choice-card__title">自己紹介</span>
-                <span class="front-choice-card__text">教育・研究・開発・教室運営など、これまでの経験と活動。</span>
+                <span class="front-choice-card__text">教育・研究・開発・<wbr>教室運営など、これまでの経験と活動。</span>
             </a>
         </div>
     </section>
@@ -109,26 +109,26 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <div class="front-section-heading">
             <p class="front-section-kicker">Featured</p>
             <h2 id="front-featured-title" class="front-section-title">代表的なコンテンツ</h2>
-            <p class="front-section-lead">このサイトらしさが伝わる、実践・開発・教育現場の入口です。</p>
+            <p class="front-section-lead">このサイトらしさが伝わる、実践・開発・<wbr>教育現場の入口です。</p>
         </div>
 
         <div class="front-featured-grid">
             <a class="front-featured-card front-featured-card--primary" href="<?php echo esc_url($works_url); ?>">
                 <span class="front-featured-card__eyebrow">Learning Product</span>
                 <h3 class="front-featured-card__title">教育・学習プロダクト</h3>
-                <p class="front-featured-card__text">情報Ⅰ対策アプリやLINE学習Botなど、学習者の課題解決を目的に制作したものをまとめています。</p>
+                <p class="front-featured-card__text">情報Ⅰ対策アプリや<wbr>LINE学習Botなど、学習者の課題解決を目的に<wbr>制作したものをまとめています。</p>
                 <span class="front-featured-card__link">開発作品を見る</span>
             </a>
             <a class="front-featured-card" href="<?php echo esc_url($learning_column_url); ?>">
                 <span class="front-featured-card__eyebrow">Column</span>
                 <h3 class="front-featured-card__title">教育・AI・継続学習の整理</h3>
-                <p class="front-featured-card__text">一般論だけでなく、実際に学び、試し、教育現場で考えたことを記事として蓄積しています。</p>
+                <p class="front-featured-card__text">一般論だけでなく、実際に学び、試し、<wbr>教育現場で考えたことを<wbr>記事として蓄積しています。</p>
                 <span class="front-featured-card__link">記事を読む</span>
             </a>
             <a class="front-featured-card" href="<?php echo esc_url($beengineer_news_url); ?>">
                 <span class="front-featured-card__eyebrow">BeEngineer通信</span>
                 <h3 class="front-featured-card__title">教育現場からの一次情報</h3>
-                <p class="front-featured-card__text">教室運営、イベント、生徒の学び、指導者としての振り返りをBeEngineer通信として発信します。</p>
+                <p class="front-featured-card__text">教室運営、イベント、生徒の学び、<wbr>指導者としての振り返りを<wbr>BeEngineer通信として発信します。</p>
                 <span class="front-featured-card__link">BeEngineer通信へ</span>
             </a>
         </div>
@@ -138,7 +138,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     <section class="front-latest-posts" aria-label="最新の学習コラム">
         <div class="front-latest-posts__inner">
             <h2 class="front-latest-posts__title">最新の学習コラム</h2>
-            <p class="front-latest-posts__lead">教育・AI・プログラミング・資格学習など、学びを実践につなげるための記事を更新しています。</p>
+            <p class="front-latest-posts__lead">教育・AI・プログラミング・<wbr>資格学習など、学びを実践につなげるための<wbr>記事を更新しています。</p>
 
             <div class="front-latest-posts__list">
                 <?php if ( $latest_posts->have_posts() ) : ?>
@@ -200,7 +200,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <div class="front-section-heading">
             <p class="front-section-kicker">Works</p>
             <h2 id="front-tools-title" class="front-section-title">開発作品</h2>
-            <p class="front-section-lead">技術スタックよりも、「誰の何を解決するか」が先に伝わるように整理しています。</p>
+            <p class="front-section-lead">技術スタックよりも、「誰の何を解決するか」が<wbr>先に伝わるように整理しています。</p>
         </div>
 
         <div class="front-tools__actions">
@@ -230,8 +230,8 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
                         </a>
                     </p>
                 </div>
-                <p class="front-beengineer__lead">BeEngineerは、中高生のための実践的なプログラミング教室です。</p>
-                <p class="front-beengineer__sublead">教室の取り組み、教育の考え方、イベントの記録をまとめて発信します。</p>
+                <p class="front-beengineer__lead">BeEngineerは、中高生のための<wbr>実践的なプログラミング教室です。</p>
+                <p class="front-beengineer__sublead">教室の取り組み、教育の考え方、<wbr>イベントの記録をまとめて発信します。</p>
             </div>
 
             <div class="front-beengineer__latest">
@@ -262,8 +262,8 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     <section class="front-about" aria-labelledby="front-about-title">
         <div class="front-about__inner">
             <div>
-                <h2 id="front-about-title" class="front-section-title">教育・開発・学びをつなげる個人Web資産</h2>
-                <p class="front-about__text">教育現場での指導や教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールなどを制作しています。日々の学びを、あとから使える形に整理して蓄積します。</p>
+                <h2 id="front-about-title" class="front-section-title">教育・開発・学びをつなげる<wbr>個人Web資産</h2>
+                <p class="front-about__text">教育現場での指導や教室運営と並行して、<wbr>情報Ⅰ教材、学習アプリ、<wbr>AIを活用した業務効率化ツールなどを制作しています。<wbr>日々の学びを、あとから使える形に整理して蓄積します。</p>
             </div>
             <p class="front-about__action">
                 <a class="work-link" href="<?php echo esc_url($about_url); ?>">運営者を知る</a>
@@ -275,7 +275,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
         <div class="front-ebooks__inner">
             <div>
                 <h2 id="front-ebooks-title" class="front-section-title">電子書籍</h2>
-                <p class="front-section-lead">学習法・仕事術・アウトプットなど、サイト内の実践知を別の形でも整理しています。</p>
+                <p class="front-section-lead">学習法・仕事術・アウトプットなど、<wbr>サイト内の実践知を<wbr>別の形でも整理しています。</p>
             </div>
             <a class="work-link" href="<?php echo esc_url($ebooks_url); ?>">電子書籍を見る</a>
         </div>
@@ -328,12 +328,12 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
 
             <div class="intro-container site-intro__panel">
                 <p class="intro-lead">
-                    教育現場での実践、AI・プログラミング、継続学習を整理するサイト
+                    教育現場での実践、<wbr>AI・プログラミング、継続学習を整理するサイト
                 </p>
                 <div class="intro-content">
                     <p class="intro-content__text">
-                        当サイトは、<strong>教育現場での実践、AI・プログラミング、情報Ⅰ、資格学習、個人開発</strong>に関する情報を整理しています。
-                        一般的な解説だけでなく、実際に学び、試し、使った経験をあとから参照できる形で蓄積します。
+                        当サイトは、<strong>教育現場での実践、AI・プログラミング、<wbr>情報Ⅰ、資格学習、個人開発</strong>に関する情報を整理しています。
+                        一般的な解説だけでなく、実際に学び、試し、<wbr>使った経験をあとから参照できる形で蓄積します。
                     </p>
                 </div>
 
@@ -350,7 +350,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
                             <div class="feature-icon-bg" aria-hidden="true"></div>
                         </div>
                         <h3 class="intro-feature__title">学習支援</h3>
-                        <p class="intro-feature__description">実践的な学習方法や資格取得の経験を共有します</p>
+                        <p class="intro-feature__description">実践的な学習方法や<wbr>資格取得の経験を共有します</p>
                     </div>
                     <div class="intro-feature">
                         <div class="feature-icon-wrapper">
@@ -362,7 +362,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
                             <div class="feature-icon-bg" aria-hidden="true"></div>
                         </div>
                         <h3 class="intro-feature__title">技術開発</h3>
-                        <p class="intro-feature__description">Pythonを中心とした開発プロジェクトを紹介します</p>
+                        <p class="intro-feature__description">Pythonを中心とした<wbr>開発プロジェクトを紹介します</p>
                     </div>
                     <div class="intro-feature">
                         <div class="feature-icon-wrapper">
@@ -374,7 +374,7 @@ $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
                             <div class="feature-icon-bg" aria-hidden="true"></div>
                         </div>
                         <h3 class="intro-feature__title">継続学習</h3>
-                        <p class="intro-feature__description">資格学習や実践の記録を、次の学びにつながる形で整理します</p>
+                        <p class="intro-feature__description">資格学習や実践の記録を、<wbr>次の学びにつながる形で整理します</p>
                     </div>
                 </div>
             </div>

@@ -5911,9 +5911,22 @@ html {
 
     .hero-lead {
         font-size: 0.92rem;
-        line-height: 1.7;
+        line-height: 1.75;
         margin-top: 14px;
-        max-width: 19rem;
+        max-width: none;
+    }
+
+    .front-page :is(p, h1, h2, h3, li, span) {
+        line-break: strict;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+    }
+
+    .front-latest-posts__title,
+    .front-news__title,
+    .front-beengineer__title {
+        overflow-wrap: break-word;
     }
 
     .intro-container {
@@ -6076,7 +6089,7 @@ html {
     .front-beengineer__title {
         font-size: 1.35rem;
         line-height: 1.28;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
     }
 
     .front-news__title {
