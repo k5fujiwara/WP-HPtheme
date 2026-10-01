@@ -66,11 +66,16 @@ function mytheme_get_share_page_text(): string {
 function mytheme_build_line_share_url( string $url = '', string $text = '' ): string {
     $url  = $url !== '' ? $url : mytheme_get_share_page_url();
     $text = $text !== '' ? $text : mytheme_get_share_page_text();
+    $message = trim( $text . "\n" . $url );
+
+    // スマホはLINEアプリの送信画面を開く。line.me/R をPCで使うと url が空のまま公式のログイン画面へ飛ぶ。
+    if ( function_exists( 'wp_is_mobile' ) && wp_is_mobile() ) {
+        return 'https://line.me/R/msg/text/?' . rawurlencode( $message );
+    }
 
     return add_query_arg(
         [
-            'url'  => $url,
-            'text' => $text,
+            'url' => $url,
         ],
         'https://social-plugins.line.me/lineit/share'
     );

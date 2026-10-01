@@ -28,11 +28,16 @@ function buildShareLinks() {
   const shareUrl = encodeURIComponent(pageUrl);
   const shareText = encodeURIComponent(currentShareText());
   const xShareUrl = encodeURIComponent(pageUrl + (pageUrl.includes('?') ? '&' : '?') + 'share=x');
+  const lineMessage = encodeURIComponent(currentShareText() + '\n' + pageUrl);
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const lineShareUrl = isMobile
+    ? `https://line.me/R/msg/text/?${lineMessage}`
+    : `https://social-plugins.line.me/lineit/share?url=${shareUrl}`;
 
   return `
       <div class="site-footer-share" aria-label="SNSで共有">
         <a class="site-footer-share-btn share-x" href="https://twitter.com/intent/tweet?text=${shareText}&url=${xShareUrl}" target="_blank" rel="noopener noreferrer">Xで共有</a>
-        <a class="site-footer-share-btn share-line" href="https://social-plugins.line.me/lineit/share?url=${shareUrl}&text=${shareText}" target="_blank" rel="noopener noreferrer">LINEで共有</a>
+        <a class="site-footer-share-btn share-line" href="${lineShareUrl}" target="_blank" rel="noopener noreferrer">LINEで共有</a>
         <a class="site-footer-share-btn share-facebook" href="https://www.facebook.com/sharer/sharer.php?u=${shareUrl}" target="_blank" rel="noopener noreferrer">Facebook</a>
       </div>
     `;
