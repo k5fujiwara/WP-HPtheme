@@ -91,6 +91,7 @@
         .site-nav__caret{display:inline-block;width:0;height:0;margin-top:1px;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor}
         .site-nav__actions{display:flex;align-items:center;gap:12px;margin-left:auto}
         .site-nav__action-toggle,.site-nav__action-link{display:inline-flex;align-items:center;gap:6px;padding:10px 6px;background:none;border:none;color:#161616;font-weight:500;text-decoration:none;cursor:pointer;white-space:nowrap}
+        .site-nav__note{display:inline-flex;align-items:center;justify-content:center;min-height:36px;margin:0;padding:8px 14px;border:1.5px solid #111;border-radius:10px;background:#fff;color:#111;font-weight:800;font-size:.875rem;line-height:1.2;text-decoration:none;white-space:nowrap}
         body.admin-bar .site-header-shell{top:32px}
         
         /* レスポンシブ */
@@ -195,6 +196,7 @@
                     <?php if ( function_exists('mytheme_header_updates_menu') ) : ?>
                         <?php mytheme_header_updates_menu(); ?>
                     <?php endif; ?>
+                    <a class="note-cta site-nav__note" href="<?php echo esc_url('https://note.com/k5fujiwara?utm_source=info-study&utm_medium=referral&utm_campaign=nav'); ?>" target="_blank" rel="noopener noreferrer external">note を読む</a>
                 </div>
             </div>
         </nav>

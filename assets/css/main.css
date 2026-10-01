@@ -1601,9 +1601,26 @@ html {
 .page-content:not(.legal-page) .page-body a.note-cta:focus-visible,
 .site-footer a.note-cta,
 .site-footer a.note-cta:hover,
-.site-footer a.note-cta:focus-visible {
+.site-footer a.note-cta:focus-visible,
+.site-nav a.note-cta {
     color: #111111;
     text-decoration: none;
+}
+
+.site-nav__note {
+    min-height: 36px;
+    margin-top: 0;
+    padding: 8px 14px;
+    font-size: 0.875rem;
+    box-shadow: none;
+}
+
+.site-nav a.site-nav__note:hover,
+.site-nav a.site-nav__note:focus-visible {
+    background: #111111;
+    color: #ffffff;
+    transform: none;
+    box-shadow: none;
 }
 
 .post-author-note {
@@ -5728,6 +5745,17 @@ html {
 
     .site-nav__actions > :last-child {
         border-bottom: none;
+    }
+
+    .site-nav__note {
+        width: 100%;
+        min-height: 46px;
+        margin: 12px 0 4px;
+    }
+
+    .site-nav__note:hover,
+    .site-nav__note:focus-visible {
+        color: #ffffff;
     }
 
     .sns-share-menu-wrapper {
