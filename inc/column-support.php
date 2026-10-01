@@ -253,7 +253,10 @@ function mytheme_render_learning_column_author_box(): void {
         <p class="post-author-box__text">教育・プログラミング・情報Ⅰ・AI活用などを中心に、実際に学び・試した内容をこのサイトに整理しています。</p>
         <div class="post-author-box__links">
             <a class="post-author-box__primary" href="<?php echo esc_url($about_url); ?>">詳しいプロフィール</a>
-            <a class="post-author-box__secondary" href="https://note.com/k5fujiwara" target="_blank" rel="noopener noreferrer external">日々の学びや実践記録はnoteでも発信しています。</a>
+        </div>
+        <div class="post-author-note">
+            <p class="post-author-note__text">ここにあるのは整理した記事です。考えている途中や、現場で感じたことは note に書いています。</p>
+            <a class="note-cta" href="<?php echo esc_url('https://note.com/k5fujiwara?utm_source=info-study&utm_medium=referral&utm_campaign=column_end'); ?>" target="_blank" rel="noopener noreferrer external">note を読む</a>
         </div>
     </section>
     <?php

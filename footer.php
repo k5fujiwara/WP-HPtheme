@@ -8,7 +8,8 @@
             <div class="site-footer__brand">
                 <p class="site-footer__text">&copy; <?php echo date('Y'); ?> <span itemprop="copyrightHolder"><?php bloginfo('name'); ?></span></p>
                 <p class="footer-tagline">教育現場での実践、AI・プログラミング、継続学習を整理する個人Web資産</p>
-                <p class="site-footer__note">日々の学びや実践記録は <a href="https://note.com/k5fujiwara" target="_blank" rel="noopener noreferrer external">note</a> でも軽く発信しています。</p>
+                <p class="site-footer__note">考えている途中や、現場で感じたことは note に書いています。</p>
+                <a class="note-cta" href="<?php echo esc_url('https://note.com/k5fujiwara?utm_source=info-study&utm_medium=referral&utm_campaign=footer'); ?>" target="_blank" rel="noopener noreferrer external">note を読む</a>
             </div>
         
             <?php

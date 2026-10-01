@@ -1570,6 +1570,72 @@ html {
     text-decoration: underline;
 }
 
+.note-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    margin-top: 12px;
+    padding: 12px 18px;
+    border: 1.5px solid #111111;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #111111;
+    font-weight: 800;
+    line-height: 1.4;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(17, 17, 17, 0.08);
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.note-cta:hover,
+.note-cta:focus-visible {
+    color: #111111;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(17, 17, 17, 0.14);
+}
+
+.page-content:not(.legal-page) .page-body a.note-cta,
+.page-content:not(.legal-page) .page-body a.note-cta:hover,
+.page-content:not(.legal-page) .page-body a.note-cta:focus-visible,
+.site-footer a.note-cta,
+.site-footer a.note-cta:hover,
+.site-footer a.note-cta:focus-visible {
+    color: #111111;
+    text-decoration: none;
+}
+
+.post-author-note {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid #111111;
+    border-radius: 16px;
+    background: #111111;
+}
+
+.page-content:not(.legal-page) .page-body .post-author-note__text {
+    margin: 0;
+    color: #ffffff;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    letter-spacing: 0;
+}
+
+.post-author-note .note-cta {
+    width: 100%;
+    margin-top: 0;
+    transform: none;
+}
+
+.post-author-note .note-cta:hover,
+.post-author-note .note-cta:focus-visible {
+    background: #f3f3f3;
+    transform: none;
+}
+
 .site-footer__links {
     flex: 1 1 420px;
     min-width: 0;

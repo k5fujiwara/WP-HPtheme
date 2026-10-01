@@ -246,15 +246,15 @@ get_header();
                     <?php endif; ?>
 
                     <h3>外部発信：YouTube / note</h3>
-                    <p>サイト内では「体系化した学習コラム」を中心に、外部では用途に合わせて補足的に発信しています。必要な方が参照できるよう、ここにまとめています。</p>
+                    <p>サイト内では整理した学習コラムを中心にしています。note では、同じテーマを日々の言葉で書いています。</p>
                     <ul class="history-content__list">
                         <li class="history-content__list-item">
                             <strong>YouTube</strong>：学習のアウトプット（主に英語）や、取り組みの記録を動画で発信しています。<br>
                             <a class="history-content__nested-link" href="https://www.youtube.com/channel/UCp0Bt81y7Dd5uuXNOaErNkw" target="_blank" rel="noopener noreferrer external">YouTubeチャンネルを見る</a>
                         </li>
                         <li class="history-content__list-item">
-                            <strong>note</strong>：日々の学びや実践記録を発信しています。<br>
-                            <a class="history-content__nested-link" href="https://note.com/k5fujiwara" target="_blank" rel="noopener noreferrer external">noteを見る</a>
+                            <strong>note</strong>：考えている途中や、現場で感じたことを自分の言葉で書いています。<br>
+                            <a class="note-cta" href="https://note.com/k5fujiwara?utm_source=info-study&amp;utm_medium=referral&amp;utm_campaign=about" target="_blank" rel="noopener noreferrer external">note を読む</a>
                         </li>
                     </ul>
 
