@@ -479,6 +479,77 @@ body.post-type-archive-beengineer-news .site-main > ins.adsbygoogle:first-child 
     }
 }
 
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"] {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 18px 0 16px;
+    margin-top: 6px;
+    border: 1px solid #1b4fbf;
+    border-radius: 6px;
+    background: #1b4fbf;
+    color: #ffffff !important;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-decoration: none !important;
+    box-shadow:
+        0 12px 22px rgba(18, 22, 20, 0.16),
+        0 2px 0 rgba(12, 32, 84, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    cursor: pointer;
+    overflow: hidden;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]::before {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: -38%;
+    width: 18%;
+    height: 140%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
+    transform: skewX(-22deg) translateX(0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]::after {
+    content: " >";
+    display: inline-block;
+    margin-left: 8px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]:hover,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]:focus-visible {
+    background: #143a8f;
+    border-color: #143a8f;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+    box-shadow:
+        0 16px 28px rgba(18, 22, 20, 0.2),
+        0 2px 0 rgba(10, 26, 68, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]:active {
+    transform: translateY(1px) scale(0.99);
+    box-shadow:
+        0 6px 12px rgba(18, 22, 20, 0.14),
+        0 1px 0 rgba(10, 26, 68, 0.28),
+        inset 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]:hover::before,
+.single-beengineer-news-content.page-content:not(.legal-page) .page-body a[href^="https://beengineer-organization.github.io/Ex-BeEn_Quiz"]:focus-visible::before {
+    opacity: 1;
+    animation: beengineerButtonShine 780ms ease forwards;
+}
+
 .beengineer-news-single__content::after {
     content: "";
     display: block;
