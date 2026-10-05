@@ -389,25 +389,6 @@ function mytheme_ensure_column_categories() {
 // サブタイトル機能はSEO必須ではないため撤去（必要なら後から復活可能）
 
 /**
- * 新規投稿の本文に「型」を自動セット（毎回の目次・見出し作成を省略）
- */
-function mytheme_default_post_content_template($content, $post = null) {
-    // WPバージョン/呼び出し元によっては $post が渡らない場合があるため、必ずガードする
-    if ( ! is_object($post) || empty($post->post_type) ) return $content;
-    if ( $post->post_type !== 'post' ) return $content;
-    if ( is_string($content) && trim($content) !== '' ) return $content;
-
-    // ユーザー要望: 目次ショートコードのみを自動挿入
-    return implode("\n", [
-        '<!-- wp:shortcode -->',
-        '[mytheme_toc]',
-        '<!-- /wp:shortcode -->',
-        '',
-    ]);
-}
-add_filter('default_content', 'mytheme_default_post_content_template', 10, 2);
-
-/**
  * 辞書アーカイブURLを取得
  */
 function mytheme_get_dictionary_archive_url(): string {
