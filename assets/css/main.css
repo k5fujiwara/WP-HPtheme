@@ -1451,7 +1451,8 @@ html {
     left: 0;
     list-style: none;
     margin: 0;
-    min-width: 12.5rem;
+    min-width: max-content;
+    width: max-content;
     opacity: 0;
     padding: 8px 0;
     position: absolute;
@@ -1480,6 +1481,7 @@ html {
 .site-nav__subitem .site-nav__link {
     display: block;
     padding: 10px 16px;
+    white-space: nowrap;
 }
 
 .site-nav__subitem .site-nav__link:hover {

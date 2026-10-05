@@ -58,8 +58,33 @@ function mytheme_get_primary_menu_items() {
             'url'   => $works_url,
         ],
         [
-            'label' => 'BeEngineer通信',
-            'url'   => $beengineer_url,
+            'label' => 'BeEngineer',
+            'children' => [
+                [
+                    'label'    => 'BeEngineerHP',
+                    'url'      => 'https://be-engineer.tech/?utm_source=note&utm_medium=referral&utm_campaign=hp_fujiwara',
+                    'external' => true,
+                ],
+                [
+                    'label' => 'BeEngineer通信',
+                    'url'   => $beengineer_url,
+                ],
+                [
+                    'label'    => 'BeEnクイズ体験版',
+                    'url'      => 'https://beengineer-organization.github.io/Ex-BeEn_Quiz/',
+                    'external' => true,
+                ],
+                [
+                    'label'    => 'BeEngineer公式note',
+                    'url'      => 'https://note.com/beengineer',
+                    'external' => true,
+                ],
+                [
+                    'label'    => 'BeEngineer梅田校note',
+                    'url'      => 'https://note.com/beengineer_fuji',
+                    'external' => true,
+                ],
+            ],
         ],
         [
             'label' => '自己紹介',
@@ -131,7 +156,7 @@ function mytheme_is_primary_menu_item_current(string $label): bool {
         return mytheme_is_current_page_tree('works');
     }
 
-    if ( $label === 'BeEngineer通信' ) {
+    if ( $label === 'BeEngineer' || $label === 'BeEngineer通信' ) {
         return is_post_type_archive('beengineer-news') || is_singular('beengineer-news');
     }
 
@@ -255,13 +280,18 @@ function mytheme_render_primary_menu_item(array $it): void {
             }
             $child_label = (string) $child['label'];
             $child_url = (string) $child['url'];
+            $child_external = ! empty($child['external']);
             $child_is_current = mytheme_is_primary_menu_item_current($child_label);
             $child_classes = ['menu-item', 'site-nav__subitem'];
             if ( $child_is_current ) {
                 $child_classes[] = 'current-menu-item';
             }
+            $child_attrs = $child_is_current ? ' aria-current="page"' : '';
+            if ( $child_external ) {
+                $child_attrs .= ' target="_blank" rel="noopener noreferrer external"';
+            }
             echo '<li class="' . esc_attr(implode(' ', $child_classes)) . '">';
-            echo '<a class="site-nav__link" href="' . esc_url($child_url) . '"' . ( $child_is_current ? ' aria-current="page"' : '' ) . '>' . esc_html($child_label) . '</a>';
+            echo '<a class="site-nav__link" href="' . esc_url($child_url) . '"' . $child_attrs . '>' . esc_html($child_label) . '</a>';
             echo '</li>';
         }
         echo '</ul>';

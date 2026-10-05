@@ -82,7 +82,7 @@
         .site-nav__menu{list-style:none;padding:0;margin:0;display:flex;gap:28px;flex-wrap:nowrap;align-items:center}
         .site-nav__link{display:inline-block;padding:10px 6px;text-decoration:none;color:#161616;font-weight:500;transition:color .2s ease;white-space:nowrap}
         .site-nav__item--has-children{position:relative}
-        .site-nav__submenu{display:none;list-style:none;margin:0;padding:8px 0;position:absolute;left:0;top:100%;min-width:12.5rem;background:#fff;border:1px solid rgba(15,98,254,.12);border-radius:14px;box-shadow:0 14px 32px rgba(15,98,254,.12);z-index:120}
+        .site-nav__submenu{display:none;list-style:none;margin:0;padding:8px 0;position:absolute;left:0;top:100%;min-width:max-content;width:max-content;background:#fff;border:1px solid rgba(15,98,254,.12);border-radius:14px;box-shadow:0 14px 32px rgba(15,98,254,.12);z-index:120}
         .site-nav__item--has-children:hover>.site-nav__submenu,
         .site-nav__item--has-children:focus-within>.site-nav__submenu,
         .site-nav__item--has-children.is-open>.site-nav__submenu{display:block}
