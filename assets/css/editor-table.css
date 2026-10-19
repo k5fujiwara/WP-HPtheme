@@ -1,0 +1,51 @@
+/* 編集画面の表を公開ページと同じ折り方にする */
+.wp-block-table table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.wp-block-table td,
+.wp-block-table th,
+.wp-block-table .has-fixed-layout td,
+.wp-block-table .has-fixed-layout th {
+    line-break: strict;
+    word-break: keep-all;
+    word-break: auto-phrase;
+    overflow-wrap: normal;
+    text-wrap: pretty;
+}
+
+.mytheme-has-column-widths table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.mytheme-has-column-widths th:nth-child(1),
+.mytheme-has-column-widths td:nth-child(1) {
+    width: var(--mytheme-col-1);
+}
+
+.mytheme-has-column-widths th:nth-child(2),
+.mytheme-has-column-widths td:nth-child(2) {
+    width: var(--mytheme-col-2);
+}
+
+.mytheme-has-column-widths th:nth-child(3),
+.mytheme-has-column-widths td:nth-child(3) {
+    width: var(--mytheme-col-3);
+}
+
+.mytheme-has-column-widths th:nth-child(4),
+.mytheme-has-column-widths td:nth-child(4) {
+    width: var(--mytheme-col-4);
+}
+
+.mytheme-has-column-widths th:nth-child(5),
+.mytheme-has-column-widths td:nth-child(5) {
+    width: var(--mytheme-col-5);
+}
+
+.mytheme-has-column-widths th:nth-child(6),
+.mytheme-has-column-widths td:nth-child(6) {
+    width: var(--mytheme-col-6);
+}

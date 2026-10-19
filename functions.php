@@ -11,6 +11,9 @@ function mytheme_setup() {
     register_nav_menus([
         'primary' => 'Primary Menu',
     ]);
+    // 表の列幅など、編集画面の中身にテーマの見た目を合わせる
+    add_theme_support('editor-styles');
+    add_editor_style('assets/css/editor-table.css');
 }
 add_action('after_setup_theme', 'mytheme_setup');
 

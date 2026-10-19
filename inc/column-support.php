@@ -593,3 +593,191 @@ function mytheme_add_heading_ids_for_toc($content) {
     }, $content);
 }
 add_filter('the_content', 'mytheme_add_heading_ids_for_toc', 15);
+
+/**
+ * 表の各セルに見出し名を持たせ、狭い画面では列を潰さず1項目ずつ読めるようにする
+ */
+function mytheme_add_table_header_labels($content) {
+    if ( is_admin() || ! is_string($content) || stripos($content, '<table') === false ) {
+        return $content;
+    }
+
+    return preg_replace_callback('/<table\b[^>]*>.*?<\/table>/is', 'mytheme_label_table_html', $content);
+}
+add_filter('the_content', 'mytheme_add_table_header_labels', 12);
+
+function mytheme_label_table_html($matches) {
+    $table_html = (string) $matches[0];
+    if ( ! class_exists('DOMDocument') ) {
+        return $table_html;
+    }
+
+    $previous = libxml_use_internal_errors(true);
+    $doc = new DOMDocument();
+    $loaded = $doc->loadHTML(
+        '<?xml encoding="UTF-8"><div id="mytheme-table-root">' . $table_html . '</div>',
+        LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+    );
+    if ( ! $loaded ) {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        return $table_html;
+    }
+
+    $root = $doc->getElementById('mytheme-table-root');
+    $table = $root ? $root->getElementsByTagName('table')->item(0) : null;
+    if ( ! $table ) {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        return $table_html;
+    }
+
+    $header_row = null;
+    $thead = $table->getElementsByTagName('thead')->item(0);
+    if ( $thead ) {
+        $header_row = $thead->getElementsByTagName('tr')->item(0);
+    }
+    if ( ! $header_row ) {
+        foreach ( $table->getElementsByTagName('tr') as $row ) {
+            $header_row = $row;
+            break;
+        }
+    }
+    if ( ! $header_row ) {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        return $table_html;
+    }
+
+    $headers = [];
+    $col = 0;
+    foreach ( $header_row->childNodes as $cell ) {
+        if ( ! $cell instanceof DOMElement || ! in_array($cell->nodeName, ['th', 'td'], true) ) {
+            continue;
+        }
+        $span = (int) $cell->getAttribute('colspan');
+        if ( $span < 1 ) {
+            $span = 1;
+        }
+        $label = trim(preg_replace('/\s+/u', ' ', $cell->textContent));
+        for ( $i = 0; $i < $span; $i++ ) {
+            $headers[$col] = $label;
+            $col++;
+        }
+    }
+    if ( $headers === [] ) {
+        libxml_clear_errors();
+        libxml_use_internal_errors($previous);
+        return $table_html;
+    }
+
+    foreach ( $table->getElementsByTagName('tr') as $row ) {
+        if ( $row === $header_row ) {
+            continue;
+        }
+        if ( $row->parentNode && $row->parentNode->nodeName === 'thead' ) {
+            continue;
+        }
+        $index = 0;
+        foreach ( $row->childNodes as $cell ) {
+            if ( ! $cell instanceof DOMElement || ! in_array($cell->nodeName, ['th', 'td'], true) ) {
+                continue;
+            }
+            $span = (int) $cell->getAttribute('colspan');
+            if ( $span < 1 ) {
+                $span = 1;
+            }
+            $label = isset($headers[$index]) ? (string) $headers[$index] : '';
+            if ( $label !== '' && ! $cell->hasAttribute('data-label') ) {
+                $cell->setAttribute('data-label', $label);
+            }
+            $index += $span;
+        }
+    }
+
+    $html = '';
+    if ( $root ) {
+        foreach ( $root->childNodes as $child ) {
+            $html .= $doc->saveHTML($child);
+        }
+    }
+    libxml_clear_errors();
+    libxml_use_internal_errors($previous);
+
+    return $html !== '' ? $html : $table_html;
+}
+
+/**
+ * 編集画面で指定した列幅を、公開ページの表へ渡す。
+ * 幅はブロックの属性にだけ保存し、表のHTML自体はコアのままにする。
+ */
+function mytheme_render_table_column_widths($content, $block) {
+    if ( ! is_string($content) || ($block['blockName'] ?? '') !== 'core/table' ) {
+        return $content;
+    }
+
+    $widths = $block['attrs']['columnWidths'] ?? null;
+    if ( ! is_array($widths) || count($widths) < 2 || count($widths) > 6 ) {
+        return $content;
+    }
+
+    $vars = [];
+    foreach ( array_values($widths) as $index => $width ) {
+        if ( ! is_numeric($width) ) {
+            return $content;
+        }
+        $n = (int) round((float) $width);
+        if ( $n < 1 || $n > 100 ) {
+            return $content;
+        }
+        $vars[] = '--mytheme-col-' . ($index + 1) . ':' . $n . '%';
+    }
+
+    if ( ! preg_match('/<figure\b[^>]*>/', $content, $match, PREG_OFFSET_CAPTURE) ) {
+        return $content;
+    }
+
+    $tag = $match[0][0];
+    $style = implode(';', $vars);
+    if ( preg_match('/\sstyle=("|\')(.*?)\1/s', $tag, $style_match) ) {
+        $merged = rtrim($style_match[2], " \t\n\r\0\x0B;");
+        $merged = $merged === '' ? $style : $merged . ';' . $style;
+        $tag = preg_replace('/\sstyle=("|\')(.*?)\1/s', ' style="' . esc_attr($merged) . '"', $tag, 1);
+    } else {
+        $tag = preg_replace('/<figure\b/', '<figure style="' . esc_attr($style) . '"', $tag, 1);
+    }
+
+    if ( preg_match('/\sclass=("|\')(.*?)\1/s', $tag, $class_match) ) {
+        $classes = preg_split('/\s+/', trim($class_match[2])) ?: [];
+        if ( ! in_array('mytheme-has-column-widths', $classes, true) ) {
+            array_unshift($classes, 'mytheme-has-column-widths');
+        }
+        $tag = preg_replace('/\sclass=("|\')(.*?)\1/s', ' class="' . esc_attr(implode(' ', $classes)) . '"', $tag, 1);
+    } else {
+        $tag = preg_replace('/<figure\b/', '<figure class="mytheme-has-column-widths"', $tag, 1);
+    }
+
+    return substr_replace($content, $tag, $match[0][1], strlen($match[0][0]));
+}
+add_filter('render_block', 'mytheme_render_table_column_widths', 10, 2);
+
+function mytheme_enqueue_table_column_editor() {
+    $path = get_template_directory() . '/assets/js/table-columns.js';
+    if ( ! is_file($path) ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'mytheme-table-columns',
+        get_template_directory_uri() . '/assets/js/table-columns.js',
+        ['wp-hooks', 'wp-blocks', 'wp-element', 'wp-compose', 'wp-block-editor', 'wp-components', 'wp-block-library'],
+        (string) filemtime($path),
+        false
+    );
+
+    $edit_post = wp_scripts()->query('wp-edit-post', 'registered');
+    if ( $edit_post && ! in_array('mytheme-table-columns', $edit_post->deps, true) ) {
+        $edit_post->deps[] = 'mytheme-table-columns';
+    }
+}
+add_action('enqueue_block_editor_assets', 'mytheme_enqueue_table_column_editor');

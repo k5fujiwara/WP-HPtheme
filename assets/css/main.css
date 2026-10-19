@@ -6910,7 +6910,13 @@ html {
     line-height: 1.75;
     text-align: left;
     vertical-align: top;
-    word-break: break-word;
+    /* 列幅に合わせて1文字ずつ折ると「守る」が「守 / る」になる。
+       句読点と文節で折り、入りきらない表は横スクロールに任せる。 */
+    line-break: strict;
+    word-break: keep-all;
+    word-break: auto-phrase;
+    overflow-wrap: normal;
+    text-wrap: pretty;
 }
 
 .page-content:not(.legal-page) .page-body thead th,
@@ -6941,6 +6947,117 @@ html {
 .page-content:not(.legal-page) .page-body tbody tr:nth-child(even) td:first-child,
 .page-content:not(.legal-page) .page-body tbody tr:nth-child(odd) td:first-child {
     background: #eef4ff;
+}
+
+/* 編集画面で指定した列幅。未指定の表は内容に合わせて自動のまま */
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(1),
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(1) {
+    width: var(--mytheme-col-1);
+}
+
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(2),
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(2) {
+    width: var(--mytheme-col-2);
+}
+
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(3),
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(3) {
+    width: var(--mytheme-col-3);
+}
+
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(4),
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(4) {
+    width: var(--mytheme-col-4);
+}
+
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(5),
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(5) {
+    width: var(--mytheme-col-5);
+}
+
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(6),
+.page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(6) {
+    width: var(--mytheme-col-6);
+}
+
+/* 狭い画面では3列を潰して改行位置を変えない。見出し名を添えて1項目ずつ並べる */
+@media (max-width: 640px) {
+    .page-content:not(.legal-page) .page-body figure.wp-block-table,
+    .page-content:not(.legal-page) .page-body .wp-block-table {
+        overflow: visible;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .page-content:not(.legal-page) .page-body table {
+        display: block;
+        overflow: visible;
+        border-radius: 0;
+    }
+
+    .page-content:not(.legal-page) .page-body thead {
+        display: none;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody,
+    .page-content:not(.legal-page) .page-body tr {
+        display: block;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody tr {
+        margin: 0 0 14px;
+        overflow: hidden;
+        border: 1px solid rgba(15, 98, 254, 0.16);
+        border-radius: 12px;
+        background: #fff;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody td,
+    .page-content:not(.legal-page) .page-body tbody th {
+        display: block;
+        width: auto;
+        border: none;
+        border-top: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths table {
+        table-layout: auto;
+    }
+
+    .page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths th:nth-child(n),
+    .page-content:not(.legal-page) .page-body figure.mytheme-has-column-widths td:nth-child(n) {
+        width: auto;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody tr > :first-child {
+        border-top: none;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody :is(td, th)[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 4px;
+        color: #0f62fe;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        line-height: 1.4;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody tr:nth-child(even) td,
+    .page-content:not(.legal-page) .page-body tbody tr:nth-child(odd) td {
+        background: #fff;
+    }
+
+    .page-content:not(.legal-page) .page-body tbody tr :is(td, th):first-child {
+        background: #eef4ff;
+    }
 }
 
 .article-callout {
