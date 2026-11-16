@@ -1473,6 +1473,97 @@ function mytheme_get_work_category_groups() {
     ];
 }
 
+function mytheme_get_about_portfolio_work_cases(): array {
+    $labels = [
+        'education'  => 'Webアプリ・学習ツール',
+        'automation' => 'AI・業務自動化',
+        'experiment' => '技術検証',
+    ];
+    $roles = [
+        'education'  => '学習アプリの開発',
+        'automation' => '自動化ツールの開発',
+        'experiment' => '技術検証としての開発',
+    ];
+    $query = mytheme_get_work_archive_query();
+    if ( ! $query instanceof WP_Query ) {
+        return [];
+    }
+
+    $chosen = [];
+    foreach ( $query->posts as $post ) {
+        $post_id = (int) $post->ID;
+        $seed = (string) mytheme_get_work_meta($post_id, '_mytheme_work_seed_key');
+        $slug = (string) $post->post_name;
+        $key = $seed !== '' ? $seed : (string) preg_replace('/-2$/', '', $slug);
+        $has_image = (int) mytheme_get_work_meta($post_id, '_mytheme_work_card_image_id', 0) > 0
+            || mytheme_get_work_meta($post_id, '_mytheme_work_card_image_path') !== '';
+        if ( ! isset($chosen[$key]) || ( $has_image && empty($chosen[$key]['has_image']) ) ) {
+            $chosen[$key] = [
+                'id'        => $post_id,
+                'has_image' => $has_image,
+            ];
+        }
+    }
+
+    $cases = [];
+    foreach ( $chosen as $item ) {
+        $post_id = (int) $item['id'];
+        $presentation = mytheme_get_work_presentation_meta($post_id);
+        $category = isset($presentation['category']) ? (string) $presentation['category'] : 'automation';
+        if ( ! isset($labels[$category]) ) {
+            $category = 'automation';
+        }
+        $summary = trim((string) mytheme_get_work_meta($post_id, '_mytheme_work_card_description'));
+        if ( $summary === '' && has_excerpt($post_id) ) {
+            $summary = trim((string) get_the_excerpt($post_id));
+        }
+        if ( $summary === '' ) {
+            $summary = trim((string) ($presentation['target'] ?? ''));
+        }
+        if ( function_exists('mb_strlen') && mb_strlen($summary) > 110 ) {
+            $summary = rtrim(mb_substr($summary, 0, 108)) . '…';
+        }
+        $detail_url = (string) get_permalink($post_id);
+        $demo_url = (string) mytheme_get_work_meta($post_id, '_mytheme_work_demo_url');
+        if ( strpos($demo_url, '#') === 0 ) {
+            $demo_url = $detail_url . $demo_url;
+        }
+        $links = [
+            [
+                'label'    => '詳細を見る',
+                'url'      => $detail_url,
+                'external' => false,
+            ],
+        ];
+        if ( function_exists('mytheme_get_work_card_secondary_cta') ) {
+            $secondary = mytheme_get_work_card_secondary_cta($post_id, $detail_url, $demo_url);
+            if ( ! empty($secondary['url']) && $secondary['url'] !== $detail_url ) {
+                $links[] = [
+                    'label'    => (string) $secondary['label'],
+                    'url'      => (string) $secondary['url'],
+                    'external' => ! empty($secondary['is_external']),
+                ];
+            }
+        }
+        $cases[] = [
+            'group'   => $category,
+            'label'   => $labels[$category],
+            'title'   => (string) get_the_title($post_id),
+            'summary' => $summary,
+            'role'    => $roles[$category],
+            'sort'    => isset($presentation['sort']) ? (int) $presentation['sort'] : 90,
+            'links'   => $links,
+        ];
+    }
+    wp_reset_postdata();
+
+    usort($cases, function ($a, $b) {
+        return $a['sort'] <=> $b['sort'];
+    });
+
+    return $cases;
+}
+
 function mytheme_get_work_archive_query($args = []) {
     $defaults = [
         'post_type'      => 'work',

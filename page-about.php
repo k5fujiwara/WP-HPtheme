@@ -59,6 +59,91 @@ get_header();
             </div>
         </section>
 
+        <?php
+        $about_portfolio_cases = [
+            [
+                'title'   => '2026春の入塾募集',
+                'summary' => '同じ春募集でも、2月と3月以降では案内する内容が変わります。時期ごとにページを分け、その時点の募集をそのまま届けられるようにしました。',
+                'role'    => '募集LPの制作',
+                'links'   => [
+                    ['label' => '2月募集', 'url' => 'https://lp.be-engineer.tech/pages/new_year_2026.html', 'external' => true],
+                    ['label' => '3月以降募集', 'url' => 'https://lp.be-engineer.tech/pages/new_year_2026_march.html', 'external' => true],
+                ],
+            ],
+            [
+                'title'   => '2026夏の講習会',
+                'summary' => '夏の講習会に興味を持った人へ、内容と参加の流れが短時間で分かる案内ページを作りました。',
+                'role'    => '講習会LPの制作',
+                'links'   => [
+                    ['label' => '夏の講習会ページ', 'url' => 'https://lp.be-engineer.tech/pages/summer_2026.html', 'external' => true],
+                ],
+            ],
+            [
+                'title'   => '2026夏の合宿',
+                'summary' => '合宿は、まず雰囲気を伝える広報ページと、申し込みにつなげる募集ページに分けました。見る目的が違う人に、別の入口を用意しています。',
+                'role'    => '広報ページと募集ページの制作',
+                'links'   => [
+                    ['label' => '広報ページ', 'url' => 'https://keigo-fujiwara.github.io/public_beengineer_camp26_summer/', 'external' => true],
+                    ['label' => '募集ページ', 'url' => 'https://beengineer-organization.github.io/been_camp_2026_LP/', 'external' => true],
+                ],
+            ],
+            [
+                'title'   => '2026冬の講習会',
+                'summary' => '冬の講習会ページは、通常の案内とハロウィン仕様を同じ構成のまま切り替えられるようにしました。季節の企画に合わせて見た目だけを変えられます。',
+                'role'    => '講習会LPと表示テーマの制作',
+                'links'   => [
+                    ['label' => '冬の講習会ページ', 'url' => 'https://beengineer-organization.github.io/winter_courses_2026_kansai/', 'external' => true],
+                    ['label' => 'ハロウィン仕様', 'url' => 'https://beengineer-organization.github.io/winter_courses_2026_kansai/?theme=halloween', 'external' => true],
+                ],
+            ],
+        ];
+        $about_portfolio_groups = [
+            'LP・サイト' => $about_portfolio_cases,
+        ];
+        if ( function_exists('mytheme_get_about_portfolio_work_cases') ) {
+            foreach ( mytheme_get_about_portfolio_work_cases() as $work_case ) {
+                $group_label = (string) $work_case['label'];
+                if ( ! isset($about_portfolio_groups[$group_label]) ) {
+                    $about_portfolio_groups[$group_label] = [];
+                }
+                $about_portfolio_groups[$group_label][] = $work_case;
+            }
+        }
+        $works_archive_url = function_exists('mytheme_get_page_url_by_path')
+            ? mytheme_get_page_url_by_path('works', home_url('/works/'))
+            : home_url('/works/');
+        ?>
+        <section class="about-section about-section--portfolio" aria-labelledby="about-portfolio-title">
+            <h2 id="about-portfolio-title" class="about-section__title">制作実績</h2>
+            <div class="history-content about-portfolio">
+                <p class="about-portfolio__lead">プログラミング塾 BeEngineer の募集・広報LPと、学習アプリや業務自動化などの開発作品です。ページ制作から、動くプロダクトの開発まで扱っています。</p>
+                <?php foreach ( $about_portfolio_groups as $group_label => $group_cases ) : ?>
+                    <section class="about-portfolio__group" aria-labelledby="about-portfolio-<?php echo esc_attr(sanitize_title($group_label)); ?>">
+                        <h3 id="about-portfolio-<?php echo esc_attr(sanitize_title($group_label)); ?>" class="about-portfolio__group-title"><?php echo esc_html($group_label); ?></h3>
+                        <div class="about-portfolio__grid">
+                            <?php foreach ( $group_cases as $case ) : ?>
+                                <article class="about-portfolio__case">
+                                    <h4 class="about-portfolio__title"><?php echo esc_html($case['title']); ?></h4>
+                                    <p class="about-portfolio__summary"><?php echo esc_html($case['summary']); ?></p>
+                                    <p class="about-portfolio__role">担当：<?php echo esc_html($case['role']); ?></p>
+                                    <ul class="about-portfolio__links">
+                                        <?php foreach ( $case['links'] as $link ) : ?>
+                                            <li>
+                                                <a class="about-portfolio__link" href="<?php echo esc_url($link['url']); ?>"<?php echo ! empty($link['external']) ? ' target="_blank" rel="noopener noreferrer external"' : ''; ?>><?php echo esc_html($link['label']); ?></a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
+                <?php endforeach; ?>
+                <p class="about-portfolio__more">
+                    <a class="history-content__nested-link" href="<?php echo esc_url($works_archive_url); ?>">開発作品の一覧を見る</a>
+                </p>
+            </div>
+        </section>
+
         <div class="about-sections">
             <section class="about-section">
                 <h2 class="about-section__title">名前</h2>
