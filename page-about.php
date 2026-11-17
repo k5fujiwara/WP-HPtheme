@@ -35,7 +35,7 @@ get_header();
     // 経歴から抜き出した「ひと目で分かる」数字
     $about_facts = [
         ['num' => '14', 'unit' => '年', 'label' => '指導歴（個別指導5年・集団授業6年・プログラミング3年）'],
-        ['num' => '100', 'unit' => '名超', 'label' => 'の生徒が在籍する校舎を、責任者として運営'],
+        ['num' => '130', 'unit' => '名超', 'label' => 'の生徒が在籍する校舎を、責任者として運営'],
         ['num' => '2', 'unit' => '本', 'label' => '査読付き英語論文'],
     ];
     // 電子書籍は日本語版・英語版をそれぞれ1冊として数える
@@ -190,6 +190,38 @@ get_header();
                 $about_portfolio_groups[$group_label][] = $work_case;
             }
         }
+        // 開発作品（投稿）に未登録の実例を追加。同名の作品が投稿で登録されたら、そちらを優先して重複表示しない。
+        $about_extra_work_cases = [
+            'Webアプリ・学習ツール' => [
+                [
+                    'match'   => 'クイズ体験版',
+                    'title'   => 'BeEngineerクイズ体験版',
+                    'summary' => 'BeEngineer「チャットアプリ開発コース」の授業内容を、入会前に4択クイズで体験できるWebアプリ。10問・制限時間5分で、ログイン不要・スマホでもすぐ始められます。',
+                    'role'    => '学習アプリの開発',
+                    'links'   => [
+                        ['label' => '体験版を開く', 'url' => 'https://beengineer-organization.github.io/Ex-BeEn_Quiz/', 'external' => true],
+                    ],
+                ],
+            ],
+        ];
+        foreach ( $about_extra_work_cases as $group_label => $extra_cases ) {
+            if ( ! isset($about_portfolio_groups[$group_label]) ) {
+                $about_portfolio_groups[$group_label] = [];
+            }
+            foreach ( $extra_cases as $extra_case ) {
+                $already = false;
+                foreach ( $about_portfolio_groups[$group_label] as $existing_case ) {
+                    if ( strpos((string) $existing_case['title'], $extra_case['match']) !== false ) {
+                        $already = true;
+                        break;
+                    }
+                }
+                if ( ! $already ) {
+                    $about_portfolio_groups[$group_label][] = $extra_case;
+                }
+            }
+        }
+
         $works_archive_url = function_exists('mytheme_get_page_url_by_path')
             ? mytheme_get_page_url_by_path('works', home_url('/works/'))
             : home_url('/works/');
@@ -301,7 +333,7 @@ get_header();
                     <ul class="history-content__list">
                         <li class="history-content__list-item">個別指導塾：主任として運営参画</li>
                         <li class="history-content__list-item">集団授業塾：理系科目リーダー（数学・理科）</li>
-                        <li class="history-content__list-item">校舎責任者（2年間／在籍生徒100名超の校舎を運営）</li>
+                        <li class="history-content__list-item">校舎責任者（2年間／在籍生徒130名超の校舎を運営）</li>
                     </ul>
                 </div>
             </section>

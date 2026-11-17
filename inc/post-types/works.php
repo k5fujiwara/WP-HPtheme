@@ -1270,6 +1270,49 @@ function mytheme_seed_work_entries_once() {
 }
 add_action('init', 'mytheme_seed_work_entries_once', 30);
 
+/**
+ * 管理画面で登録した「BeEngineerクイズ体験版」（スラッグ beengineer-quiz-trial）に、
+ * テーマ側で使う設定のうち「未入力のものだけ」を1回補う。新規作成・本文の上書きはしない。
+ */
+function mytheme_link_beengineer_quiz_work_once() {
+    if ( get_option('mytheme_work_link_beengineer_quiz_v1') ) return;
+
+    $found = get_posts([
+        'post_type'              => 'work',
+        'post_status'            => ['publish', 'draft', 'pending', 'private'],
+        'name'                   => 'beengineer-quiz-trial',
+        'posts_per_page'         => 1,
+        'fields'                 => 'ids',
+        'no_found_rows'          => true,
+        'update_post_term_cache' => false,
+    ]);
+    // まだ登録されていなければ、登録されるまで毎回確認する（オプションは立てない）
+    if ( empty($found) ) return;
+
+    $post_id = (int) $found[0];
+    $fill = [
+        '_mytheme_work_seed_key'         => 'beengineer-quiz',
+        '_mytheme_work_external_url'     => 'https://beengineer-organization.github.io/Ex-BeEn_Quiz/',
+        '_mytheme_work_card_description' => 'BeEngineer「チャットアプリ開発コース」の授業内容を、入会前に4択クイズで体験できるWebアプリ。10問・制限時間5分で、ログイン不要・スマホでもすぐ始められます。',
+    ];
+    foreach ( $fill as $meta_key => $value ) {
+        if ( trim((string) get_post_meta($post_id, $meta_key, true)) === '' ) {
+            update_post_meta($post_id, $meta_key, $value);
+        }
+    }
+    // 一覧カードの画像が未設定のときだけ、テーマ同梱のサムネイルを使う
+    $has_card_image = (int) get_post_meta($post_id, '_mytheme_work_card_image_id', true) > 0
+        || trim((string) get_post_meta($post_id, '_mytheme_work_card_image_path', true)) !== ''
+        || has_post_thumbnail($post_id);
+    if ( ! $has_card_image ) {
+        update_post_meta($post_id, '_mytheme_work_card_image_path', 'assets/images/beengineer_quiz_1.webp');
+        update_post_meta($post_id, '_mytheme_work_card_image_alt', 'BeEngineerクイズ体験版のトップ画面');
+    }
+
+    update_option('mytheme_work_link_beengineer_quiz_v1', 1, false);
+}
+add_action('init', 'mytheme_link_beengineer_quiz_work_once', 31);
+
 function mytheme_work_should_update_seeded_detail_content($post_id) {
     $post_id = (int) $post_id;
     if ( $post_id <= 0 ) return false;
@@ -1397,6 +1440,13 @@ function mytheme_get_work_presentation_meta($post_id) {
             'status'         => '公開中',
             'target'         => 'LINE上で学習クイズに取り組みたい学習者を支援',
             'sort'           => 20,
+        ],
+        'beengineer-quiz' => [
+            'category'       => 'education',
+            'category_label' => '教育・学習プロダクト',
+            'status'         => '公開中',
+            'target'         => '入会を検討している方が、BeEngineerの授業内容を4択クイズで気軽に体験できるようにする',
+            'sort'           => 15,
         ],
         'beengineer-camp' => [
             'category'       => 'education',
@@ -1612,7 +1662,8 @@ function mytheme_get_front_featured_work_ids(int $limit = 3): array {
     foreach ( $ids as $id ) {
         $meta = mytheme_get_work_presentation_meta($id);
         $sort = isset($meta['sort']) ? (int) $meta['sort'] : 90;
-        if ( in_array($sort, [10, 20, 40], true) ) {
+        // トップに出す3件：情報Ⅰコードポケット(10)・BeEngineerクイズ体験版(15)・Shorts自動作成(40)
+        if ( in_array($sort, [10, 15, 40], true) ) {
             $preferred[] = $id;
         } else {
             $fallback[] = $id;
@@ -1634,6 +1685,7 @@ function mytheme_get_work_identity_key($post_id): string {
     $keys = [
         'it1-code-pocket',
         'quest4',
+        'beengineer-quiz',
         'beengineer-camp',
         'shorts-auto-creator',
         'note-auto-post',
@@ -1670,6 +1722,14 @@ function mytheme_get_work_card_secondary_cta($post_id, string $detail_url, strin
     if ( $key === 'quest4' && $external_url !== '' ) {
         return [
             'label'       => 'LINEで使う',
+            'url'         => $external_url,
+            'is_external' => true,
+        ];
+    }
+
+    if ( $key === 'beengineer-quiz' && $external_url !== '' ) {
+        return [
+            'label'       => '体験版を開く',
             'url'         => $external_url,
             'is_external' => true,
         ];
