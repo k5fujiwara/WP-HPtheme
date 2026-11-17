@@ -199,8 +199,11 @@ function mytheme_get_work_tech_tags($post_id) {
 
     $items = preg_split('/[\r\n,、]+/u', $raw);
     $items = array_map('trim', is_array($items) ? $items : []);
+    // 技術名ではない文章（句点を含む・長すぎる）が混ざっても、タグとして表示しない
     $items = array_filter($items, function($item) {
-        return $item !== '';
+        if ( $item === '' ) return false;
+        if ( strpos($item, '。') !== false ) return false;
+        return ! function_exists('mb_strlen') || mb_strlen($item) <= 30;
     });
 
     return array_values(array_unique($items));
@@ -1293,7 +1296,8 @@ function mytheme_link_beengineer_quiz_work_once() {
     $fill = [
         '_mytheme_work_seed_key'         => 'beengineer-quiz',
         '_mytheme_work_external_url'     => 'https://beengineer-organization.github.io/Ex-BeEn_Quiz/',
-        '_mytheme_work_card_description' => 'BeEngineer「チャットアプリ開発コース」の授業内容を、入会前に4択クイズで体験できるWebアプリ。10問・制限時間5分で、ログイン不要・スマホでもすぐ始められます。',
+        '_mytheme_work_card_description' => 'プログラミング塾BeEngineer「チャットアプリ開発コース」の内容を、入会前に体験できる4択Webクイズアプリ。60問から10問を出題する確認テスト形式（制限時間5分・8割で合格）で、解説表示とカリキュラム紹介を備えています。',
+        '_mytheme_work_tech_tags'        => "HTML5\nCSS3\nVanilla JavaScript\nJSON\nGitHub Pages",
     ];
     foreach ( $fill as $meta_key => $value ) {
         if ( trim((string) get_post_meta($post_id, $meta_key, true)) === '' ) {
@@ -1445,7 +1449,7 @@ function mytheme_get_work_presentation_meta($post_id) {
             'category'       => 'education',
             'category_label' => '教育・学習プロダクト',
             'status'         => '公開中',
-            'target'         => '入会を検討している方が、BeEngineerの授業内容を4択クイズで気軽に体験できるようにする',
+            'target'         => '入会を検討している方が、授業の内容とレベル感をスマートフォンで事前に確かめられるようにする',
             'sort'           => 15,
         ],
         'beengineer-camp' => [
@@ -1837,7 +1841,7 @@ function mytheme_render_work_card($post_id) {
     <div class="work-item">
         <div class="work-visual">
             <div class="work-thumbnail">
-                <a class="work-thumbnail__link" href="<?php echo esc_url($url); ?>">
+                <div class="work-thumbnail__link">
                     <?php if ( $image_id > 0 ) : ?>
                         <?php echo mytheme_work_get_attachment_image_html($image_id, 'work-thumbnail__image', $image_alt, 'large', $image_loading); ?>
                     <?php elseif ( $image_path !== '' && function_exists('mytheme_picture_tag') ) : ?>
@@ -1845,19 +1849,12 @@ function mytheme_render_work_card($post_id) {
                     <?php elseif ( has_post_thumbnail($post_id) ) : ?>
                         <?php echo get_the_post_thumbnail($post_id, 'large', ['class' => 'work-thumbnail__image', 'alt' => $image_alt, 'loading' => $image_loading]); ?>
                     <?php endif; ?>
-                </a>
-            </div>
-            <div class="work-links">
-                <a href="<?php echo esc_url($url); ?>" class="work-link">詳細を見る</a>
-                <?php if ( ! empty($secondary_cta['url']) ) : ?>
-                    <a href="<?php echo esc_url((string) $secondary_cta['url']); ?>" class="work-link work-link-demo"<?php echo ! empty($secondary_cta['is_external']) ? ' target="_blank" rel="noopener noreferrer external"' : ''; ?>>
-                        <?php echo esc_html((string) $secondary_cta['label']); ?>
-                    </a>
-                <?php endif; ?>
+                </div>
             </div>
         </div>
         <div class="work-info">
-            <h2 class="work-title"><?php echo esc_html($title); ?></h2>
+            <?php // 作品名のリンクをカード全体に広げる（どこを押しても詳細ページへ） ?>
+            <h2 class="work-title"><a class="work-title__link" href="<?php echo esc_url($url); ?>"><?php echo esc_html($title); ?></a></h2>
             <?php if ( $description !== '' ) : ?>
                 <p class="work-description"><?php echo esc_html($description); ?></p>
             <?php endif; ?>
@@ -1881,6 +1878,15 @@ function mytheme_render_work_card($post_id) {
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
+            <div class="work-links">
+                <?php // カード全体がリンクなので、こちらは見た目上のボタン（読み上げ・タブ移動は作品名リンクに一本化） ?>
+                <span class="work-link work-link--primary" aria-hidden="true">詳細を見る</span>
+                <?php if ( ! empty($secondary_cta['url']) ) : ?>
+                    <a href="<?php echo esc_url((string) $secondary_cta['url']); ?>" class="work-link work-link-demo"<?php echo ! empty($secondary_cta['is_external']) ? ' target="_blank" rel="noopener noreferrer external"' : ''; ?>>
+                        <?php echo esc_html((string) $secondary_cta['label']); ?><?php if ( ! empty($secondary_cta['is_external']) ) : ?><span class="work-link__external" aria-hidden="true">↗</span><span class="screen-reader-text">（新しいタブで開きます）</span><?php endif; ?>
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
     <?php

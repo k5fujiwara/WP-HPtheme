@@ -9857,3 +9857,382 @@ html {
         grid-column: 1 / -1;
     }
 }
+
+/* =====================================================================
+ * 作品画像：切り抜かず、画像全体が枠に収まるように縮小して表示
+ * （/works/ 一覧のブラウザ風の枠、トップの「つくったもの」共通）
+ * ===================================================================== */
+.work-thumbnail__link picture,
+.work-tile__media picture {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.work-thumbnail__image,
+.work-thumbnail__link img {
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+}
+
+.work-tile__media {
+    background: #eceae3;
+}
+
+.work-tile__media picture,
+.work-tile__media img {
+    object-fit: contain;
+    object-position: center;
+}
+
+/* =====================================================================
+ * 開発作品一覧：カード全体をクリック可能に／押しやすいボタン
+ * ===================================================================== */
+.works-page.page-content {
+    max-width: 1000px;
+}
+
+/* グループ：白い箱をやめ、見出し＋下線で区切る */
+.works-page .works-group {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin: 0 0 56px;
+    padding: 0;
+}
+
+.works-page .works-group__header {
+    border-bottom: 2px solid var(--ink);
+    margin: 0 0 20px;
+    padding: 0 0 12px;
+}
+
+.works-page .works-group__title {
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 2.4vw, 1.65rem);
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0;
+    padding: 0;
+}
+
+.works-page .works-group__title::before,
+.works-page .works-group__title::after {
+    display: none;
+}
+
+.page-content:not(.legal-page) .page-body .works-group__description,
+.works-page .works-group__description {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    margin: 6px 0 0;
+}
+
+.works-page .works-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+/* カード */
+.works-page .work-item {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: none;
+    cursor: pointer;
+    display: grid;
+    gap: 28px;
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    overflow: visible;
+    padding: 22px;
+    position: relative;
+    transform: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.works-page .work-item::before {
+    display: none;
+}
+
+.works-page .work-item:hover {
+    border-color: var(--line-strong);
+    box-shadow: 0 10px 24px rgba(27, 31, 39, 0.08);
+    transform: translateY(-2px);
+}
+
+/* 作品名のリンクをカード全体に広げる */
+.page-content:not(.legal-page) .page-body a.work-title__link,
+.work-title__link {
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.work-title__link::after {
+    border-radius: 8px;
+    content: "";
+    inset: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+.work-title__link:focus-visible {
+    outline: none;
+}
+
+.work-title__link:focus-visible::after {
+    outline: 3px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.works-page .work-item:hover .work-title__link {
+    color: var(--brand);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+}
+
+/* サムネイル */
+.works-page .work-visual {
+    align-self: start;
+    display: block;
+    margin: 0;
+}
+
+.works-page .work-thumbnail {
+    aspect-ratio: 16 / 10;
+    background: #eceae3;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: none;
+    transform: none;
+}
+
+.works-page .work-item:hover .work-thumbnail {
+    box-shadow: none;
+    transform: none;
+}
+
+.works-page .work-thumbnail::before,
+.works-page .work-thumbnail::after {
+    display: none;
+}
+
+.works-page .work-thumbnail__link {
+    height: 100%;
+    margin: 0;
+}
+
+.works-page .work-item:hover .work-thumbnail__image {
+    transform: scale(1.02);
+}
+
+/* 本文 */
+.works-page .work-info {
+    gap: 0;
+    padding: 0;
+}
+
+.works-page .work-title {
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 0 0 8px;
+}
+
+.page-content:not(.legal-page) .page-body .works-page .work-description,
+.works-page .work-description {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    line-height: 1.8;
+    margin: 0 0 14px;
+}
+
+.works-page .work-summary {
+    border-bottom: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    gap: 0;
+    margin: 0 0 14px;
+}
+
+.works-page .work-summary__item {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    gap: 16px;
+    grid-template-columns: 9.5em minmax(0, 1fr);
+    padding: 10px 0;
+}
+
+.works-page .work-summary__item + .work-summary__item {
+    border-top: 1px dashed var(--line);
+}
+
+.works-page .work-summary__item dt {
+    color: var(--ink-3);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.works-page .work-summary__item dd {
+    color: var(--ink);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+.works-page .work-status {
+    background: none;
+    border: 0;
+    color: var(--red-pen);
+    font-weight: 700;
+    padding: 0;
+}
+
+.works-page .work-tech {
+    background: none;
+    border: 0;
+    box-shadow: none;
+    gap: 6px;
+    margin: 0 0 18px;
+    padding: 0;
+}
+
+.works-page .work-tech::before {
+    display: none;
+}
+
+.works-page .tech-tag {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    transform: none;
+}
+
+.works-page .tech-tag:hover {
+    transform: none;
+}
+
+/* ボタン：押しやすい大きさ（高さ48px）、紺の塗り＋紺の枠線 */
+.works-page .work-item .work-links,
+.works-page .work-links {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-top: auto;
+}
+
+.works-page .work-item .work-links .work-link,
+.page-content:not(.legal-page) .page-body .works-page .work-item .work-links a.work-link {
+    align-items: center;
+    border: 1.5px solid var(--brand);
+    border-radius: 4px;
+    box-shadow: none;
+    display: inline-flex;
+    font-size: 0.95rem;
+    font-weight: 700;
+    gap: 6px;
+    justify-content: center;
+    line-height: 1.2;
+    min-height: 48px;
+    min-width: 160px;
+    padding: 0 22px;
+    text-decoration: none;
+    transform: none;
+    white-space: nowrap;
+}
+
+.works-page .work-item .work-links .work-link--primary {
+    background: var(--brand);
+    color: #fff;
+}
+
+.works-page .work-item .work-links .work-link--primary::after {
+    content: "→";
+    font-weight: 400;
+}
+
+.works-page .work-item:hover .work-links .work-link--primary {
+    background: var(--brand-dark);
+    border-color: var(--brand-dark);
+}
+
+/* 2つ目のボタンはカード全体リンクより手前に出して、単独で押せるようにする */
+.works-page .work-item .work-links .work-link-demo,
+.page-content:not(.legal-page) .page-body .works-page .work-item .work-links a.work-link-demo {
+    background: var(--surface);
+    color: var(--brand);
+    position: relative;
+    z-index: 2;
+}
+
+.works-page .work-item .work-links .work-link-demo:hover,
+.page-content:not(.legal-page) .page-body .works-page .work-item .work-links a.work-link-demo:hover {
+    background: var(--brand-soft);
+    box-shadow: none;
+    color: var(--brand-dark);
+    transform: none;
+}
+
+.works-page .work-item .work-links .work-link-demo:focus-visible {
+    outline: 3px solid var(--brand);
+    outline-offset: 2px;
+}
+
+.work-link__external {
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .works-page .work-item {
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+        padding: 16px;
+    }
+
+    .works-page .work-item:hover {
+        transform: none;
+    }
+
+    .works-page .work-title {
+        font-size: 1.08rem;
+    }
+
+    .works-page .work-summary__item {
+        gap: 2px;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .works-page .work-item .work-links .work-link,
+    .page-content:not(.legal-page) .page-body .works-page .work-item .work-links a.work-link {
+        flex: 1 1 140px;
+        min-width: 0;
+        padding: 0 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .works-page .work-item,
+    .works-page .work-item:hover {
+        transform: none;
+        transition: none;
+    }
+}

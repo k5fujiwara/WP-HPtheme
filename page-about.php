@@ -196,7 +196,7 @@ get_header();
                 [
                     'match'   => 'クイズ体験版',
                     'title'   => 'BeEngineerクイズ体験版',
-                    'summary' => 'BeEngineer「チャットアプリ開発コース」の授業内容を、入会前に4択クイズで体験できるWebアプリ。10問・制限時間5分で、ログイン不要・スマホでもすぐ始められます。',
+                    'summary' => 'プログラミング塾BeEngineer「チャットアプリ開発コース」の内容を、入会前に体験できる4択Webクイズアプリ。60問から10問を出題する確認テスト形式（制限時間5分・8割で合格）で、解説表示とカリキュラム紹介を備えています。',
                     'role'    => '学習アプリの開発',
                     'links'   => [
                         ['label' => '体験版を開く', 'url' => 'https://beengineer-organization.github.io/Ex-BeEn_Quiz/', 'external' => true],
