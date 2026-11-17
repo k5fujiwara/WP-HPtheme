@@ -20,7 +20,7 @@
 }
 
 .dictionary-card {
-  border: 1px solid rgba(15, 98, 254, 0.2);
+  border: 1px solid rgba(31, 58, 104, 0.2);
   border-radius: 14px;
   background: #fff;
   padding: 16px 14px;
@@ -31,8 +31,8 @@
 
 .dictionary-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(15, 98, 254, 0.45);
-  box-shadow: 0 10px 24px rgba(15, 98, 254, 0.12);
+  border-color: rgba(31, 58, 104, 0.45);
+  box-shadow: 0 10px 24px rgba(31, 58, 104, 0.12);
 }
 
 .dictionary-card__term {
@@ -103,14 +103,14 @@
   right: 12px;
   width: 36px;
   height: 36px;
-  border: 1px solid rgba(15, 98, 254, 0.28);
+  border: 1px solid rgba(31, 58, 104, 0.28);
   border-radius: 999px;
-  background: linear-gradient(135deg, #edf5ff 0%, #d0e2ff 100%);
+  background: linear-gradient(135deg, #eef1f6 0%, #d8e1ee 100%);
   font-size: 1.35rem;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  color: #0f62fe;
+  color: #1f3a68;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -119,13 +119,13 @@
 
 .dictionary-modal__close:hover {
   transform: translateY(-1px);
-  border-color: rgba(15, 98, 254, 0.42);
-  background: linear-gradient(135deg, #d0e2ff 0%, #a6c8ff 100%);
-  box-shadow: 0 8px 18px rgba(15, 98, 254, 0.2);
+  border-color: rgba(31, 58, 104, 0.42);
+  background: linear-gradient(135deg, #d8e1ee 0%, #a6c8ff 100%);
+  box-shadow: 0 8px 18px rgba(31, 58, 104, 0.2);
 }
 
 .dictionary-modal__close:focus-visible {
-  outline: 2px solid rgba(15, 98, 254, 0.55);
+  outline: 2px solid rgba(31, 58, 104, 0.55);
   outline-offset: 2px;
 }
 

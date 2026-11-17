@@ -42,7 +42,7 @@ $query_args = [
     'post_type'      => 'post',
     'post_status'    => 'publish',
     'paged'          => $paged,
-    'posts_per_page' => 10,
+    'posts_per_page' => 12,
     'no_found_rows'  => false,
 ];
 if ( $selected_cat !== '' ) {
@@ -75,45 +75,83 @@ $active_theme = $selected_theme !== ''
     </header>
 
     <div class="page-body">
-        <?php if ( function_exists('mytheme_render_learning_column_toolbox') ) : ?>
-            <?php mytheme_render_learning_column_toolbox('archive'); ?>
-        <?php endif; ?>
+        <div class="lc-search">
+            <?php get_search_form(); ?>
+            <a class="lc-search__dictionary" href="<?php echo esc_url(function_exists('mytheme_get_dictionary_archive_url') ? mytheme_get_dictionary_archive_url() : home_url('/dictionary/')); ?>">用語辞書から探す</a>
+        </div>
 
         <nav class="learning-column-filters" aria-label="テーマで絞り込み">
             <?php
             $base_url = get_permalink();
             $all_url  = remove_query_arg(['cat', 'cats', 'theme', 'paged'], $base_url);
+            $total_posts = (int) wp_count_posts('post')->publish;
             ?>
             <a class="learning-column-filters__item is-all <?php echo ($selected_cat === '' && $selected_theme === '') ? 'is-active' : ''; ?>" href="<?php echo esc_url($all_url); ?>">
-                <span class="lc-filter-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16"></path><path d="M6 12h12"></path><path d="M8 18h8"></path></svg>
-                </span>
                 <span class="lc-filter-text">すべて</span>
+                <span class="lc-filter-count"><?php echo esc_html((string) $total_posts); ?></span>
             </a>
             <?php foreach ( $theme_meta as $slug => $m ) : ?>
                 <?php
                 if ( $slug === 'review-required' ) continue;
+                $theme_count = function_exists('mytheme_get_learning_column_theme_post_ids')
+                    ? count(mytheme_get_learning_column_theme_post_ids($slug))
+                    : 0;
+                if ( $theme_count === 0 ) continue;
                 $is_active = $active_theme === $slug;
                 $url = add_query_arg('theme', $slug, remove_query_arg(['cat', 'cats', 'paged'], $base_url));
                 ?>
                 <a class="learning-column-filters__item <?php echo ! empty($m['class']) ? esc_attr($m['class']) : ''; ?> <?php echo $is_active ? 'is-active' : ''; ?>" href="<?php echo esc_url($url); ?>" rel="nofollow" data-cat="<?php echo esc_attr($slug); ?>">
-                    <?php if ( ! empty($m['icon']) ) : ?>
-                        <span class="lc-filter-icon" aria-hidden="true"><?php echo $m['icon']; ?></span>
-                    <?php else : ?>
-                        <span class="lc-filter-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"></path><path d="M5 8h14"></path><path d="M5 16h14"></path></svg>
-                        </span>
-                    <?php endif; ?>
                     <span class="lc-filter-text"><?php echo esc_html((string) $m['label']); ?></span>
+                    <span class="lc-filter-count"><?php echo esc_html((string) $theme_count); ?></span>
                 </a>
             <?php endforeach; ?>
         </nav>
 
         <div class="learning-column-results" data-learning-column-results>
+            <?php if ( $active_theme !== '' && ! empty($theme_meta[$active_theme]['description']) ) : ?>
+                <p class="lc-theme-description"><?php echo esc_html((string) $theme_meta[$active_theme]['description']); ?></p>
+            <?php endif; ?>
+
+            <?php
+            // 1ページ目・絞り込みなしのときだけ「よく読まれている記事」を表示
+            if ( $paged === 1 && $active_theme === '' && $selected_cat === '' && function_exists('mytheme_get_cached_id_query') ) :
+                $popular = mytheme_get_cached_id_query('mytheme_lc_popular_posts', [
+                    'post_type'              => 'post',
+                    'posts_per_page'         => 3,
+                    'meta_key'               => '_mytheme_post_views',
+                    'orderby'                => 'meta_value_num',
+                    'order'                  => 'DESC',
+                    'update_post_meta_cache' => true,
+                    'update_post_term_cache' => true,
+                ], HOUR_IN_SECONDS);
+                if ( $popular->have_posts() ) :
+                    $rank = 0;
+            ?>
+                <section class="lc-popular" aria-labelledby="lc-popular-title">
+                    <h2 id="lc-popular-title" class="lc-section-title">よく読まれている記事</h2>
+                    <ol class="lc-popular__list">
+                        <?php foreach ( $popular->posts as $popular_post ) : $rank++; $pid = (int) (is_object($popular_post) ? $popular_post->ID : $popular_post); ?>
+                            <li class="lc-popular__item">
+                                <a class="lc-popular__link" href="<?php echo esc_url(get_permalink($pid)); ?>">
+                                    <span class="lc-popular__rank" aria-hidden="true"><?php echo esc_html((string) $rank); ?></span>
+                                    <span class="lc-popular__title"><?php echo esc_html(get_the_title($pid)); ?></span>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ol>
+                </section>
+                <h2 class="lc-section-title">新着順</h2>
+            <?php
+                endif;
+            endif;
+            ?>
+
             <?php if ( $q->have_posts() ) : ?>
-                <?php while ( $q->have_posts() ) : $q->the_post(); ?>
-                    <?php mytheme_render_learning_column_card($cat_meta); ?>
-                <?php endwhile; ?>
+                <div class="post-tile-grid">
+                    <?php while ( $q->have_posts() ) : $q->the_post(); ?>
+                        <?php mytheme_render_learning_column_card($cat_meta); ?>
+                    <?php endwhile; ?>
+                </div>
 
                 <div class="pagination">
                     <?php
@@ -127,7 +165,7 @@ $active_theme = $selected_theme !== ''
                     ?>
                 </div>
             <?php else : ?>
-                <p>まだ投稿がありません。最初の学習コラムを投稿してみましょう。</p>
+                <p>このテーマの記事はまだありません。</p>
             <?php endif; ?>
         </div>
     </div>

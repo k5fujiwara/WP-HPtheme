@@ -66,7 +66,7 @@ function mytheme_render_contact_template($content) {
     if ( is_admin() ) return $content;
     if ( ! is_singular('page') ) return $content;
     if ( ! is_page(['contact', 'お問い合わせ']) ) return $content;
-    require_once get_template_directory() . '/inc/legal/contact.php';
+    require_once get_template_directory() . '/inc/content/legal/contact.php';
 
     $privacy_url = mytheme_get_page_url_by_path('privacy-policy', home_url('/privacy-policy/'));
 
@@ -89,7 +89,7 @@ function mytheme_render_privacy_policy_template($content) {
     if ( ! is_page(['privacy-policy', 'プライバシーポリシー']) ) return $content;
 
     $contact_url = mytheme_get_page_url_by_path('contact', home_url('/contact/'));
-    require_once get_template_directory() . '/inc/legal/privacy-policy.php';
+    require_once get_template_directory() . '/inc/content/legal/privacy-policy.php';
 
     return mytheme_legal_privacy_policy_template_html([
         'site_name'   => get_bloginfo('name'),
@@ -108,7 +108,7 @@ function mytheme_render_disclaimer_template($content) {
     if ( ! is_page(['disclaimer', '免責事項 / 広告表記', '免責事項']) ) return $content;
 
     $contact_url = mytheme_get_page_url_by_path('contact', home_url('/contact/'));
-    require_once get_template_directory() . '/inc/legal/disclaimer.php';
+    require_once get_template_directory() . '/inc/content/legal/disclaimer.php';
 
     return mytheme_legal_disclaimer_template_html([
         'site_name'   => get_bloginfo('name'),

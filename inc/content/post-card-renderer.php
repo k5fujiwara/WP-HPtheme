@@ -25,58 +25,94 @@ function mytheme_get_column_category_meta(): array {
 }
 
 /**
- * 学習コラム系のカードを共通描画
+ * 記事タイル（アイキャッチ付きカード）を描画
+ *
+ * @param int   $post_id 投稿ID（0なら現在のループの投稿）
+ * @param array $args {
+ *     @type string $heading   見出しタグ（h2/h3）
+ *     @type bool   $excerpt   抜粋を表示するか
+ *     @type string $loading   画像の loading 属性
+ *     @type string $variant   追加のモディファイア（例: compact）
+ * }
  */
-function mytheme_render_learning_column_card(array $cat_meta = [], bool $show_default_badge = false): void {
-    $post_id = (int) get_the_ID();
+function mytheme_render_post_tile(int $post_id = 0, array $args = []): void {
+    $post_id = $post_id > 0 ? $post_id : (int) get_the_ID();
     if ( $post_id <= 0 ) return;
 
-    $post_url = get_permalink($post_id);
-    $primary = function_exists('mytheme_get_learning_column_theme_meta')
+    $args = array_merge([
+        'heading' => 'h2',
+        'excerpt' => true,
+        'loading' => 'lazy',
+        'variant' => '',
+    ], $args);
+    $heading = in_array($args['heading'], ['h2', 'h3', 'h4'], true) ? $args['heading'] : 'h2';
+
+    $theme = function_exists('mytheme_get_learning_column_theme_meta')
         ? mytheme_get_learning_column_theme_meta($post_id)
-        : null;
+        : ['slug' => 'default', 'label' => '学習コラム', 'class' => 'is-theme-default'];
+    $theme_slug  = (string) ($theme['slug'] ?? 'default');
+    $theme_label = $theme_slug === 'review-required' ? '学習コラム' : (string) ($theme['label'] ?? '学習コラム');
+    $theme_class = $theme_slug === 'review-required' ? 'is-theme-default' : (string) ($theme['class'] ?? 'is-theme-default');
+
     $updated_ts = function_exists('mytheme_learning_column_modified_timestamp')
         ? mytheme_learning_column_modified_timestamp($post_id)
         : 0;
 
-    echo '<article ';
-    post_class(array_filter(['post-card', 'lc-card', $primary ? $primary['class'] : '']));
-    echo '>';
-    echo '<div class="lc-card-head">';
-
-    if ( $primary ) {
-        echo '<span class="lc-badge ' . esc_attr((string) $primary['class']) . '">';
-        if ( ! empty($primary['icon']) ) {
-            echo '<span class="lc-badge__icon" aria-hidden="true">' . $primary['icon'] . '</span>';
-        }
-        echo '<span class="lc-badge__text">' . esc_html((string) $primary['label']) . '</span>';
-        echo '</span>';
-    } elseif ( $show_default_badge ) {
-        echo '<span class="lc-badge"><span class="lc-badge__text">学習コラム</span></span>';
+    $classes = ['post-tile', $theme_class];
+    if ( $args['variant'] !== '' ) {
+        $classes[] = 'post-tile--' . sanitize_html_class((string) $args['variant']);
     }
 
-    echo '<span class="lc-dates">';
-    echo '<time class="lc-date" datetime="' . esc_attr(get_the_date('c', $post_id)) . '">公開: ' . esc_html(get_the_date('', $post_id)) . '</time>';
-    if ( $updated_ts > 0 ) {
-        $updated_datetime = function_exists('mytheme_learning_column_modified_datetime') ? mytheme_learning_column_modified_datetime($post_id) : '';
-        $updated_date = function_exists('mytheme_learning_column_modified_date') ? mytheme_learning_column_modified_date($post_id) : '';
-        echo '<time class="lc-date lc-date--updated" datetime="' . esc_attr($updated_datetime) . '">更新: ' . esc_html($updated_date) . '</time>';
-    }
-    echo '</span>';
-    echo '</div>';
+    $permalink = get_permalink($post_id);
+    $title     = get_the_title($post_id);
+    ?>
+    <article <?php post_class($classes, $post_id); ?>>
+        <a class="post-tile__link" href="<?php echo esc_url($permalink); ?>">
+            <div class="post-tile__media">
+                <?php if ( has_post_thumbnail($post_id) ) : ?>
+                    <?php echo get_the_post_thumbnail($post_id, 'medium_large', [
+                        'class'    => 'post-tile__image',
+                        'alt'      => '',
+                        'loading'  => $args['loading'],
+                        'decoding' => 'async',
+                        'sizes'    => '(max-width: 640px) 34vw, (max-width: 1024px) 50vw, 360px',
+                    ]); ?>
+                <?php else : ?>
+                    <span class="post-tile__cover" aria-hidden="true">
+                        <span class="post-tile__cover-label"><?php echo esc_html($theme_label); ?></span>
+                        <span class="post-tile__cover-title"><?php echo esc_html($title); ?></span>
+                    </span>
+                <?php endif; ?>
+            </div>
+            <div class="post-tile__body">
+                <div class="post-tile__meta">
+                    <span class="post-tile__badge"><?php echo esc_html($theme_label); ?></span>
+                    <?php if ( $updated_ts > 0 && function_exists('mytheme_learning_column_modified_datetime') ) : ?>
+                        <time class="post-tile__date" datetime="<?php echo esc_attr(mytheme_learning_column_modified_datetime($post_id)); ?>"><?php echo esc_html(mytheme_learning_column_modified_date($post_id, 'Y.m.d')); ?> 更新</time>
+                    <?php else : ?>
+                        <time class="post-tile__date" datetime="<?php echo esc_attr(get_the_date('c', $post_id)); ?>"><?php echo esc_html(get_the_date('Y.m.d', $post_id)); ?></time>
+                    <?php endif; ?>
+                </div>
+                <<?php echo $heading; ?> class="post-tile__title"><?php echo esc_html($title); ?></<?php echo $heading; ?>>
+                <?php if ( $args['excerpt'] ) : ?>
+                    <?php
+                    $excerpt_text = wp_strip_all_tags((string) get_the_excerpt($post_id));
+                    $excerpt = function_exists('wp_html_excerpt') ? wp_html_excerpt($excerpt_text, 90, '…') : $excerpt_text;
+                    ?>
+                    <?php if ( $excerpt !== '' ) : ?>
+                        <p class="post-tile__excerpt"><?php echo esc_html($excerpt); ?></p>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </a>
+    </article>
+    <?php
+}
 
-    echo '<h2 class="post-title"><a href="' . esc_url($post_url) . '">';
-    the_title();
-    echo '</a></h2>';
-
-    $raw_excerpt = get_the_excerpt($post_id);
-    $excerpt_text = wp_strip_all_tags((string) $raw_excerpt);
-    // wp_trim_words は日本語ロケールだと「語数」ではなく「文字数」になる。
-    // 本番 ja では 36 文字≒1行で切れるため、文字数ベースで 3 行分を渡して CSS line-clamp に任せる。
-    $excerpt = function_exists('wp_html_excerpt')
-        ? wp_html_excerpt($excerpt_text, 120, '…')
-        : $excerpt_text;
-    echo '<div class="post-excerpt">' . esc_html($excerpt) . '</div>';
-    echo '<p class="post-readmore"><a class="read-more" href="' . esc_url($post_url) . '">続きを読む</a></p>';
-    echo '</article>';
+/**
+ * 学習コラム系のカードを共通描画（一覧・検索・アーカイブ）
+ * 互換のため旧シグネチャを維持し、記事タイルに委譲する。
+ */
+function mytheme_render_learning_column_card(array $cat_meta = [], bool $show_default_badge = false): void {
+    mytheme_render_post_tile((int) get_the_ID(), ['heading' => 'h2']);
 }

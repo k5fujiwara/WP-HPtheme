@@ -56,33 +56,23 @@
     <style>
         /* ベース（最小限） */
         *,*:before,*:after{box-sizing:border-box}
-        .site-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.75;color:#161616;background:#f7fbff;font-size:16px;-webkit-font-smoothing:antialiased;opacity:1}
+        .site-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.75;color:#161616;background:#faf9f6;font-size:16px;-webkit-font-smoothing:antialiased;opacity:1}
         .site-body.loaded{opacity:1}
         
         /* ヘッダー（ATF） */
-        .site-header-shell{position:sticky;top:0;z-index:102;background:#fff;box-shadow:0 10px 24px rgba(15,98,254,.08)}
+        .site-header-shell{position:sticky;top:0;z-index:102;background:#fff;box-shadow:0 10px 24px rgba(31, 58, 104,.08)}
         .site-header{padding:24px 0 0;background:#fff;z-index:100}
         .container{width:min(1100px,92%);margin:0 auto}
-        .site-title{font-size:2rem;font-weight:800;text-decoration:none;color:#0f62fe;letter-spacing:-.02em;line-height:1.2;display:inline-block}
+        .site-title{font-size:1.5rem;font-weight:800;text-decoration:none;color:#1c2321;letter-spacing:-.01em;line-height:1.2;display:inline-block}
         .site-description{margin:0;padding-bottom:16px;color:#525252;font-size:.925rem;font-weight:500}
         
-        /* ヒーローセクション（トップページのみ） */
-        .hero-section{text-align:center;padding:48px 40px;background:
-            radial-gradient(circle at 18% 18%,rgba(255,255,255,.2),transparent 20%),
-            radial-gradient(circle at 82% 22%,rgba(0,212,255,.18),transparent 24%),
-            linear-gradient(135deg,#001d6c 0%,#0f62fe 52%,#4589ff 100%);border-radius:32px;margin:40px 20px;box-shadow:0 12px 40px rgba(0,45,156,.25);overflow:hidden;border:1px solid rgba(255,255,255,.12);min-height:220px;display:flex;align-items:center;justify-content:center}
-        .hero-section__inner{max-width:720px;position:relative;z-index:1}
-        .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 16px;padding:8px 14px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.92);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-        .hero-title{font-size:2.9rem;margin:0 auto;font-weight:900;color:#fff;text-shadow:0 4px 12px rgba(0,0,0,.3);letter-spacing:-.03em;line-height:1.12;z-index:1;max-width:none;white-space:nowrap}
-        .hero-lead{margin:18px auto 0;max-width:36rem;color:rgba(255,255,255,.9);font-size:1rem;line-height:1.75;text-shadow:0 2px 8px rgba(0,0,0,.16)}
-        
         /* ナビゲーション */
-        .site-nav{border-top:1px solid rgba(15,98,254,.1);margin:0;background:#fff;position:static;top:auto;z-index:101}
+        .site-nav{border-top:1px solid rgba(31, 58, 104,.1);margin:0;background:#fff;position:static;top:auto;z-index:101}
         .site-nav .container{display:flex;align-items:center;padding:12px 0;gap:20px;flex-wrap:nowrap}
         .site-nav__menu{list-style:none;padding:0;margin:0;display:flex;gap:28px;flex-wrap:nowrap;align-items:center}
         .site-nav__link{display:inline-block;padding:10px 6px;text-decoration:none;color:#161616;font-weight:500;transition:color .2s ease;white-space:nowrap}
         .site-nav__item--has-children{position:relative}
-        .site-nav__submenu{display:none;list-style:none;margin:0;padding:8px 0;position:absolute;left:0;top:100%;min-width:max-content;width:max-content;background:#fff;border:1px solid rgba(15,98,254,.12);border-radius:14px;box-shadow:0 14px 32px rgba(15,98,254,.12);z-index:120}
+        .site-nav__submenu{display:none;list-style:none;margin:0;padding:8px 0;position:absolute;left:0;top:100%;min-width:max-content;width:max-content;background:#fff;border:1px solid rgba(31, 58, 104,.12);border-radius:14px;box-shadow:0 14px 32px rgba(31, 58, 104,.12);z-index:120}
         .site-nav__item--has-children:hover>.site-nav__submenu,
         .site-nav__item--has-children:focus-within>.site-nav__submenu,
         .site-nav__item--has-children.is-open>.site-nav__submenu{display:block}
@@ -104,18 +94,12 @@
             .site-nav__item--has-children.is-open>.site-nav__submenu{display:block}
             .site-nav__submenu .site-nav__link{padding:12px 12px 12px 28px}
         }
-        @media(max-width:768px){
-            .hero-section{padding:34px 22px;margin:32px 16px;min-height:0}
-            .hero-eyebrow{margin-bottom:12px;padding:6px 11px;font-size:.64rem;letter-spacing:.06em}
-            .hero-title{font-size:1.45rem;max-width:none;white-space:normal}
-            .hero-lead{margin-top:14px;font-size:.92rem;line-height:1.7}
-        }
         @media(max-width:782px){
             body.admin-bar .site-header-shell{top:0}
         }
 
         @media(min-width:1024px){
-            .site-body{background:#f7fbff}
+            .site-body{background:#faf9f6}
         }
         <?php if ( function_exists('mytheme_is_quiz_page') && mytheme_is_quiz_page() ) : ?>
         <?php

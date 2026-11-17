@@ -180,6 +180,10 @@ function mytheme_flush_front_query_cache($post_id = 0): void {
     delete_transient('mytheme_front_latest_posts');
     delete_transient('mytheme_front_latest_news');
     delete_transient('mytheme_front_latest_beengineer_news');
+    delete_transient('mytheme_front_latest_posts_v2');
+    delete_transient('mytheme_front_latest_beengineer_news_v2');
+    delete_transient('mytheme_lc_popular_posts');
+    delete_transient('mytheme_front_popular_posts');
     for ( $i = 1; $i <= 6; $i++ ) {
         delete_transient('mytheme_front_featured_work_ids_' . $i);
     }

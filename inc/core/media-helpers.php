@@ -75,3 +75,21 @@ function mytheme_picture_tag($image_path, $alt = '', $class = 'image', $loading 
         $fetchpriority
     );
 }
+
+/**
+ * 運営者のプロフィール画像（正方形の顔写真）URLを取得。無ければ空文字。
+ */
+function mytheme_get_profile_image_url(): string {
+    static $cached = null;
+    if ( $cached !== null ) return $cached;
+
+    $cached = '';
+    foreach ( ['fujiwara-avatar.webp', 'profile.webp', 'profile.jpg', 'profile.png'] as $file ) {
+        $rel = 'assets/images/' . $file;
+        if ( file_exists(get_template_directory() . '/' . $rel) ) {
+            $cached = get_template_directory_uri() . '/' . $rel;
+            break;
+        }
+    }
+    return $cached;
+}

@@ -15,7 +15,7 @@ Thumbs.db
 .vscode/
 
 # 開発作品詳細ページ 入力テンプレート
-dev_intro.md
+_dev/docs/dev_intro.md
 
 data/science-quiz/questions.local.csv
 data/science-quiz/questions.local.php

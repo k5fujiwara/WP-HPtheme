@@ -61,10 +61,10 @@ get_header();
 .error-code {
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 900;
-    color: #0f62fe;
+    color: #1f3a68;
     line-height: 1;
     margin-bottom: 20px;
-    text-shadow: 0 4px 12px rgba(15, 98, 254, 0.2);
+    text-shadow: 0 4px 12px rgba(31, 58, 104, 0.2);
 }
 
 .error-message {
@@ -88,14 +88,14 @@ get_header();
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #0f62fe 0%, #0353e9 100%);
+    background: linear-gradient(135deg, #1f3a68 0%, #0353e9 100%);
     color: white;
-    box-shadow: 0 4px 12px rgba(15, 98, 254, 0.3);
+    box-shadow: 0 4px 12px rgba(31, 58, 104, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(15, 98, 254, 0.4);
+    box-shadow: 0 8px 20px rgba(31, 58, 104, 0.4);
 }
 
 .search-box,
@@ -130,8 +130,8 @@ get_header();
 
 .search-box input[type="search"]:focus {
     outline: none;
-    border-color: #0f62fe;
-    box-shadow: 0 0 0 3px rgba(15, 98, 254, 0.1);
+    border-color: #1f3a68;
+    box-shadow: 0 0 0 3px rgba(31, 58, 104, 0.1);
 }
 
 .page-links {
@@ -152,14 +152,14 @@ get_header();
     padding: 16px 24px;
     background: #f8fafc;
     border-radius: 8px;
-    color: #0f62fe;
+    color: #1f3a68;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.3s ease;
 }
 
 .page-links a:hover {
-    background: #edf5ff;
+    background: #eef1f6;
     transform: translateX(8px);
 }
 

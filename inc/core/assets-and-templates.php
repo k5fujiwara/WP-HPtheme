@@ -161,6 +161,15 @@ function mytheme_assets() {
     $main_js_ver  = file_exists($main_js_path) ? (string) filemtime($main_js_path) : $theme_version;
     wp_enqueue_script('mytheme-main-js', get_template_directory_uri() . $main_js_rel, [], $main_js_ver, mytheme_script_loader_args());
 
+    // トップ・自己紹介だけの小さな動き（スクロール表示・連動ハイライト・カウントアップ）
+    if ( is_front_page() || is_page('about') ) {
+        $ix_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/interactions', '.js');
+        $ix_js_path = $theme_dir . $ix_js_rel;
+        if ( file_exists($ix_js_path) ) {
+            wp_enqueue_script('mytheme-interactions', get_template_directory_uri() . $ix_js_rel, [], (string) filemtime($ix_js_path), mytheme_script_loader_args());
+        }
+    }
+
     // 学習コラム（一覧）だけに必要なJS（未使用JS削減）
     if ( is_page('learning-column') || is_home() ) {
         $lc_js_rel  = mytheme_get_theme_asset_rel_path('/assets/js/learning-column', '.js');
@@ -203,7 +212,9 @@ function mytheme_async_page_styles($html, $handle, $href, $media) {
     return '<link rel="preload" as="style" id="' . $stylesheet_id . '-preload" href="' . $href_attr . '" onload="this.onload=null;this.rel=\'stylesheet\'" media="' . $media_attr . '">' . "\n"
         . '<noscript><link rel="stylesheet" id="' . $stylesheet_id . '" href="' . $href_attr . '" media="' . $media_attr . '"></noscript>' . "\n";
 }
-add_filter('style_loader_tag', 'mytheme_async_page_styles', 10, 4);
+// 非同期読み込みは CSS 到着時に全体が再レイアウトされ CLS（0.169）の原因になっていたため無効化。
+// テーマCSSは通常の render-blocking で読み込む（minify済みで gzip 後は十分小さい）。
+// add_filter('style_loader_tag', 'mytheme_async_page_styles', 10, 4);
 
 /**
  * ナビゲーションメニューにBEMクラスを追加

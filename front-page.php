@@ -2,386 +2,347 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 get_header();
 
-// ページURLを取得（1リクエスト内キャッシュ付きヘルパーを優先）
-$about_url = function_exists('mytheme_get_page_url_by_path')
-    ? mytheme_get_page_url_by_path('about', home_url('/about/'))
-    : home_url('/about/');
-$works_url = function_exists('mytheme_get_page_url_by_path')
-    ? mytheme_get_page_url_by_path('works', home_url('/works/'))
-    : home_url('/works/');
-$learning_column_url = function_exists('mytheme_get_page_url_by_path')
-    ? mytheme_get_page_url_by_path('learning-column', home_url('/learning-column/'))
-    : home_url('/learning-column/');
-$news_url = function_exists('get_post_type_archive_link')
-    ? get_post_type_archive_link('news')
-    : home_url('/news/');
-$beengineer_news_url = function_exists('get_post_type_archive_link')
-    ? get_post_type_archive_link('beengineer-news')
-    : home_url('/beengineer-news/');
-$ebooks_url = function_exists('mytheme_get_page_url_by_path')
-    ? mytheme_get_page_url_by_path('ebooks', home_url('/ebooks/'))
-    : home_url('/ebooks/');
+$page_url = static function (string $path): string {
+    return function_exists('mytheme_get_page_url_by_path')
+        ? (string) mytheme_get_page_url_by_path($path, home_url('/' . $path . '/'))
+        : home_url('/' . $path . '/');
+};
+$about_url           = $page_url('about');
+$works_url           = $page_url('works');
+$learning_column_url = $page_url('learning-column');
+$ebooks_url          = $page_url('ebooks');
+$news_url            = get_post_type_archive_link('news') ?: home_url('/news/');
+$beengineer_news_url = get_post_type_archive_link('beengineer-news') ?: home_url('/beengineer-news/');
+$note_url            = 'https://note.com/k5fujiwara?utm_source=info-study&utm_medium=referral&utm_campaign=front';
+$theme_url           = static function (string $slug) use ($learning_column_url): string {
+    return add_query_arg('theme', $slug, $learning_column_url);
+};
 
-// 最新の学習コラム（トップで最優先表示）
-$latest_posts_args = [
-    'post_type'              => 'post',
-    'posts_per_page'         => 3,
-    'update_post_meta_cache' => false,
-    'update_post_term_cache' => true,
-];
-$latest_posts = function_exists('mytheme_get_cached_id_query')
-    ? mytheme_get_cached_id_query('mytheme_front_latest_posts', $latest_posts_args)
-    : new WP_Query(array_merge([
+$cached_query = static function (string $key, array $args): WP_Query {
+    if ( function_exists('mytheme_get_cached_id_query') ) {
+        return mytheme_get_cached_id_query($key, $args);
+    }
+    return new WP_Query(array_merge([
         'post_status'         => 'publish',
         'no_found_rows'       => true,
         'ignore_sticky_posts' => true,
-    ], $latest_posts_args));
+    ], $args));
+};
+$post_ids = static function (WP_Query $q): array {
+    return array_map(static function ($p) {
+        return (int) (is_object($p) ? $p->ID : $p);
+    }, (array) $q->posts);
+};
 
-$latest_news_args = [
+$popular_ids = $post_ids($cached_query('mytheme_front_popular_posts', [
+    'post_type'              => 'post',
+    'posts_per_page'         => 5,
+    'meta_key'               => '_mytheme_post_views',
+    'orderby'                => 'meta_value_num',
+    'order'                  => 'DESC',
+    'update_post_meta_cache' => true,
+    'update_post_term_cache' => true,
+]));
+$latest_ids = $post_ids($cached_query('mytheme_front_latest_posts_v2', [
+    'post_type'              => 'post',
+    'posts_per_page'         => 5,
+    'update_post_meta_cache' => true,
+    'update_post_term_cache' => true,
+]));
+$beengineer_ids = $post_ids($cached_query('mytheme_front_latest_beengineer_news_v2', [
+    'post_type'              => 'beengineer-news',
+    'posts_per_page'         => 3,
+    'update_post_meta_cache' => true,
+    'update_post_term_cache' => false,
+]));
+$news_ids = $post_ids($cached_query('mytheme_front_latest_news', [
     'post_type'              => 'news',
     'posts_per_page'         => 3,
     'update_post_meta_cache' => false,
     'update_post_term_cache' => false,
-];
-$latest_news = function_exists('mytheme_get_cached_id_query')
-    ? mytheme_get_cached_id_query('mytheme_front_latest_news', $latest_news_args)
-    : new WP_Query(array_merge([
-        'post_status'         => 'publish',
-        'no_found_rows'       => true,
-        'ignore_sticky_posts' => true,
-    ], $latest_news_args));
-
-$latest_beengineer_news_args = [
-    'post_type'              => 'beengineer-news',
-    'posts_per_page'         => 2,
-    'update_post_meta_cache' => false,
-    'update_post_term_cache' => false,
-];
-$latest_beengineer_news = function_exists('mytheme_get_cached_id_query')
-    ? mytheme_get_cached_id_query('mytheme_front_latest_beengineer_news', $latest_beengineer_news_args)
-    : new WP_Query(array_merge([
-        'post_status'         => 'publish',
-        'no_found_rows'       => true,
-        'ignore_sticky_posts' => true,
-    ], $latest_beengineer_news_args));
-
+]));
 $featured_work_ids = function_exists('mytheme_get_front_featured_work_ids')
     ? mytheme_get_front_featured_work_ids(3)
     : [];
+
+$themes = function_exists('mytheme_get_learning_column_themes') ? mytheme_get_learning_column_themes() : [];
+unset($themes['review-required']);
+$theme_count = static function (string $slug): int {
+    return function_exists('mytheme_get_learning_column_theme_post_ids')
+        ? count(mytheme_get_learning_column_theme_post_ids($slug))
+        : 0;
+};
+$theme_label_of = static function (int $post_id): string {
+    if ( ! function_exists('mytheme_get_learning_column_theme_meta') ) return '学習コラム';
+    $meta = mytheme_get_learning_column_theme_meta($post_id);
+    return ($meta['slug'] ?? '') === 'review-required' ? '学習コラム' : (string) $meta['label'];
+};
+
+$avatar = function_exists('mytheme_get_profile_image_url') ? mytheme_get_profile_image_url() : '';
+
+// 4つの軸（サイトのテーマそのもの）
+$axes = [
+    [
+        'no'    => '01',
+        'title' => '教育',
+        'axis'  => 'education',
+        'text'  => '教室での指導や授業づくり、学び方の違いについて。',
+        'url'   => $theme_url('education-learning'),
+        'count' => $theme_count('education-learning'),
+    ],
+    [
+        'no'    => '02',
+        'title' => 'プログラミング',
+        'axis'  => 'programming',
+        'text'  => 'Python・Web・アプリ開発を、つまずきやすい所から。',
+        'url'   => $theme_url('ai-programming'),
+        'count' => $theme_count('ai-programming'),
+    ],
+    [
+        'no'    => '03',
+        'title' => 'AI',
+        'axis'  => 'ai',
+        'text'  => '生成AIを授業や仕事でどう使うか、試した結果を。',
+        'url'   => add_query_arg(['s' => 'AI', 'post_type' => 'post'], home_url('/')),
+        'count' => 0,
+    ],
+    [
+        'no'    => '04',
+        'title' => '個人開発',
+        'axis'  => 'dev',
+        'text'  => '情報Ⅰ対策アプリや学習ツールなど、作って公開したもの。',
+        'url'   => $works_url,
+        'count' => 0,
+    ],
+];
 ?>
 
-<div class="front-page">
-    <div class="hero-section">
-        <div class="hero-section__inner">
-            <p class="hero-eyebrow">Learning, Growth, and Creation</p>
-            <h1 class="hero-title">学び続ける、成長し続ける</h1>
-            <p class="hero-lead">教育現場での実践、AI・プログラミング、資格学習、個人開発など、自分自身が学び・試したことを<wbr>体系的に整理しています。</p>
-        </div>
-    </div>
+<div class="home">
 
-    <section class="front-finder" aria-labelledby="front-finder-title">
-        <div class="front-section-heading">
-            <p class="front-section-kicker">Start Here</p>
-            <h2 id="front-finder-title" class="front-section-title">何を探していますか？</h2>
-            <p class="front-section-lead">目的に合わせて、記事・ツール・<wbr>プロフィールへ進めます。</p>
-        </div>
-
-        <div class="front-choice-grid">
-            <a class="front-choice-card" href="<?php echo esc_url($learning_column_url); ?>">
-                <span class="front-choice-card__label">学びたい</span>
-                <span class="front-choice-card__title">学習コラム</span>
-                <span class="front-choice-card__text">教育・AI・プログラミング・<wbr>資格・学習法などを体系的に整理。</span>
-            </a>
-            <a class="front-choice-card" href="<?php echo esc_url($works_url); ?>">
-                <span class="front-choice-card__label">使ってみたい</span>
-                <span class="front-choice-card__title">開発作品</span>
-                <span class="front-choice-card__text">情報Ⅰ対策や学習支援など、実際に制作した<wbr>ツールやプロジェクト。</span>
-            </a>
-            <a class="front-choice-card" href="<?php echo esc_url($about_url); ?>">
-                <span class="front-choice-card__label">運営者を知りたい</span>
-                <span class="front-choice-card__title">自己紹介</span>
-                <span class="front-choice-card__text">教育・研究・開発・<wbr>教室運営など、これまでの経験と活動。</span>
-            </a>
-        </div>
-    </section>
-
-    <section class="front-featured" aria-labelledby="front-featured-title">
-        <div class="front-section-heading">
-            <p class="front-section-kicker">Featured</p>
-            <h2 id="front-featured-title" class="front-section-title">代表的なコンテンツ</h2>
-            <p class="front-section-lead">このサイトらしさが伝わる、実践・開発・<wbr>教育現場の入口です。</p>
-        </div>
-
-        <div class="front-featured-grid">
-            <a class="front-featured-card front-featured-card--primary" href="<?php echo esc_url($works_url); ?>">
-                <span class="front-featured-card__eyebrow">Learning Product</span>
-                <h3 class="front-featured-card__title">教育・学習プロダクト</h3>
-                <p class="front-featured-card__text">情報Ⅰ対策アプリや<wbr>LINE学習Botなど、学習者の課題解決を目的に<wbr>制作したものをまとめています。</p>
-                <span class="front-featured-card__link">開発作品を見る</span>
-            </a>
-            <a class="front-featured-card" href="<?php echo esc_url($learning_column_url); ?>">
-                <span class="front-featured-card__eyebrow">Column</span>
-                <h3 class="front-featured-card__title">教育・AI・継続学習の整理</h3>
-                <p class="front-featured-card__text">一般論だけでなく、実際に学び、試し、<wbr>教育現場で考えたことを<wbr>記事として蓄積しています。</p>
-                <span class="front-featured-card__link">記事を読む</span>
-            </a>
-            <a class="front-featured-card" href="<?php echo esc_url($beengineer_news_url); ?>">
-                <span class="front-featured-card__eyebrow">BeEngineer通信</span>
-                <h3 class="front-featured-card__title">教育現場からの一次情報</h3>
-                <p class="front-featured-card__text">教室運営、イベント、生徒の学び、<wbr>指導者としての振り返りを<wbr>BeEngineer通信として発信します。</p>
-                <span class="front-featured-card__link">BeEngineer通信へ</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- 最新の学習コラム -->
-    <section class="front-latest-posts" aria-label="最新の学習コラム">
-        <div class="front-latest-posts__inner">
-            <h2 class="front-latest-posts__title">最新の学習コラム</h2>
-            <p class="front-latest-posts__lead">教育・AI・プログラミング・<wbr>資格学習など、学びを実践につなげるための<wbr>記事を更新しています。</p>
-
-            <div class="front-latest-posts__list">
-                <?php if ( $latest_posts->have_posts() ) : ?>
-                    <?php while ( $latest_posts->have_posts() ) : $latest_posts->the_post(); ?>
-                        <?php
-                        $post_url = get_permalink(get_the_ID());
-                        $primary_meta = function_exists('mytheme_get_learning_column_theme_meta')
-                            ? mytheme_get_learning_column_theme_meta(get_the_ID())
-                            : [
-                                'slug'  => 'default',
-                                'label' => '学習コラム',
-                                'class' => 'is-default',
-                            ];
-
-                        $raw_excerpt = get_the_excerpt();
-                        $excerpt_text = wp_strip_all_tags((string) $raw_excerpt);
-                        $excerpt = function_exists('wp_html_excerpt')
-                            ? wp_html_excerpt($excerpt_text, 120, '…')
-                            : $excerpt_text;
-                        ?>
-
-                        <article <?php post_class('front-latest-card front-latest-card--' . esc_attr((string) $primary_meta['slug'])); ?>>
-                            <a class="front-latest-card__link" href="<?php echo esc_url($post_url); ?>" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
-                                <div class="front-latest-card__meta">
-                                    <span class="front-latest-card__badge <?php echo esc_attr((string) $primary_meta['class']); ?>">
-                                        <span class="front-latest-card__badge-text"><?php echo esc_html((string) $primary_meta['label']); ?></span>
-                                    </span>
-                                    <time class="front-latest-card__date" datetime="<?php echo esc_attr( get_the_date('c') ); ?>">
-                                        <?php echo esc_html( get_the_date() ); ?>
-                                    </time>
-                                </div>
-
-                                <h3 class="front-latest-card__title">
-                                    <span class="front-latest-card__title-text"><?php the_title(); ?></span>
-                                </h3>
-
-                                <p class="front-latest-card__excerpt"><?php echo esc_html((string) $excerpt); ?></p>
-
-                                <p class="front-latest-card__cta">
-                                    <span class="front-latest-card__cta-link">この記事を読む</span>
-                                </p>
-                            </a>
-                        </article>
-                    <?php endwhile; ?>
-                <?php else : ?>
-                    <p>まだ投稿がありません。学習コラムを投稿してみましょう。</p>
-                <?php endif; ?>
-            </div>
-
-            <p class="front-latest-posts__more">
-                <a class="work-link" href="<?php echo esc_url( $learning_column_url ); ?>">学習コラム一覧を見る</a>
+    <!-- ヒーロー：授業ノート（コード × 板書） -->
+    <section class="home-hero" aria-labelledby="home-hero-title">
+        <div class="home-hero__text">
+            <p class="home-hero__axes" aria-label="このサイトのテーマ">
+                <span>教育</span><i aria-hidden="true">×</i><span>プログラミング</span><i aria-hidden="true">×</i><span>AI</span><i aria-hidden="true">×</i><span>個人開発</span>
             </p>
-        </div>
-    </section>
-
-    <?php wp_reset_postdata(); ?>
-
-    <section class="front-tools" aria-labelledby="front-tools-title">
-        <div class="front-section-heading">
-            <p class="front-section-kicker">Works</p>
-            <h2 id="front-tools-title" class="front-section-title">開発作品</h2>
-            <p class="front-section-lead">技術スタックよりも、「誰の何を解決するか」が<wbr>先に伝わるように整理しています。</p>
-        </div>
-
-        <div class="front-tools__actions">
-            <a class="work-link work-link-demo" href="<?php echo esc_url($works_url); ?>">開発作品を見る</a>
+            <h1 id="home-hero-title" class="home-hero__title">教えて、つくって、<br><mark>学んだこと</mark>を書く。</h1>
+            <p class="home-hero__lead">プログラミング教室で中高生に教えながら、情報Ⅰ教材や学習アプリを個人で開発しています。AIの使い方も含めて、現場で試して分かったことを、あとから役立つ形で残しているノートです。</p>
+            <div class="home-hero__actions">
+                <a class="home-btn" href="#home-popular">よく読まれている記事から読む</a>
+                <a class="home-textlink" href="<?php echo esc_url($learning_column_url); ?>">記事一覧</a>
+            </div>
+            <a class="home-byline" href="<?php echo esc_url($about_url); ?>">
+                <?php if ( $avatar !== '' ) : ?>
+                    <img class="home-byline__photo" src="<?php echo esc_url($avatar); ?>" alt="" width="44" height="44" decoding="async">
+                <?php endif; ?>
+                <span class="home-byline__text"><small>書いている人</small><strong>藤原圭吾</strong><span>プログラミング教室での指導・教室運営／個人開発</span></span>
+            </a>
         </div>
 
-        <?php if ( ! empty($featured_work_ids) ) : ?>
-            <div class="front-tools__list">
-                <?php foreach ( $featured_work_ids as $work_id ) : ?>
-                    <?php if ( function_exists('mytheme_render_work_card') ) mytheme_render_work_card((int) $work_id); ?>
+        <figure class="home-board">
+            <?php
+            // 板書：1行ずつタイピングされ、書き終わった行に赤ペンの書き込みが入る（CSSアニメーション）
+            $board_lines = [
+                ['code' => '# 毎日の授業ノート', 'note' => '', 'axis' => '', 'class' => 'is-comment'],
+                ['code' => 'while learning:', 'note' => '', 'axis' => 'programming', 'class' => ''],
+                ['code' => '    teach(students)', 'note' => '教育', 'axis' => 'education', 'class' => ''],
+                ['code' => '    build(tools)', 'note' => '個人開発', 'axis' => 'dev', 'class' => ''],
+                ['code' => '    try_with(ai)', 'note' => 'AI', 'axis' => 'ai', 'class' => ''],
+                ['code' => '    write(notes)', 'note' => 'このノート', 'axis' => 'note', 'class' => 'is-last'],
+            ];
+            $board_time = 0.4; // 最初の行を打ち始めるまでの秒数
+            $board_ms_per_char = 0.035;
+            ?>
+            <div class="home-board__grid" aria-hidden="true">
+                <span class="home-board__bar"><span class="home-board__file">lesson.py</span></span><span></span>
+                <?php foreach ( $board_lines as $i => $line ) : ?>
+                    <?php
+                    $chars = max(1, mb_strlen($line['code']));
+                    $duration = $chars * $board_ms_per_char;
+                    $html = esc_html($line['code']);
+                    $html = preg_replace('/^while\b/', '<b>while</b>', $html);
+                    $html = preg_replace('/\(([a-z_]+)\)/', '(<em>$1</em>)', $html);
+                    $style = sprintf('--chars:%d;--dur:%.2fs;--delay:%.2fs', $chars, $duration, $board_time);
+                    $note_delay = $board_time + $duration;
+                    $board_time = $note_delay + 0.12;
+                    $axis_attr = $line['axis'] !== '' ? ' data-axis="' . esc_attr($line['axis']) . '"' : '';
+                    $is_last = $i === count($board_lines) - 1;
+                    ?>
+                    <span class="home-board__line <?php echo esc_attr($line['class']); ?>"<?php echo $axis_attr; ?>><i><?php echo (int) $i + 1; ?></i><code style="<?php echo esc_attr($style); ?>"><?php echo $html; ?></code><?php if ( $is_last ) : ?><span class="home-board__caret" style="--delay:<?php echo esc_attr(sprintf('%.2fs', $note_delay)); ?>"></span><?php endif; ?></span><?php if ( $line['note'] !== '' ) : ?><span class="home-board__note"<?php echo $axis_attr; ?> style="--delay:<?php echo esc_attr(sprintf('%.2fs', $note_delay)); ?>"><?php echo esc_html($line['note']); ?></span><?php else : ?><span></span><?php endif; ?>
+
                 <?php endforeach; ?>
             </div>
+            <figcaption class="screen-reader-text">教える、つくる、AIで試す、書く。これを繰り返しながら学んだことを、このサイトに書いています。</figcaption>
+        </figure>
+    </section>
+
+    <!-- 4つの軸 -->
+    <section class="home-axes" aria-labelledby="home-axes-title">
+        <h2 id="home-axes-title" class="screen-reader-text">このサイトで書いていること</h2>
+        <ol class="home-axes__list">
+            <?php foreach ( $axes as $axis ) : ?>
+                <li class="home-axes__item" data-axis="<?php echo esc_attr($axis['axis']); ?>">
+                    <a class="home-axes__link" href="<?php echo esc_url($axis['url']); ?>">
+                        <span class="home-axes__no"><?php echo esc_html($axis['no']); ?></span>
+                        <span class="home-axes__title"><?php echo esc_html($axis['title']); ?></span>
+                        <span class="home-axes__text"><?php echo esc_html($axis['text']); ?></span>
+                        <?php if ( $axis['count'] > 0 ) : ?>
+                            <span class="home-axes__count"><?php echo esc_html((string) $axis['count']); ?>本の記事</span>
+                        <?php endif; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ol>
+    </section>
+
+    <?php if ( count($popular_ids) >= 3 ) : ?>
+    <!-- よく読まれている記事 -->
+    <section class="home-section" id="home-popular" aria-labelledby="home-popular-title">
+        <header class="home-head">
+            <h2 id="home-popular-title" class="home-head__title">よく読まれている記事</h2>
+            <p class="home-head__note">はじめての方は、まずここから。</p>
+        </header>
+        <ol class="home-rank">
+            <?php foreach ( $popular_ids as $i => $pid ) : ?>
+                <li class="home-rank__item">
+                    <a class="home-rank__link" href="<?php echo esc_url(get_permalink($pid)); ?>">
+                        <span class="home-rank__no"><?php echo esc_html((string) ($i + 1)); ?></span>
+                        <span class="home-rank__body">
+                            <span class="home-rank__theme"><?php echo esc_html($theme_label_of($pid)); ?></span>
+                            <span class="home-rank__title"><?php echo esc_html(get_the_title($pid)); ?></span>
+                        </span>
+                        <?php if ( has_post_thumbnail($pid) ) : ?>
+                            <span class="home-rank__thumb"><?php echo get_the_post_thumbnail($pid, 'thumbnail', ['alt' => '', 'loading' => 'lazy', 'decoding' => 'async']); ?></span>
+                        <?php endif; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ol>
+    </section>
+    <?php endif; ?>
+
+    <!-- 新着の記事 -->
+    <section class="home-section"<?php echo count($popular_ids) >= 3 ? '' : ' id="home-popular"'; ?> aria-labelledby="home-latest-title">
+        <header class="home-head">
+            <h2 id="home-latest-title" class="home-head__title">新しい記事</h2>
+            <a class="home-head__more" href="<?php echo esc_url($learning_column_url); ?>">記事一覧へ</a>
+        </header>
+
+        <?php if ( ! empty($latest_ids) ) : ?>
+            <div class="home-latest">
+                <div class="home-latest__lead">
+                    <?php mytheme_render_post_tile($latest_ids[0], ['heading' => 'h3', 'variant' => 'feature']); ?>
+                </div>
+                <?php if ( count($latest_ids) > 1 ) : ?>
+                    <ul class="home-latest__list">
+                        <?php foreach ( array_slice($latest_ids, 1) as $pid ) : ?>
+                            <li>
+                                <a class="home-entry" href="<?php echo esc_url(get_permalink($pid)); ?>">
+                                    <span class="home-entry__meta">
+                                        <time datetime="<?php echo esc_attr(get_the_date('c', $pid)); ?>"><?php echo esc_html(get_the_date('Y.m.d', $pid)); ?></time>
+                                        <span><?php echo esc_html($theme_label_of($pid)); ?></span>
+                                    </span>
+                                    <span class="home-entry__title"><?php echo esc_html(get_the_title($pid)); ?></span>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            </div>
+        <?php else : ?>
+            <p class="home-empty">記事は準備中です。</p>
+        <?php endif; ?>
+
+        <?php if ( ! empty($themes) ) : ?>
+            <nav class="home-themes" aria-label="テーマから記事を探す">
+                <span class="home-themes__label">テーマから探す：</span>
+                <?php foreach ( $themes as $slug => $theme ) : ?>
+                    <?php $count = $theme_count($slug); if ( $count === 0 ) continue; ?>
+                    <a class="home-themes__link" href="<?php echo esc_url($theme_url($slug)); ?>"><?php echo esc_html((string) $theme['label']); ?><small><?php echo esc_html((string) $count); ?></small></a>
+                <?php endforeach; ?>
+            </nav>
         <?php endif; ?>
     </section>
 
-    <section class="front-beengineer" aria-label="BeEngineer通信">
-        <div class="front-beengineer__inner">
-            <div class="front-beengineer__content">
-                <div class="front-beengineer__headline">
-                    <div class="front-beengineer__heading">
-                        <h2 class="front-beengineer__title">BeEngineer通信</h2>
-                    </div>
-                    <p class="front-beengineer__cta">
-                        <a class="work-link" href="<?php echo esc_url($beengineer_news_url); ?>">
-                            <span class="label-desktop">BeEngineer通信を見る</span>
-                            <span class="label-mobile">BeEngineer<br>通信を見る</span>
-                        </a>
-                    </p>
-                </div>
-                <p class="front-beengineer__lead">BeEngineerは、中高生のための<wbr>実践的なプログラミング教室です。</p>
-                <p class="front-beengineer__sublead">教室の取り組み、教育の考え方、<wbr>イベントの記録をまとめて発信します。</p>
-            </div>
-
-            <div class="front-beengineer__latest">
-                <p class="front-beengineer__latest-title">最新記事</p>
-                <?php if ( $latest_beengineer_news->have_posts() ) : ?>
-                    <ul class="front-beengineer__list">
-                        <?php while ( $latest_beengineer_news->have_posts() ) : $latest_beengineer_news->the_post(); ?>
-                            <li class="front-beengineer__item">
-                                <a class="front-beengineer__link" href="<?php the_permalink(); ?>">
-                                    <time class="front-beengineer__date" datetime="<?php echo esc_attr(get_the_date('c')); ?>">
-                                        <?php echo esc_html(get_the_date('Y.m.d')); ?>
-                                    </time>
-                                    <span class="front-beengineer__item-title"><?php the_title(); ?></span>
-                                    <span class="front-beengineer__marker" aria-hidden="true">＞</span>
-                                </a>
-                            </li>
-                        <?php endwhile; ?>
-                    </ul>
-                <?php else : ?>
-                    <p class="front-beengineer__empty">記事は準備中です。公開次第こちらから確認できます。</p>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-
-    <?php wp_reset_postdata(); ?>
-
-    <section class="front-about" aria-labelledby="front-about-title">
-        <div class="front-about__inner">
-            <div>
-                <h2 id="front-about-title" class="front-section-title">教育・開発・学びをつなげる<wbr>個人Web資産</h2>
-                <p class="front-about__text">教育現場での指導や教室運営と並行して、<wbr>情報Ⅰ教材、学習アプリ、<wbr>AIを活用した業務効率化ツールなどを制作しています。<wbr>日々の学びを、あとから使える形に整理して蓄積します。</p>
-            </div>
-            <p class="front-about__action">
-                <a class="work-link" href="<?php echo esc_url($about_url); ?>">運営者を知る</a>
-            </p>
-        </div>
-    </section>
-
-    <section class="front-ebooks" aria-labelledby="front-ebooks-title">
-        <div class="front-ebooks__inner">
-            <div>
-                <h2 id="front-ebooks-title" class="front-section-title">電子書籍</h2>
-                <p class="front-section-lead">学習法・仕事術・アウトプットなど、<wbr>サイト内の実践知を<wbr>別の形でも整理しています。</p>
-            </div>
-            <a class="work-link" href="<?php echo esc_url($ebooks_url); ?>">電子書籍を見る</a>
-        </div>
-    </section>
-
-    <?php if ( $latest_news->have_posts() ) : ?>
-    <section class="front-news" aria-label="お知らせ">
-        <div class="front-news__inner">
-            <div class="front-news__header">
-                <div>
-                    <h2 class="front-news__title">お知らせ</h2>
-                </div>
-                <a class="front-news__archive-link" href="<?php echo esc_url($news_url); ?>">一覧を見る</a>
-            </div>
-
-            <ul class="front-news__list">
-                <?php
-                if ( function_exists('mytheme_render_news_list_items') ) {
-                    mytheme_render_news_list_items($latest_news, [
-                        'item_class'    => 'front-news__item',
-                        'link_class'    => 'front-news__link',
-                        'date_class'    => 'front-news__date',
-                        'title_class'   => 'front-news__item-title',
-                        'date_format'   => 'Y.m.d',
-                        'date_position' => 'left',
-                    ]);
-                }
-                ?>
-            </ul>
+    <?php if ( ! empty($featured_work_ids) && function_exists('mytheme_render_work_tile') ) : ?>
+    <!-- 開発作品 -->
+    <section class="home-section" aria-labelledby="home-works-title">
+        <header class="home-head">
+            <h2 id="home-works-title" class="home-head__title">つくったもの</h2>
+            <a class="home-head__more" href="<?php echo esc_url($works_url); ?>">開発作品一覧へ</a>
+        </header>
+        <p class="home-section__lead">教室で生徒と接する中で見えた「ここが不便」「ここでつまずく」を、自分の手で道具にしています。</p>
+        <div class="work-tile-grid">
+            <?php foreach ( $featured_work_ids as $work_id ) : ?>
+                <?php mytheme_render_work_tile((int) $work_id); ?>
+            <?php endforeach; ?>
         </div>
     </section>
     <?php endif; ?>
 
-    <?php wp_reset_postdata(); ?>
+    <!-- 教室から -->
+    <section class="home-section home-classroom" aria-labelledby="home-classroom-title">
+        <div class="home-classroom__main">
+            <header class="home-head">
+                <h2 id="home-classroom-title" class="home-head__title">教室から</h2>
+                <a class="home-head__more" href="<?php echo esc_url($beengineer_news_url); ?>">BeEngineer通信へ</a>
+            </header>
+            <p class="home-section__lead">中高生のためのプログラミング教室「BeEngineer」での授業やイベント、生徒たちの様子を記録しています。</p>
+            <?php if ( ! empty($beengineer_ids) ) : ?>
+                <ul class="home-classroom__list">
+                    <?php foreach ( $beengineer_ids as $i => $pid ) : ?>
+                        <li>
+                            <a class="home-entry<?php echo ($i === 0 && has_post_thumbnail($pid)) ? ' home-entry--photo' : ''; ?>" href="<?php echo esc_url(get_permalink($pid)); ?>">
+                                <?php if ( $i === 0 && has_post_thumbnail($pid) ) : ?>
+                                    <span class="home-entry__photo"><?php echo get_the_post_thumbnail($pid, 'medium_large', ['alt' => '', 'loading' => 'lazy', 'decoding' => 'async']); ?></span>
+                                <?php endif; ?>
+                                <span class="home-entry__meta"><time datetime="<?php echo esc_attr(get_the_date('c', $pid)); ?>"><?php echo esc_html(get_the_date('Y.m.d', $pid)); ?></time></span>
+                                <span class="home-entry__title"><?php echo esc_html(get_the_title($pid)); ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else : ?>
+                <p class="home-empty">記事は準備中です。</p>
+            <?php endif; ?>
+        </div>
 
-    <!-- サイト紹介セクション -->
-    <section class="site-intro">
-        <details class="site-intro__details" open>
-            <summary class="site-intro__summary">
-                <span class="site-intro__summary-copy">
-                    <span class="site-intro__summary-title">このサイトについて</span>
-                    <span class="site-intro__summary-text">運営方針や発信内容を見る</span>
-                </span>
-                <span class="site-intro__summary-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m6 9 6 6 6-6"></path>
-                    </svg>
-                </span>
-            </summary>
+        <?php if ( ! empty($news_ids) ) : ?>
+            <aside class="home-classroom__news" aria-labelledby="home-news-title">
+                <h2 id="home-news-title" class="home-news__title">お知らせ</h2>
+                <ul class="home-news__list">
+                    <?php foreach ( $news_ids as $pid ) : ?>
+                        <li>
+                            <a href="<?php echo esc_url(get_permalink($pid)); ?>">
+                                <time datetime="<?php echo esc_attr(get_the_date('c', $pid)); ?>"><?php echo esc_html(get_the_date('Y.m.d', $pid)); ?></time>
+                                <span><?php echo esc_html(get_the_title($pid)); ?></span>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+                <a class="home-head__more" href="<?php echo esc_url($news_url); ?>">お知らせ一覧へ</a>
+            </aside>
+        <?php endif; ?>
+    </section>
 
-            <div class="intro-container site-intro__panel">
-                <p class="intro-lead">
-                    教育現場での実践、<wbr>AI・プログラミング、継続学習を整理するサイト
-                </p>
-                <div class="intro-content">
-                    <p class="intro-content__text">
-                        当サイトは、<strong>教育現場での実践、AI・プログラミング、<wbr>情報Ⅰ、資格学習、個人開発</strong>に関する情報を整理しています。
-                        一般的な解説だけでなく、実際に学び、試し、<wbr>使った経験をあとから参照できる形で蓄積します。
-                    </p>
-                </div>
-
-                <div class="intro-features">
-                    <div class="intro-feature">
-                        <div class="feature-icon-wrapper">
-                            <svg class="feature-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-label="学習支援アイコン">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                                <line x1="10" y1="8" x2="16" y2="8"></line>
-                                <line x1="10" y1="12" x2="16" y2="12"></line>
-                                <line x1="10" y1="16" x2="16" y2="16"></line>
-                            </svg>
-                            <div class="feature-icon-bg" aria-hidden="true"></div>
-                        </div>
-                        <h3 class="intro-feature__title">学習支援</h3>
-                        <p class="intro-feature__description">実践的な学習方法や<wbr>資格取得の経験を共有します</p>
-                    </div>
-                    <div class="intro-feature">
-                        <div class="feature-icon-wrapper">
-                            <svg class="feature-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-label="技術開発アイコン">
-                                <polyline points="16 18 22 12 16 6"></polyline>
-                                <polyline points="8 6 2 12 8 18"></polyline>
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            </svg>
-                            <div class="feature-icon-bg" aria-hidden="true"></div>
-                        </div>
-                        <h3 class="intro-feature__title">技術開発</h3>
-                        <p class="intro-feature__description">Pythonを中心とした<wbr>開発プロジェクトを紹介します</p>
-                    </div>
-                    <div class="intro-feature">
-                        <div class="feature-icon-wrapper">
-                            <svg class="feature-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" role="img" aria-label="継続学習アイコン">
-                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
-                            </svg>
-                            <div class="feature-icon-bg" aria-hidden="true"></div>
-                        </div>
-                        <h3 class="intro-feature__title">継続学習</h3>
-                        <p class="intro-feature__description">資格学習や実践の記録を、<wbr>次の学びにつながる形で整理します</p>
-                    </div>
-                </div>
-            </div>
-        </details>
+    <!-- 書いている人 -->
+    <section class="home-author" aria-labelledby="home-author-title">
+        <?php if ( $avatar !== '' ) : ?>
+            <img class="home-author__photo" src="<?php echo esc_url($avatar); ?>" alt="" width="160" height="160" loading="lazy" decoding="async">
+        <?php endif; ?>
+        <div class="home-author__body">
+            <p class="home-author__label">このノートを書いている人</p>
+            <h2 id="home-author-title" class="home-author__name">藤原圭吾</h2>
+            <p class="home-author__text">プログラミング教室での指導・教室運営と並行して、情報Ⅰ教材、学習アプリ、AIを活用した業務効率化ツールを制作しています。大学院では情報科学を研究していました。一般論だけでなく、自分で学び、試し、教えた経験をもとに書いています。</p>
+            <ul class="home-author__links">
+                <li><a href="<?php echo esc_url($about_url); ?>">詳しいプロフィール</a></li>
+                <li><a href="<?php echo esc_url($page_url('contact')); ?>">お仕事のご相談</a></li>
+                <li><a href="<?php echo esc_url($ebooks_url); ?>">電子書籍</a></li>
+                <li><a href="<?php echo esc_url($note_url); ?>" target="_blank" rel="noopener noreferrer external">note（考えている途中のこと）</a></li>
+            </ul>
+        </div>
     </section>
 
 </div>
 
 <?php get_footer(); ?>
-

@@ -57,35 +57,47 @@ function mytheme_get_page_by_path_cached($path, $output = OBJECT, $post_type = '
 }
 
 // ===== Theme modules =====
-// 役割ごとに `inc/` 配下へ分割。詳細は `inc/README.md` を参照。
+// 役割ごとに `inc/<役割>/` へ分割。詳細は `inc/README.md` を参照。
+// 読み込み順は旧構成と同じ（関数の定義順に依存する処理があるため変更しない）。
+$mytheme_modules = [
+    // core: 基盤（初期化・アセット読み込み）
+    'core/bootstrap-init',
+    'core/assets-and-templates',
 
-// 基盤
-require_once get_template_directory() . '/inc/bootstrap-init.php';
-require_once get_template_directory() . '/inc/assets-and-templates.php';
+    // content: 学習コラム・記事まわりの運用
+    'content/column-support',
+    'content/post-engagement',
+    'content/post-card-renderer',
+    'content/search-support',
+    'content/internal-links',
+    'content/navigation-maintenance',
 
-// コンテンツ運用
-require_once get_template_directory() . '/inc/column-support.php';
-require_once get_template_directory() . '/inc/post-engagement.php';
-require_once get_template_directory() . '/inc/post-card-renderer.php';
-require_once get_template_directory() . '/inc/search-support.php';
-require_once get_template_directory() . '/inc/internal-links.php';
-require_once get_template_directory() . '/inc/navigation-maintenance.php';
-require_once get_template_directory() . '/inc/dictionary.php';
-require_once get_template_directory() . '/inc/news.php';
-require_once get_template_directory() . '/inc/beengineer-news.php';
-require_once get_template_directory() . '/inc/works.php';
-require_once get_template_directory() . '/inc/youtube-learning.php';
-require_once get_template_directory() . '/inc/science-quiz.php';
-require_once get_template_directory() . '/inc/japanese-quiz.php';
-require_once get_template_directory() . '/inc/it1-code-pocket.php';
-require_once get_template_directory() . '/inc/legal-content.php';
+    // post-types: カスタム投稿タイプ
+    'post-types/dictionary',
+    'post-types/news',
+    'post-types/beengineer-news',
+    'post-types/works',
+    'post-types/youtube-learning',
 
-// SEO / パフォーマンス / 画像
-require_once get_template_directory() . '/inc/seo.php';
-require_once get_template_directory() . '/inc/performance-optimizations.php';
-require_once get_template_directory() . '/inc/image-optimizations.php';
-require_once get_template_directory() . '/inc/media-helpers.php';
+    // apps: サイト内アプリ（クイズ・情報Ⅰコードポケット）
+    'apps/science-quiz',
+    'apps/japanese-quiz',
+    'apps/it1-code-pocket',
 
-// UI / 外部連携
-require_once get_template_directory() . '/inc/sns-menus.php';
-require_once get_template_directory() . '/inc/accessibility-analytics.php';
+    // content: 法務ページ
+    'content/legal-content',
+
+    // core: SEO / パフォーマンス / 画像
+    'core/seo',
+    'core/performance-optimizations',
+    'core/image-optimizations',
+    'core/media-helpers',
+
+    // ui / 外部連携
+    'ui/sns-menus',
+    'core/accessibility-analytics',
+];
+foreach ( $mytheme_modules as $mytheme_module ) {
+    require_once get_template_directory() . '/inc/' . $mytheme_module . '.php';
+}
+unset($mytheme_modules, $mytheme_module);

@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-$mytheme_work_seed_content_path = get_template_directory() . '/inc/work-seed-content.php';
+$mytheme_work_seed_content_path = get_template_directory() . '/inc/post-types/work-seed-content.php';
 if ( file_exists($mytheme_work_seed_content_path) ) {
     require_once $mytheme_work_seed_content_path;
 }
@@ -1697,6 +1697,47 @@ function mytheme_get_work_card_secondary_cta($post_id, string $detail_url, strin
         'url'         => $demo_url,
         'is_external' => $demo_url !== '' && strpos($demo_url, home_url('/')) !== 0 && strpos($demo_url, '#') !== 0,
     ];
+}
+
+/**
+ * トップページ用のコンパクトな作品タイル
+ */
+function mytheme_render_work_tile($post_id): void {
+    $post_id = (int) $post_id;
+    if ( $post_id <= 0 ) return;
+
+    $url = mytheme_get_work_detail_url($post_id);
+    $title = get_the_title($post_id);
+    $image_alt = '';
+    $image_id = (int) mytheme_get_work_meta($post_id, '_mytheme_work_card_image_id', 0);
+    $image_path = mytheme_get_work_meta($post_id, '_mytheme_work_card_image_path');
+    $presentation = mytheme_get_work_presentation_meta($post_id);
+    $target = trim((string) ($presentation['target'] ?? ''));
+    $status = trim((string) ($presentation['status'] ?? ''));
+    ?>
+    <article class="work-tile">
+        <a class="work-tile__link" href="<?php echo esc_url($url); ?>">
+            <div class="work-tile__media">
+                <?php if ( $image_id > 0 ) : ?>
+                    <?php echo mytheme_work_get_attachment_image_html($image_id, 'work-tile__image', $image_alt, 'medium_large', 'lazy'); ?>
+                <?php elseif ( $image_path !== '' && function_exists('mytheme_picture_tag') ) : ?>
+                    <?php echo mytheme_picture_tag($image_path, $image_alt, 'work-tile__image', 'lazy'); ?>
+                <?php elseif ( has_post_thumbnail($post_id) ) : ?>
+                    <?php echo get_the_post_thumbnail($post_id, 'medium_large', ['class' => 'work-tile__image', 'alt' => $image_alt, 'loading' => 'lazy', 'decoding' => 'async']); ?>
+                <?php endif; ?>
+            </div>
+            <div class="work-tile__body">
+                <?php if ( $status !== '' ) : ?>
+                    <span class="work-tile__status"><?php echo esc_html($status); ?></span>
+                <?php endif; ?>
+                <h3 class="work-tile__title"><?php echo esc_html($title); ?></h3>
+                <?php if ( $target !== '' ) : ?>
+                    <p class="work-tile__target"><?php echo esc_html($target); ?></p>
+                <?php endif; ?>
+            </div>
+        </a>
+    </article>
+    <?php
 }
 
 function mytheme_render_work_card($post_id) {

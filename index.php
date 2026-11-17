@@ -144,7 +144,7 @@ $cat_meta = function_exists('mytheme_get_column_category_meta') ? mytheme_get_co
             <?php endif; ?>
 
             <div class="page-body">
-                <div class="learning-column-results">
+                <div class="learning-column-results post-tile-grid">
                     <?php while ( have_posts() ) : the_post(); ?>
                         <?php mytheme_render_learning_column_card($cat_meta, true); ?>
                     <?php endwhile; ?>
