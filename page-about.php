@@ -46,7 +46,7 @@ get_header();
     if ( $about_ebook_count > 0 ) {
         $about_facts[] = ['num' => (string) $about_ebook_count, 'unit' => '冊', 'label' => 'Kindleで出版した電子書籍（日本語版・英語版）'];
     }
-    $about_facts[] = ['num' => '37', 'unit' => '万円', 'label' => '2026年の投資収益額'];
+    $about_facts[] = ['num' => '40', 'unit' => '万円', 'label' => '2026年の投資収益額'];
 
     // お手伝いできること（実績に基づく）
     $about_services = [
